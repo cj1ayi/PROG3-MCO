@@ -19,7 +19,7 @@ public class Pokemon
 	private int moveSetCount = 0;
 	private String heldItem;
 	
-	public Pokemon(int pokedexNum, String name, String type1, String type2, int baseLevel, int evolvesFrom, int evolvesTo, int evolutionLevel, int hp, int atk, int def, int spd, String heldItem)
+	public Pokemon(int pokedexNum, String name, String type1, String type2, int baseLevel, int evolvesFrom, int evolvesTo, int evolutionLevel, int hp, int atk, int def, int spd)
 	{
 		this.pokedexNum = pokedexNum;
 		this.name = name; 
@@ -33,14 +33,13 @@ public class Pokemon
 		this.atk = atk; 
 		this.def = def;
 		this.spd = spd;
-		this.heldItem = heldItem;
 		
 		moveSet[0] = "Tackle";
 		moveSet[1] = "Defend";
 		moveSetCount = 2;
 	}
 	
-	public Pokemon(int pokedexNum, String name, String type1, int baseLevel, int evolvesFrom, int evolvesTo, int evolutionLevel, int hp, int atk, int def, int spd, String heldItem)
+	public Pokemon(int pokedexNum, String name, String type1, int baseLevel, int evolvesFrom, int evolvesTo, int evolutionLevel, int hp, int atk, int def, int spd)
 	{
 		this.pokedexNum = pokedexNum;
 		this.name = name; 
@@ -53,10 +52,25 @@ public class Pokemon
 		this.atk = atk; 
 		this.def = def;
 		this.spd = spd;
-		this.heldItem = heldItem;
 		
 		moveSet[0] = "Tackle";
 		moveSet[1] = "Defend";
 		moveSetCount = 2;
 	}
+	
+	//getters
+	public int getPokedexNum() { return pokedexNum; }
+	public String getName() { return name; }
+	public String getType1() { return type1; }
+	public String getType2() { return type2; }
+	public int getBaseLevel() { return baseLevel; }
+	public int getEvolvesFrom() { return evolvesFrom; }
+	public int getEvolvesTo() { return evolvesTo; }
+	public int getEvolutionLevel() { return evolutionLevel; }
+	public int getHp() { return hp; }
+	public int getAtk() { return atk; }
+	public int getDef() { return def; }
+	public int getSpd() { return spd; }
+	public String[] getMoveSet() { return moveSet; }
+	public String getHeldItem() { return heldItem; }
 }
