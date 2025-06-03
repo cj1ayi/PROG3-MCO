@@ -1,7 +1,6 @@
 package view;
 
 import model.Pokemon;
-import java.util.Scanner;
 
 public class PokemonView
 {
@@ -64,27 +63,5 @@ public class PokemonView
 				i++;
 			}
 		}
-	}
-	
-	//to be moved to utils
-	public String promptString(String msg)
-	{
-		Scanner input = new Scanner(System.in);
-		System.out.print(msg);
-		return input.nextLine();
-	}
-	
-	public int promptInt(String msg)
-	{
-		Scanner input = new Scanner(System.in);
-		System.out.print(msg);
-		int choice = input.nextInt();
-		input.nextLine(); //buffer
-		return choice;
-	}
-	
-	public void prompt(String msg)
-	{
-		System.out.print(msg);
 	}
 }
