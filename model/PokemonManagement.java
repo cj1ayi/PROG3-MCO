@@ -3,7 +3,7 @@ package model;
 public class PokemonManagement
 {
 	private static int pokemonCount = 0;
-	private Pokemon pokemonList[];
+	private Pokemon pokemonList[] = new Pokemon[100];
 	
 	public void searchPokemon()
 	{
