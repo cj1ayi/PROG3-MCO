@@ -1,6 +1,7 @@
 package controller;
 
 import model.Pokemon;
+import model.PokemonManagement;
 import view.PokemonView;
 import java.util.Scanner;
 

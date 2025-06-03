@@ -6,7 +6,7 @@ public class Main
 	{
 		PokemonController controller = new PokemonController();
 		
-		controller.addPokemon();
+		controller.newPokemon();
 	}
 }
 
