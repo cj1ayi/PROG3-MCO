@@ -47,7 +47,7 @@ public class Pokedex
 						  break;
 				case 2: pokemonController.viewAllPokemon();
 						  break;
-				case 3: pokemonController.searchPokemon();
+				case 3: pokemonController.searchPokemonMenu();
 						  break;
 				case 4: pokemonController.savePokemonEntries();
 						  break;

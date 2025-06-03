@@ -36,9 +36,17 @@ public class PokemonController
 		view.viewAllPokemon(service.getPokemonList());
 	}
 	
-	public void searchPokemon()
+	public void searchPokemonMenu()
 	{
-		
+		view.prompt("-----------------------------------\n");
+		view.prompt("Enter attribute\n");
+		String attribute = view.promptString("name/type/pokedex: ");
+		String key = view.promptString("Enter key to search for: ");
+		for(Pokemon p : service.searchPokemon(attribute, key))
+		{	
+			if(p != null)
+				view.viewPokemon(p);
+		}
 	}
 	
 	public void newPokemon()
