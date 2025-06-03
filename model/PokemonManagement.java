@@ -15,4 +15,9 @@ public class PokemonManagement
 		pokemonList[pokemonCount] = pokemon;
 		pokemonCount++;
 	}
+	
+	public Pokemon[] getPokemonList()
+	{
+		return pokemonList;
+	}
 }

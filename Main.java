@@ -7,6 +7,8 @@ public class Main
 		PokemonController controller = new PokemonController();
 		
 		controller.newPokemon();
+		controller.newPokemon();
+		controller.savePokemonEntries();
 	}
 }
 

@@ -2,6 +2,7 @@ package controller;
 
 import model.Pokemon;
 import model.PokemonManagement;
+import model.PokemonFileHandler;
 import view.PokemonView;
 import java.util.Scanner;
 
@@ -10,12 +11,19 @@ public class PokemonController
 	private Pokemon model;
 	private PokemonView view;
 	private PokemonManagement service;
+	private PokemonFileHandler dao;
 	
 	public PokemonController()
 	{
 		this.model = new Pokemon();
 		this.view = new PokemonView();
 		this.service = new PokemonManagement();
+		this.dao = new PokemonFileHandler();
+	}
+	
+	public void savePokemonEntries()
+	{
+		dao.save(service.getPokemonList());
 	}
 	
 	public void newPokemon()
@@ -100,6 +108,8 @@ public class PokemonController
 			model.setHeldItem(heldItem);
 		
 		System.out.println("Entery Successfully Made!\n");
+		
+		view.viewPokemon(model);
 		
 		service.addPokemon(model);
 	}
