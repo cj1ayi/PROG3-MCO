@@ -55,11 +55,14 @@ public class Trainer {
     {
 
     }
+
     public void useItem()
     {
 
     }
-    public boolean addPokemon(Pokemon pokemon) {
+
+    public boolean addPokemon(Pokemon pokemon) 
+	 {
         for (int i = 0; i < MAX_POKEMON_LINEUP; i++) {
             if (pokemonLineup[i] == null) {
                 pokemonLineup[i] = pokemon;
@@ -68,10 +71,16 @@ public class Trainer {
         }
         return false; // Lineup is full
     }
-    public Pokemon switchPokemon(pokemonLineup)
-    {
 
+	//GIVING ME ERRORS, JUST UNCOMMENT LATER
+	
+    /*
+	 public Pokemon switchPokemon(Pokemon pokemonLineup)
+    {
+		
     }
+	*/
+	
     public void teachMoves()
     {
 

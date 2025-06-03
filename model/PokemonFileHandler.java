@@ -1,5 +1,7 @@
 package model;
 
+import static utils.FileHelper.fromSafe;
+import static utils.FileHelper.safe;
 import java.io.File;
 import java.io.PrintWriter;
 import java.io.IOException;
@@ -17,40 +19,23 @@ public class PokemonFileHandler
 			{
 				if(p != null)
 				{
-					writer.write(String.valueOf(p.getPokedexNum()));
-					writer.write(" ");
-					writer.write(p.getName());
-					writer.write(" ");
-					writer.write(p.getType1());
-					writer.write(" ");
-					writer.write(p.getType2());
-					writer.write(" ");
-					writer.write(String.valueOf(p.getBaseLevel()));
-					writer.write(" ");
-					writer.write(String.valueOf(p.getEvolvesFrom()));
-					writer.write(" ");
-					writer.write(String.valueOf(p.getEvolvesTo()));
-					writer.write(" ");
-					writer.write(String.valueOf(p.getEvolutionLevel()));
-					writer.write(" ");
-					writer.write(String.valueOf(p.getHp()));
-					writer.write(" ");
-					writer.write(String.valueOf(p.getAtk()));
-					writer.write(" ");
-					writer.write(String.valueOf(p.getDef()));
-					writer.write(" ");
-					writer.write(String.valueOf(p.getSpd()));
-					writer.write(" ");
+					writer.write(safe(p.getPokedexNum()));
+					writer.write(safe(p.getName()));
+					writer.write(safe(p.getType1()));
+					writer.write(safe(p.getType2()));
+					writer.write(safe(p.getBaseLevel()));
+					writer.write(safe(p.getEvolvesFrom()));
+					writer.write(safe(p.getEvolvesTo()));
+					writer.write(safe(p.getEvolutionLevel()));
+					writer.write(safe(p.getHp()));
+					writer.write(safe(p.getAtk()));
+					writer.write(safe(p.getDef()));
+					writer.write(safe(p.getSpd()));
 					for(String m : p.getMoveSet())
 					{
-						if(m != null)
-						{
-							writer.write(m);
-							writer.write(" ");
-						}
+						writer.write(safe(m)); 
 					}
-					writer.write(p.getHeldItem());
-					writer.write("\n");
+					writer.write(safe(p.getHeldItem()));
 				}
 			}
 			writer.close();
@@ -61,9 +46,51 @@ public class PokemonFileHandler
 		}
 	}
 	
-	public void load(Pokemon pokemon[])
+	public Pokemon[] load()
 	{
-		File load = new File("Pokedex.txt");
+		Pokemon pokemonList[] = new Pokemon[100];
+		int pokemonCount;
 		
+		String moves[] = new String[Pokemon.MAX_MOVES];
+		Pokemon pokemon = new Pokemon();
+		
+		try
+		{
+			File load = new File("model/Pokedex.txt");
+			Scanner scanner = new Scanner(load);
+			
+			pokemonCount = 0;
+			while(scanner.hasNextLine())
+			{
+				int pokedexNum = Integer.parseInt(scanner.nextLine());
+				String name = fromSafe(scanner.nextLine());
+				String type1 = fromSafe(scanner.nextLine());
+				String type2 = fromSafe(scanner.nextLine());
+				int baseLevel = Integer.parseInt(scanner.nextLine());
+				int evolvesFrom = Integer.parseInt(scanner.nextLine());
+				int evolvesTo = Integer.parseInt(scanner.nextLine());
+				int evolutionLevel = Integer.parseInt(scanner.nextLine());
+				int hp = Integer.parseInt(scanner.nextLine());
+				int atk = Integer.parseInt(scanner.nextLine());
+				int def = Integer.parseInt(scanner.nextLine());
+				int spd = Integer.parseInt(scanner.nextLine());
+				for(int i = 0; i < Pokemon.MAX_MOVES; i++)
+				{
+					moves[i] = fromSafe(scanner.nextLine());
+				}
+				String heldItem = fromSafe(scanner.nextLine());
+				
+				pokemon = new Pokemon(pokedexNum, name, type1, type2, baseLevel, evolvesFrom, evolvesTo, evolutionLevel, hp, atk, def, spd, moves, heldItem);
+				
+				pokemonList[pokemonCount] = pokemon;
+				pokemonCount++;
+			}
+		} catch (IOException e)
+		{
+			System.out.println("An error occurred.");
+			e.printStackTrace();
+		}
+			
+		return pokemonList;
 	}
 }

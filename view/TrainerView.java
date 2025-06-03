@@ -23,7 +23,11 @@ public class TrainerView {
         }
         // Display Stored Pokemon
         System.out.println("Pokemon in Storage: " );
-        Pokemon[] storedPokemon = trainer.getStoredPokemon();
+		  
+        //GIVING ME ERRORS (METHOD DNE), JUST UNCOMMENT LATER
+		  
+		  /*
+		  Pokemon[] storedPokemon = trainer.getStoredPokemon();
         if (storedPokemon == null || storedPokemon.length == 0) { System.out.println("No stored Pokemon"); }
         else {
             for (Pokemon p: storedPokemon)
@@ -32,6 +36,7 @@ public class TrainerView {
             }
         }
         System.out.println("====================");
+		  */
     }
 
     public void viewAllTrainers(Trainer trainer[])

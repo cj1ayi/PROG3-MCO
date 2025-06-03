@@ -47,6 +47,33 @@ public class Pokemon
 		moveSetCount = 2;
 	}
 	
+	public Pokemon(int pokedexNum, String name, String type1, String type2, int baseLevel, int evolvesFrom, int evolvesTo, int evolutionLevel, int hp, int atk, int def, int spd, String moveSet[], String heldItem)
+	{
+		this.pokedexNum = pokedexNum;
+		this.name = name; 
+		this.type1 = type1;
+		this.type2 = type2;
+		this.baseLevel = baseLevel;
+		this.evolvesFrom = evolvesFrom;
+		this.evolvesTo = evolvesTo;
+		this.evolutionLevel = evolutionLevel;
+		this.hp = hp;
+		this.atk = atk; 
+		this.def = def;
+		this.spd = spd;
+		
+		moveSetCount = 0;
+		for(String m : moveSet)
+		{
+			if(m != null)
+			{
+				this.moveSet[moveSetCount] = m;
+				moveSetCount++;
+			}
+		}
+		
+		this.heldItem = heldItem;
+	}
 	//getters
 	public int getPokedexNum() { return pokedexNum; }
 	public String getName() { return name; }

@@ -16,6 +16,19 @@ public class PokemonManagement
 		pokemonCount++;
 	}
 	
+	public void setPokemonList(Pokemon pokemonList[])
+	{
+		pokemonCount = 0;
+		for(Pokemon p : pokemonList)
+		{
+			if(p != null)
+			{
+				this.pokemonList[pokemonCount] = p;
+				pokemonCount++;
+			}
+		}    
+	}
+	
 	public Pokemon[] getPokemonList()
 	{
 		return pokemonList;

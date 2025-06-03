@@ -5,6 +5,7 @@ import java.util.Scanner;
 
 public class PokemonView
 {
+	//view a single pokemon entry (more detailed)
 	public void viewPokemon(Pokemon p)
 	{
 		System.out.println("-----------------------------------");
@@ -26,19 +27,32 @@ public class PokemonView
 		System.out.println("-----------------------------------\n");
 	}
 	
+	//view all pokemon
 	public void viewAllPokemon(Pokemon pokemon[])
 	{
-		System.out.println("-----------------------------------");
+		boolean allNull = true;
+		System.out.print("-----------------------------------");
 		for(Pokemon p : pokemon)
 		{
-			System.out.print("#" + p.getPokedexNum() + " " + p.getName() + " " + p.getType1());
-			
-			if(p.getType2() != null)
-				System.out.println("/" + p.getType2());
+			if(p != null)
+			{
+				allNull = false;
+				System.out.print("\n#" + p.getPokedexNum() + " " + p.getName() + " " + p.getType1());
+					
+				if(p.getType2() != null)
+					System.out.print("/" + p.getType2());
+			}
 		}
-		System.out.println("-----------------------------------\n");
+		
+		if(allNull == true)
+		{
+			System.out.print("\nNo Pokemon Entries.");
+		}
+		
+		System.out.println("\n-----------------------------------");
 	}
 	
+	//view all 4 moves of a single pokemon
 	public void viewMoveSet(Pokemon pokemon)
 	{
 		int i = 1;
@@ -52,6 +66,7 @@ public class PokemonView
 		}
 	}
 	
+	//to be moved to utils
 	public String promptString(String msg)
 	{
 		Scanner input = new Scanner(System.in);

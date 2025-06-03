@@ -1,14 +1,10 @@
-import controller.PokemonController;
+import controller.Pokedex;
 
 public class Main
 {
 	public static void main(String[] args)
 	{
-		PokemonController controller = new PokemonController();
-		
-		controller.newPokemon();
-		controller.newPokemon();
-		controller.savePokemonEntries();
+		Pokedex controller = new Pokedex();
 	}
 }
 

@@ -1,8 +1,8 @@
 package model;
 
-public class TrainerManagement {
-
-    public void searchTrainers
+public class TrainerManagement 
+{
+    public void searchTrainers()
     {
 
     }

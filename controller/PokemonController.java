@@ -1,10 +1,10 @@
 package controller;
 
+import static utils.InputHelper.checkNA;
 import model.Pokemon;
 import model.PokemonManagement;
 import model.PokemonFileHandler;
 import view.PokemonView;
-import java.util.Scanner;
 
 public class PokemonController
 {
@@ -20,16 +20,29 @@ public class PokemonController
 		this.service = new PokemonManagement();
 		this.dao = new PokemonFileHandler();
 	}
-	
+		
 	public void savePokemonEntries()
 	{
 		dao.save(service.getPokemonList());
 	}
 	
+	public void loadPokemonEntries()
+	{
+		service.setPokemonList(dao.load());
+	}
+
+	public void viewAllPokemon()
+	{
+		view.viewAllPokemon(service.getPokemonList());
+	}
+	
+	public void searchPokemon()
+	{
+		
+	}
+	
 	public void newPokemon()
 	{
-		Scanner input = new Scanner(System.in);
-		
 		int pokedexNum;
 		String name;
 		String type1;
@@ -102,12 +115,10 @@ public class PokemonController
 		heldItem = view.promptString("Enter held Items: ");
 		
 		//for all possible N/A
-		if(!type2.equals("N/A") || !type2.equals("n/a") || !type2.equals("na") || !type2.equals("NA"))
-			model.setType2(type2);
-		if(!heldItem.equals("N/A") || heldItem.equals("n/a") || !heldItem.equals("na") || !heldItem.equals("NA"));
-			model.setHeldItem(heldItem);
+		model.setType2(checkNA(type2));
+		model.setHeldItem(checkNA(heldItem));
 		
-		System.out.println("Entery Successfully Made!\n");
+		System.out.println("Entry Successfully Made!\n");
 		
 		view.viewPokemon(model);
 		
