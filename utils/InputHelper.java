@@ -32,6 +32,21 @@ public class InputHelper
 		return choice;
 	}
 	
+	public static int promptIntRange(int lowerRange, int higherRange)
+	{
+		Scanner input = new Scanner(System.in);
+		int choice = -1;
+		do
+		{
+			choice = input.nextInt();
+			if(choice > higherRange || choice < lowerRange)
+			{
+				System.out.println("Invalid Choice!");
+			}
+		} while (choice > higherRange || choice < lowerRange);
+		return choice;
+	}
+	
 	//this method asks for a string message to print
 	public static void prompt(String msg)
 	{

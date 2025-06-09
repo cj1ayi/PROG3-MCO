@@ -1,10 +1,11 @@
 package controller;
 
+import static utils.InputHelper.*;
+//pokemon modules
 import model.Pokemon;
 import model.PokemonManagement;
 import model.PokemonFileHandler;
 import view.PokemonView;
-import java.util.Scanner;
 
 public class Pokedex
 {
@@ -19,11 +20,34 @@ public class Pokedex
 	
 	public void initMenu()
 	{
-		Scanner input = new Scanner(System.in);
+		boolean flag = false;
 		
-		int choice = -1;
+		while(!flag)
+		{
+			prompt("------------D POKEDEX N------------\n");
+			prompt("1] Manage Pokemon						 \n");
+			prompt("2] Manage Moves							 \n");
+			prompt("3] Manage Trainers						 \n");
+			prompt("4] Manage Items							 \n");
+			prompt("-----------------------------------\n");
+			prompt("[5] SAVE   [6] LOAD        [7] EXIT\n");
+			prompt("-----------------------------------\n");
+			
+			switch(promptIntRange(1,7))
+			{
+				case 1: this.initPokemonMenu();
+						  break;
+				case 7: flag = true;
+						  break;
+			}
+		}
+	}
+	
+	public void initPokemonMenu()
+	{
+		boolean flag = false;
 		
-		while(choice != 6)
+		while(!flag)
 		{
 			System.out.println("------------D POKEDEX N------------");
 			System.out.println("1] Add pokemon");
@@ -32,16 +56,8 @@ public class Pokedex
 			System.out.println("-----------------------------------");
 			System.out.println("[4] SAVE   [5] LOAD        [6] EXIT");
 			System.out.println("-----------------------------------");
-			do
-			{
-				choice = input.nextInt();
-				if(choice >= 7 || choice <= 0)
-				{
-					System.out.print("Enter a valid option: ");
-				}
-			} while (choice >= 7 || choice <= 0);
 			
-			switch(choice)
+			switch(promptIntRange(1,6))
 			{
 				case 1: pokemonController.newPokemon();
 						  break;
@@ -53,7 +69,8 @@ public class Pokedex
 						  break;
 				case 5: pokemonController.loadPokemonEntries();
 						  break;
-				default: break;
+				case 6: flag = true; 
+  						  break;
 			}
 		} 
 	}
