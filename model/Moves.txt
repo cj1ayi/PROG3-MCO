@@ -2,7 +2,7 @@ Knock Off
 Dark
 TM
 Knocks down the foe’s held item to prevent its use.
-Dive
-Water
-TM
-Dives underwater the first turn and strikes next turn.
+Cut
+Normal
+HM
+Cuts using claws, scythes, etc.
