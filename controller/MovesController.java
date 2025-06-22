@@ -14,8 +14,8 @@ public class MovesController {
     private MovesFileHandler fileHandler;
 
     public MovesController(MovesManagement movesManagement, MovesView view) {
-        this.movesManagement = new MovesManagement();
-        this.view = new MovesView();
+        this.movesManagement = movesManagement;
+        this.view = view;
         this.fileHandler = new MovesFileHandler();
     }
 
@@ -73,14 +73,17 @@ public class MovesController {
 
     public void viewMoves() {
         view.displayMoves(movesManagement.getMoves());
+
     }
 
     public void saveMoves() {
         fileHandler.save(movesManagement.getMoves());
+        System.out.println("Moves saved successfully.");
     }
 
     public void loadMoves(){
         movesManagement.setMoveList(fileHandler.load());
+        System.out.println("Moves loaded successfully.");
     }
 
 

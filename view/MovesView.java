@@ -4,6 +4,8 @@ import model.Moves;
 import model.MovesManagement;
 import controller.MovesController;
 
+import static utils.Dividers.printLongDivider;
+
 import java.util.ArrayList;
 
 public class MovesView {
@@ -28,8 +30,7 @@ public class MovesView {
 
         System.out.printf("%-20s %-15s %-20s %-50s\n",
                 "Name", "Type", "Classification", "Description");
-        System.out.println("---------------------------------------------------------------------------------------------------------------------------------------------");
-
+        printLongDivider();
         // Loop to display moves
         for (Moves move : moves) {
             System.out.printf("%-20s %-15s %-20s %-50s\n",

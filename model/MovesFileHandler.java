@@ -24,6 +24,7 @@ public class MovesFileHandler
                     writer.write(safe(m.getMoveType1()));
                     writer.write(safe(m.getMoveClassification()));
                     writer.write(safe(m.getMoveDesc()));
+
                 }
             }
             writer.close();
