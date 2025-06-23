@@ -2,18 +2,27 @@ package controller;
 
 import static utils.InputHelper.*;
 //pokemon modules
-import model.Pokemon;
-import model.PokemonManagement;
-import model.PokemonFileHandler;
+import model.*;
+import view.MovesView;
 import view.PokemonView;
 
 public class Pokedex
 {
 	private PokemonController pokemonController;
+	private MovesController movesController;
+	private MovesManagement movesManagement;
+	private MovesView view;
 	
 	public void start()
 	{	
 		this.pokemonController = new PokemonController();
+<<<<<<< HEAD
+=======
+
+		this.movesManagement = new MovesManagement();
+		this.view = new MovesView();
+		this.movesController = new MovesController(movesManagement, view);
+>>>>>>> 786e2a2a2b6edf874b54b6ffcec46071a57f0c7d
 		this.initMenu();
 	}
 	
@@ -36,6 +45,8 @@ public class Pokedex
 			{
 				case 1: this.initPokemonMenu();
 						  break;
+				case 2: this.initMovesMenu();
+						break;
 				case 7: flag = true;
 						  break;
 			}
@@ -72,5 +83,38 @@ public class Pokedex
   						  break;
 			}
 		} 
+	}
+
+	public void initMovesMenu(){
+		boolean flag = false;
+
+		while(!flag)
+		{
+			System.out.println("\n------------D POKEDEX N------------");
+			System.out.println("1] Add Move");
+			System.out.println("2] View All Moves");
+			System.out.println("3] Search Moves");
+			System.out.println("-----------------------------------");
+			System.out.println("[4] SAVE   [5] LOAD        [6] EXIT");
+			System.out.println("-----------------------------------");
+
+			switch(promptIntRange(1,6))
+			{
+				case 1: movesController.addMoves();
+						break;
+				case 2: movesController.viewMoves();
+						break;
+				case 3: movesController.searchMoves();
+						break;
+				case 4:
+						movesController.saveMoves();
+						break;
+				case 5:
+						movesController.loadMoves();
+						break;
+				case 6: flag = true;
+						break;
+			}
+		}
 	}
 }

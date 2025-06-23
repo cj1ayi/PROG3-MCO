@@ -1,0 +1,12 @@
+Knock Off
+Dark
+TM
+Knocks down the foe’s held item to prevent its use.
+Cut
+Normal
+HM
+Cuts using claws, scythes, etc.
+Moonblast
+Fairy
+TM
+Borrowing the power of the moon, the user attacks the target. This may also lower the target’s Sp. Atk stat.
