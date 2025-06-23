@@ -11,10 +11,9 @@ public class Pokedex
 {
 	private PokemonController pokemonController;
 	
-	public Pokedex()
-	{
+	public void start()
+	{	
 		this.pokemonController = new PokemonController();
-		
 		this.initMenu();
 	}
 	

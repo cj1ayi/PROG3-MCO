@@ -4,7 +4,8 @@ public class Main
 {
 	public static void main(String[] args)
 	{
-		Pokedex controller = new Pokedex();
+		Pokedex app = new Pokedex();
+		app.start();
 	}
 }
 
