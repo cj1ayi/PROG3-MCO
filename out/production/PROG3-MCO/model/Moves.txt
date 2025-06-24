@@ -9,4 +9,4 @@ Cuts using claws, scythes, etc.
 Moonblast
 Fairy
 TM
-Borrowing the power of the moon, the user attacks the target. This may also lower the target’s Sp. Atk stat.
+Borrowing the power of the moon, the user attacks the target.

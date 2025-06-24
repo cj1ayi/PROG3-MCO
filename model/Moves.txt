@@ -1,12 +1,20 @@
-Knock Off
-Dark
+Earthquake
+Ground
 TM
-Knocks down the foe’s held item to prevent its use.
-Cut
-Normal
+The user sets off an earthquake that strikes those around it.
+Surf
+Water
 HM
-Cuts using claws, scythes, etc.
-Moonblast
-Fairy
+Creates a huge wave, then crashes it down on the foe.
+Earthquake
+Ground
 TM
-Borrowing the power of the moon, the user attacks the target. This may also lower the target’s Sp. Atk stat.
+The user sets off an earthquake that strikes those around it.
+Surf
+Water
+HM
+Creates a huge wave, then crashes it down on the foe.
+Acrobatics
+Flying
+TM
+The user nimbly strikes the target
