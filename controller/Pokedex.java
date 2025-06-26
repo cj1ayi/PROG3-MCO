@@ -16,11 +16,9 @@ public class Pokedex
 	public void start()
 	{	
 		this.pokemonController = new PokemonController();
-
 		this.movesManagement = new MovesManagement();
 		this.view = new MovesView();
 		this.movesController = new MovesController(movesManagement, view);
-		
 		this.initMenu();
 	}
 	
