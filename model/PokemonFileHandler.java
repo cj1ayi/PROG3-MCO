@@ -5,15 +5,16 @@ import static utils.FileHelper.safe;
 import java.io.File;
 import java.io.PrintWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class PokemonFileHandler
 {
-	public void save(Pokemon pokemon[])
+	public void save(ArrayList<Pokemon> pokemon)
 	{
 		try
 		{
-			PrintWriter writer = new PrintWriter("model/Pokedex.txt");
+			PrintWriter writer = new PrintWriter("model/db/Pokedex.txt");
 			
 			for(Pokemon p : pokemon)
 			{
@@ -46,9 +47,9 @@ public class PokemonFileHandler
 		}
 	}
 	
-	public Pokemon[] load()
+	public ArrayList<Pokemon> load()
 	{
-		Pokemon pokemonList[] = new Pokemon[100];
+		ArrayList<Pokemon> pokemonList = new ArrayList<>();
 		int pokemonCount;
 		
 		String moves[] = new String[Pokemon.MAX_MOVES];
@@ -56,7 +57,7 @@ public class PokemonFileHandler
 		
 		try
 		{
-			File load = new File("model/Pokedex.txt");
+			File load = new File("model/db/Pokedex.txt");
 			Scanner scanner = new Scanner(load);
 			
 			pokemonCount = 0;
@@ -82,10 +83,9 @@ public class PokemonFileHandler
 				
 				pokemon = new Pokemon(pokedexNum, name, type1, type2, baseLevel, evolvesFrom, evolvesTo, evolutionLevel, hp, atk, def, spd, moves, heldItem);
 				
-				pokemonList[pokemonCount] = pokemon;
-				pokemonCount++;
+				pokemonList.add(pokemon);
 			}
-		} catch (IOException e)
+		} catch (Exception e)
 		{
 			System.out.println("An error occurred.");
 			e.printStackTrace();

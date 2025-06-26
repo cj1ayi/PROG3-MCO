@@ -1,91 +1,129 @@
 package controller;
 
-import static utils.InputHelper.*;
+//helpers and utils
+import static utils.InputHelper.clean;
+import java.util.ArrayList;
+
+//mvc implementation
 import model.Moves;
 import model.MovesFileHandler;
 import model.MovesManagement;
 import view.MovesView;
-import java.util.ArrayList;
+import view.View;
 
+public class MovesController 
+{
+	private MovesView movesView;
+	private MovesManagement model;
+	private MovesFileHandler fileHandler;
 
-public class MovesController {
-    private MovesManagement movesManagement;
-    private MovesView view;
-    private MovesFileHandler fileHandler;
+	private View view;
+	
+	public MovesController(MovesManagement model, View view) 
+	{
+		//mvc implementation of view
+		//varies for cli and gui :33
+		this.view = view;
+		this.model = model;
+		
+		//module specific
+		this.movesView = new MovesView();
+		this.fileHandler = new MovesFileHandler();
+	}
+	
+	public void searchMoves() 
+	{
+		String[] availableAttributes = {"name", "classification", "type"};
+		String attribute;
+		String keyword;
+		
+		view.show("=== SEARCH MOVES === \n");
+		
+		//input
+		attribute = view.prompt("Enter attribute (name/classification/type): ");
+		
+		boolean found = false;
+		while(!found)
+		{
+			//checks for available attributes in the given list
+			for(String avail : availableAttributes)
+				if(attribute.equalsIgnoreCase(avail)) 
+					found = true; 
+				
+			//validation check
+			if(!found)
+			{
+				view.show("Invalid input! Please choose an attribute to search by name/classification/type\n");
+				attribute = view.prompt("Enter attribute (name/classification/type): ");
+			}
+		}
 
-    public MovesController(MovesManagement movesManagement, MovesView view) {
-        this.movesManagement = movesManagement;
-        this.view = view;
-        this.fileHandler = new MovesFileHandler();
-    }
+      // get the search keyword for the chosen attribute
+      keyword = view.prompt("Enter keyword (name/classification/type): ");
+		
+		// Interact with MovesManagement to get the Move
+      ArrayList<Moves> matchingMoves = model.searchMoves(attribute, keyword);
+		
+		//case if theres matching moves
+		if (!matchingMoves.isEmpty()) 
+		{
+			movesView.displayMoves(matchingMoves);
+			view.show("Found " + matchingMoves.size() + " move(s) matching '" + keyword + "' in " + attribute + "\n");
+      } else  
+		{
+         view.show("No moves found with '" + keyword + "' in " + attribute);
+      }
+   }
 
-    public void searchMoves() {
-        // Input
+   public void addMoves() 
+	{
+		String name;
+		String type;
+		String classification;
+		String desc;
+		
+		// view.show user for move details
+		view.show("=== NEW MOVE === \n");
+		name = clean(view.prompt("Enter move name: "));
+		type = clean(view.prompt("Enter move type: "));
+		classification = clean(view.prompt("Enter move classification (HM/TM): "));
+		desc = clean(view.prompt("Enter move description: "));
+		
+		// Validation
+		
+		// Description can be left blank
+		if (name.isEmpty() || classification.isEmpty() || type.isEmpty()) 
+		{
+			view.show("Invalid input! Please enter all attributes to add a new move");
+		}
+		else
+		{
+			// Create a new Moves object
+			Moves move = new Moves(name, type, classification, desc);
+			
+			// Add to MovesManagement's ArrayList
+			model.addMove(move);
 
-        prompt("=== SEARCH MOVES === \n");
-        String attribute = promptString("Enter attribute (name/classification/type): ").toLowerCase();
-        // Validation
-        while (!attribute.equals("name") && !attribute.equals("classification") && !attribute.equals("type")) {
-            prompt("Invalid input! Please choose an attribute to search by name/classification/type");
-            attribute = promptString("Enter attribute (name/classification/type): ").toLowerCase();
-        }
+			// Update the view
+			// view.displayMoves(service.getMoves());
+			view.show("Move '" + name + "' added successfully!\n");
+		}
+   }
 
-        // get the search keyword for the chosen attribute
-        String keyword = promptString("\nEnter keyword (name/classification/type): ");
+   public void viewMoves() 
+	{
+		movesView.displayMoves(model.getMoves());
+	}
 
-        // Interact with MovesManagement to get the Move
-        ArrayList<Moves> matchingMoves = movesManagement.searchMoves(attribute, keyword);
-
-        if (!matchingMoves.isEmpty()) {
-            view.displayMoves(matchingMoves);
-            prompt("Found " + matchingMoves.size() + " move(s) matching '" + keyword + "' in " + attribute+"\n");
-        } else {
-            prompt("No moves found with '" + keyword + "' in " + attribute);
-        }
-
-    }
-
-    public void addMoves() {
-        // Prompt user for move details
-        prompt("=== NEW MOVE === \n");
-        String name = promptString("Enter move name: ");
-        String type1 = promptString("Enter move type: ");
-        String classification = promptString("Enter move classification (HM/TM): ");
-        String desc = promptString("Enter move description: ");
-
-        // Validation
-        // Description can be left blank
-        if (name.isEmpty() || classification.isEmpty() || type1.isEmpty()) {
-            prompt("Invalid input! Please enter all attributes to add a new move");
-            return;
-        }
-
-        // Create a new Moves object
-        Moves moves = new Moves(name, type1, classification, desc);
-
-        // Add to MovesManagement's ArrayList
-        movesManagement.addMove(moves);
-
-        /* Update the view
-         view.displayMoves(movesManagement.getMoves()); */
-        prompt("Move '" + name + "' added successfully!\n");
-    }
-
-    public void viewMoves() {
-        view.displayMoves(movesManagement.getMoves());
-
-    }
-
-    public void saveMoves() {
-        fileHandler.save(movesManagement.getMoves());
-        System.out.println("Moves saved successfully.");
-    }
-
-    public void loadMoves(){
-        movesManagement.setMoveList(fileHandler.load());
-        System.out.println("Moves loaded successfully.");
-    }
-
-
-
+   public void saveMoves() 
+	{
+		fileHandler.save(model.getMoves());
+		view.show("Moves saved successfully.\n");
+   }
+	
+	public void loadMoves()
+	{
+		model.setMoveList(fileHandler.load());
+		view.show("Moves loaded successfully.\n");
+	}
 }

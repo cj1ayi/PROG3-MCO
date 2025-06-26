@@ -1,56 +1,66 @@
 package controller;
 
+//helpers and utils
 import static utils.InputHelper.*;
+import java.util.ArrayList;
+
 import model.Pokemon;
 import model.PokemonManagement;
 import model.PokemonFileHandler;
 import view.PokemonView;
+import view.View;
 
 public class PokemonController
 {
-	private Pokemon model;
-	private PokemonView view;
-	private PokemonManagement service;
-	private PokemonFileHandler dao;
+	private PokemonView pkmnView;
+	private PokemonManagement model;
+	private PokemonFileHandler fileHandler;
+
+	private View view;
 	
-	public PokemonController()
+	public PokemonController(PokemonManagement model, View view)
 	{
-		this.model = new Pokemon();
-		this.view = new PokemonView();
-		this.service = new PokemonManagement();
-		this.dao = new PokemonFileHandler();
+		this.view = view;
+		this.model = model;
+		
+		pkmnView = new PokemonView();
+		fileHandler = new PokemonFileHandler();
 	}
 		
 	public void savePokemonEntries()
 	{
-		dao.save(service.getPokemonList());
+		fileHandler.save(model.getPokemonList());
 	}
 	
 	public void loadPokemonEntries()
 	{
-		service.setPokemonList(dao.load());
+		model.setPokemonList(fileHandler.load());
 	}
 
 	public void viewAllPokemon()
 	{
-		view.viewAllPokemon(service.getPokemonList());
+		pkmnView.viewAllPokemon(model.getPokemonList());
 	}
 	
 	public void searchPokemonMenu()
 	{
-		prompt("-----------------------------------\n");
-		prompt("Enter attribute\n");
-		String attribute = promptString("name/type/pokedex: ");
-		String key = promptString("Enter key to search for: ");
-		for(Pokemon p : service.searchPokemon(attribute, key))
+		view.show("-----------------------------------\n");
+		view.show("Enter attribute\n");
+		String attribute = view.prompt("name/type/pokedex: ");
+		String key = view.prompt("Enter key to search for: ");
+		for(Pokemon p : model.searchPokemon(attribute, key))
 		{	
 			if(p != null)
-				view.viewPokemon(p);
+				pkmnView.viewPokemon(p);
 		}
 	}
 	
 	public void newPokemon()
 	{
+		Pokemon pkmn = new Pokemon();
+		
+		String acceptedInputs[] = {"yes", "y"};
+		
 		int pokedexNum;
 		String name;
 		String type1;
@@ -63,73 +73,75 @@ public class PokemonController
 		int atk;
 		int def;
 		int spd;
-		String[] moveSet = new String[model.MAX_MOVES];
+		String[] moveSet = new String[Pokemon.MAX_MOVES];
 		int moveCount;
 		String heldItem;
 		
 		String choice;
 		
-		prompt("NEW POKEMON ENTRY\n");
-		prompt("input N/A if the pokemon doesn't have that attribute.\n\n");
-		pokedexNum = promptInt("Enter Pokedex Number: ");
-		name = promptString("Enter name: ");
-		type1 = promptString("Enter type 1: ");
-		type2 = promptString("Enter type 2: ");
-		baseLevel = promptInt("Enter base level: ");
-		evolvesFrom = promptInt("Enter pokedex number it evolves from: ");
-		evolvesTo = promptInt("Enter pokedex number it evolves to: ");
-		evolutionLevel = promptInt("Enter evolution level: ");
+		view.show("NEW POKEMON ENTRY\n");
+		view.show("input N/A if the pokemon doesn't have that attribute.\n\n");
 		
-		prompt("\nBASE STATS\n");
-		hp = promptInt("Enter hit-points: ");
-		atk = promptInt("Enter attack: ");
-		def = promptInt("Enter defense: ");
-		spd = promptInt("Enter speed: "); 
+		pokedexNum = view.promptInt("Enter Pokedex Number: ");
+		name = view.prompt("Enter name: ");
+		type1 = view.prompt("Enter type 1: ");
+		type2 = view.prompt("Enter type 2: ");
+		baseLevel = view.promptInt("Enter base level: ");
+		evolvesFrom = view.promptInt("Enter pokedex number it evolves from: ");
+		evolvesTo = view.promptInt("Enter pokedex number it evolves to: ");
+		evolutionLevel = view.promptInt("Enter evolution level: ");
 		
-		//set up new model pokemon object
-		model = new Pokemon(pokedexNum, name, type1, baseLevel, evolvesFrom, evolvesTo, evolutionLevel, hp, atk, def, spd);
+		view.show("\nBASE STATS\n");
+		hp = view.promptInt("Enter hit-points: ");
+		atk = view.promptInt("Enter attack: ");
+		def = view.promptInt("Enter defense: ");
+		spd = view.promptInt("Enter speed: "); 
 		
-		prompt("\nDefault moves are set to the ff.\n");
-		view.viewMoveSet(model);
+		//set up new temporary pokemon object
+		pkmn = new Pokemon(pokedexNum, name, type1, baseLevel, evolvesFrom, evolvesTo, evolutionLevel, hp, atk, def, spd);
 		
-		choice = promptString("Use Default Moves (Y/N)? ");
+		view.show("\nDefault moves are set to the ff.\n");
+		pkmnView.viewMoveSet(pkmn);
+		
+		choice = view.prompt("Use Default Moves (Y/N)? ");
 		
 		moveCount = 0;
-		if(choice.equals("y") || choice.equals("Y"))
+		if(choice.equalsIgnoreCase("y"))
 		{
-			prompt("Default Moves Set!\n\n");
+			view.show("Default Moves Set!\n\n");
 		}
 		else
 		{
-			model.setMoveSetCount(0);
+			pkmn.setMoveSetCount(0);
 			do
 			{
-				choice = promptString("\nAdd new moves (Y/N)? ");
-				if(choice.equals("y") || choice.equals("Y"))
+				choice = view.prompt("\nAdd new moves (Y/N)? ");
+				if(choice.equalsIgnoreCase("y"))
 				{
 					//did NOT apply move restrictions yet
-					moveSet[moveCount] = promptString("Enter move: ");
+					//on god im gonna cry
+					moveSet[moveCount] = view.prompt("Enter move: ");
 					moveCount++;
 				}
-			} while(moveCount < model.MAX_MOVES && (choice.equals("y") || choice.equals("Y")));
+			} while(moveCount < Pokemon.MAX_MOVES && choice.equalsIgnoreCase("y"));
 				
-			model.setMoveSet(moveSet);
+			pkmn.setMoveSet(moveSet);
 			
-			prompt("New moveset has been set.\n");
-			view.viewMoveSet(model);
-			prompt("\n");
+			view.show("New moveset has been set.\n");
+			pkmnView.viewMoveSet(pkmn);
+			view.show("\n");
 		}				
 		
-		heldItem = promptString("Enter held Items: ");
+		heldItem = view.prompt("Enter held Items: ");
 		
 		//for all possible N/A
-		model.setType2(checkNA(type2));
-		model.setHeldItem(checkNA(heldItem));
+		pkmn.setType2(checkNA(type2));
+		pkmn.setHeldItem(checkNA(heldItem));
 		
-		prompt("Entry Successfully Made!\n\n");
+		view.show("Entry Successfully Made!\n\n");
 		
-		view.viewPokemon(model);
+		pkmnView.viewPokemon(pkmn);
 		
-		service.addPokemon(model);
+		model.addPokemon(pkmn);
 	}
 }

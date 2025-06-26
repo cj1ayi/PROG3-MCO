@@ -1,5 +1,7 @@
 package view;
 
+import java.util.ArrayList;
+
 import model.Pokemon;
 
 public class PokemonView
@@ -27,20 +29,19 @@ public class PokemonView
 	}
 	
 	//view all pokemon
-	public void viewAllPokemon(Pokemon pokemon[])
+	public void viewAllPokemon(ArrayList<Pokemon> pokemon)
 	{
 		boolean allNull = true;
 		System.out.print("-----------------------------------");
 		for(Pokemon p : pokemon)
 		{
-			if(p != null)
-			{
-				allNull = false;
-				System.out.print("\n#" + p.getPokedexNum() + " " + p.getName() + " " + p.getType1());
-					
-				if(p.getType2() != null)
-					System.out.print("/" + p.getType2());
-			}
+			if(p == null) { continue; }
+				
+			allNull = false;
+			System.out.print("\n#" + p.getPokedexNum() + " " + p.getName() + " " + p.getType1());
+			
+			if(p.getType2() != null)
+				System.out.print("/" + p.getType2());
 		}
 		
 		if(allNull == true)
@@ -57,11 +58,10 @@ public class PokemonView
 		int i = 1;
 		for(String move : pokemon.getMoveSet())
 		{
-			if(move != null)
-			{
-				System.out.println(i + "] " + move);
-				i++;
-			}
+			if(move == null) { continue; }
+			
+			System.out.println(i + "] " + move);
+			i++;
 		}
 	}
 }

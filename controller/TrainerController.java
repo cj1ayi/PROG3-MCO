@@ -1,4 +1,4 @@
-package controller;
+/*package controller;
 
 import model.Trainer;
 import model.TrainerManagement;
@@ -21,17 +21,20 @@ public class TrainerController {
 
 
     public void addTrainer(){
-        prompt("== ADD TRAINER ==");
-        String name = promptString("Enter trainer name: ");
-        String birthdate = promptString("Enter trainer birthdate: ");
-        String sex = promptString("Enter trainer sex (Female/Male): ");
-        String hometown = promptString("Enter trainer hometown: ");
-        String description = promptString("Enter trainer description: ");
+        view.show("== ADD TRAINER ==");
+        String name = view.prompt("Enter trainer name: ");
+        String birthdate = view.prompt("Enter trainer birthdate: ");
+        String sex = view.prompt("Enter trainer sex (Female/Male): ");
+        String hometown = view.prompt("Enter trainer hometown: ");
+        String description = view.prompt("Enter trainer description: ");
 
         Trainer trainer = new Trainer(name, birthdate, sex, hometown, description);
         trainerMgmt.addTrainer(trainer);
 
-        prompt("Trainer profile created! Trainer ID: " + trainer.getTrainerID());
+        view.show("Trainer profile created! Trainer ID: " + trainer.getTrainerID());
 
     }
 }
+
+temporarily hashed out for future implementation (sorry i want the code to run n my head hurts ToT)
+*/

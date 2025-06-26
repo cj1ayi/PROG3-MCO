@@ -14,7 +14,7 @@ public class MovesFileHandler
     {
         try
         {
-            PrintWriter writer = new PrintWriter("model/Moves.txt");
+            PrintWriter writer = new PrintWriter("model/db/Moves.txt");
 
             for(Moves m : moves)
             {
@@ -40,7 +40,7 @@ public class MovesFileHandler
         ArrayList<Moves> moves = new ArrayList<>();
         try
         {
-            File load = new File("model/Moves.txt");
+            File load = new File("model/db/Moves.txt");
             Scanner scanner = new Scanner(load);
 
             while(scanner.hasNextLine())

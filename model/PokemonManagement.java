@@ -1,13 +1,19 @@
 package model;
 
+import java.util.ArrayList;
+
 public class PokemonManagement
 {
-	private static int pokemonCount = 0;
-	private Pokemon pokemonList[] = new Pokemon[100];
+	private ArrayList<Pokemon> pokemonList;
 	
-	public Pokemon[] searchPokemon(String attribute, String key)
+	public PokemonManagement()
 	{
-		Pokemon results[] = new Pokemon[100];
+		pokemonList = new ArrayList<>();
+	}
+	
+	public ArrayList<Pokemon> searchPokemon(String attribute, String key)
+	{
+		ArrayList<Pokemon> results = new ArrayList<>();
 		int i = 0;
 		
 		for(Pokemon p : pokemonList)
@@ -19,21 +25,21 @@ public class PokemonManagement
 					case "name": 
 						if(p.getName().toLowerCase().equals(key.toLowerCase()))
 						{	
-							results[i] = p;
+							results.add(p);
 							i++;
 						}
 						break;
 					case "type": 
 						if(p.getType1().toLowerCase().equals(key.toLowerCase()) || (p.getType2() != null && p.getType2().toLowerCase().equals(key.toLowerCase())))
 						{
-							results[i] = p;
+							results.add(p);
 							i++;
 						}
 						break;
 					case "pokedex": 
 						if(String.valueOf(p.getPokedexNum()).equals(key))
 						{
-							results[i] = p;
+							results.add(p);
 							i++;
 						}
 						break;
@@ -46,24 +52,19 @@ public class PokemonManagement
 	
 	public void addPokemon(Pokemon pokemon)
 	{
-		pokemonList[pokemonCount] = pokemon;
-		pokemonCount++;
+		pokemonList.add(pokemon);
 	}
 	
-	public void setPokemonList(Pokemon pokemonList[])
+	public void setPokemonList(ArrayList<Pokemon> pokemonList)
 	{
-		pokemonCount = 0;
 		for(Pokemon p : pokemonList)
 		{
-			if(p != null)
-			{
-				this.pokemonList[pokemonCount] = p;
-				pokemonCount++;
-			}
+			if (p == null) { continue; } 
+			this.pokemonList.add(p);
 		}    
 	}
 	
-	public Pokemon[] getPokemonList()
+	public ArrayList<Pokemon> getPokemonList()
 	{
 		return pokemonList;
 	}
