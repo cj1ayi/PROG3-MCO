@@ -33,8 +33,7 @@ public class Pokedex
 			prompt("2] Manage Moves							 \n");
 			prompt("3] Manage Trainers						 \n");
 			prompt("4] Manage Items							 \n");
-			prompt("-----------------------------------\n");
-			prompt("[5] SAVE   [6] LOAD        [7] EXIT\n");
+			prompt("5] EXIT									 \n");
 			prompt("-----------------------------------\n");
 			
 			switch(promptIntRange(1,7))
@@ -43,7 +42,9 @@ public class Pokedex
 						  break;
 				case 2: this.initMovesMenu();
 						break;
-				case 7: flag = true;
+				case 3: this.initItemsMenu();
+						break;
+				case 5: flag = true;
 						  break;
 			}
 		}
@@ -81,12 +82,13 @@ public class Pokedex
 		} 
 	}
 
-	public void initMovesMenu(){
+	public void initMovesMenu()
+	{
 		boolean flag = false;
 
 		while(!flag)
 		{
-			System.out.println("\n------------D POKEDEX N------------");
+			System.out.println("------------D POKEDEX N------------");
 			System.out.println("1] Add Move");
 			System.out.println("2] View All Moves");
 			System.out.println("3] Search Moves");
@@ -97,19 +99,39 @@ public class Pokedex
 			switch(promptIntRange(1,6))
 			{
 				case 1: movesController.addMoves();
-						break;
+						  break;
 				case 2: movesController.viewMoves();
-						break;
+						  break;
 				case 3: movesController.searchMoves();
-						break;
-				case 4:
-						movesController.saveMoves();
-						break;
-				case 5:
-						movesController.loadMoves();
-						break;
+						  break;
+				case 4: movesController.saveMoves();
+						  break;
+				case 5: movesController.loadMoves();
+						  break;
 				case 6: flag = true;
-						break;
+						  break;
+			}
+		}
+	}
+	
+	public void initItemsMenu()
+	{
+		boolean flag = false;
+		
+		while(!flag)
+		{
+			System.out.println("------------D POKEDEX N------------");
+			System.out.println("1] View Items");
+			System.out.println("2] Search Items");
+			System.out.println("3] EXIT");
+			System.out.println("-----------------------------------");
+			
+			switch(promptIntRange(1,3))
+			{
+				case 1: break;
+				case 2: break;
+				case 3: flag = true;
+						  break;
 			}
 		}
 	}
