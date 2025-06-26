@@ -11,7 +11,7 @@ public class ItemView
 		{
 			if(i == null) { continue; }
 			
-			System.out.println("#")
+			System.out.println("#");
 		}
 	}
 }

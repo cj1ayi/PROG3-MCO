@@ -18,7 +18,7 @@ public class TrainerView {
         else {
             for (Pokemon p: activePokemon)
             {
-                //ystem.out.println()
+                //System.out.println();
             }
         }
         // Display Stored Pokemon

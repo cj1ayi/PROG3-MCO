@@ -31,7 +31,7 @@ public class MovesController {
         }
 
         // get the search keyword for the chosen attribute
-        String keyword = promptString("Enter keyword (name/classification/type): ");
+        String keyword = promptString("\nEnter keyword (name/classification/type): ");
 
         // Interact with MovesManagement to get the Move
         ArrayList<Moves> matchingMoves = movesManagement.searchMoves(attribute, keyword);

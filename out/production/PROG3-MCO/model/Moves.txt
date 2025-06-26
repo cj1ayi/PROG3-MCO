@@ -1,12 +1,4 @@
-Knock Off
+Bite
 Dark
 TM
-Knocks down the foe’s held item to prevent its use.
-Cut
-Normal
-HM
-Cuts using claws, scythes, etc.
-Moonblast
-Fairy
-TM
-Borrowing the power of the moon, the user attacks the target.
+u bite them

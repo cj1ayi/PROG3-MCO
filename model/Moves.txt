@@ -1,20 +1,4 @@
-Earthquake
-Ground
+Bite
+Dark
 TM
-The user sets off an earthquake that strikes those around it.
-Surf
-Water
-HM
-Creates a huge wave, then crashes it down on the foe.
-Earthquake
-Ground
-TM
-The user sets off an earthquake that strikes those around it.
-Surf
-Water
-HM
-Creates a huge wave, then crashes it down on the foe.
-Acrobatics
-Flying
-TM
-The user nimbly strikes the target
+u bite them

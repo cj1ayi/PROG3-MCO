@@ -1,6 +1,7 @@
 package controller;
 
 import static utils.InputHelper.*;
+import static utils.Dividers.printPokedexLogo;
 //pokemon modules
 import model.*;
 import view.MovesView;
@@ -28,7 +29,7 @@ public class Pokedex
 		
 		while(!flag)
 		{
-			prompt("------------D POKEDEX N------------\n");
+			System.out.println("------------D POKEDEX N------------");
 			prompt("1] Manage Pokemon						 \n");
 			prompt("2] Manage Moves							 \n");
 			prompt("3] Manage Trainers						 \n");
@@ -56,8 +57,8 @@ public class Pokedex
 		
 		while(!flag)
 		{
-			System.out.println("------------D POKEDEX N------------");
-			System.out.println("1] Add pokemon");
+			printPokedexLogo();
+			System.out.println("1] Add Pokemon");
 			System.out.println("2] View All Pokemon");
 			System.out.println("3] Search Pokemon");
 			System.out.println("-----------------------------------");
@@ -134,5 +135,28 @@ public class Pokedex
 						  break;
 			}
 		}
+	}
+
+	public void initTrainerMenu(){
+		boolean flag = false;
+
+		while(!flag)
+		{
+			System.out.println("------------D POKEDEX N------------");
+			System.out.println("1] Add Trainer");
+			System.out.println("2] View All Trainers");
+			System.out.println("3] Search Trainers");
+			System.out.println("----------------------------------");
+			System.out.println("[4] SAVE   [5] LOAD        [6] EXIT");
+			System.out.println("-----------------------------------");
+			switch(promptIntRange(1,6)){
+				case 1: break;
+				case 2: break;
+				case 3: break;
+				case 4: flag = true;
+				break;
+			}
+		}
+
 	}
 }

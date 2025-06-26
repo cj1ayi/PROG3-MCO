@@ -1,5 +1,7 @@
 package model;
 
+import java.util.Random;
+
 public class Trainer {
     private static int MAX_POKEMON_LINEUP = 6;
     private Pokemon pokemonLineup[] = new Pokemon[MAX_POKEMON_LINEUP];
@@ -47,44 +49,14 @@ public class Trainer {
 
     // Methods
 
+    // Generate Random ID
+    public void generateID() {
+        Random random = new Random();
+        this.trainerID = 100000 + random.nextInt(900000); // Generate 6-digit number
+    }
+
     // Add & Remove Money
     public void addMoney(int money) { this.money += money; }
     public void removeMoney(int money) { this.money -= money; }
-
-    public void buyItem()
-    {
-
-    }
-
-    public void useItem()
-    {
-
-    }
-
-    public boolean addPokemon(Pokemon pokemon) 
-	 {
-        for (int i = 0; i < MAX_POKEMON_LINEUP; i++) {
-            if (pokemonLineup[i] == null) {
-                pokemonLineup[i] = pokemon;
-                return true;
-            }
-        }
-        return false; // Lineup is full
-    }
-
-	//GIVING ME ERRORS, JUST UNCOMMENT LATER
-	
-    /*
-	 public Pokemon switchPokemon(Pokemon pokemonLineup)
-    {
-		
-    }
-	*/
-	
-    public void teachMoves()
-    {
-
-    }
-
 
 }
