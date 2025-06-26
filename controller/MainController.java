@@ -42,8 +42,8 @@ public class MainController
 			view.show("------------D POKEDEX N------------\n");
 			view.show("1] Manage Pokemon						 \n");
 			view.show("2] Manage Moves							 \n");
-			view.show("3] Manage Trainers						 \n");
-			view.show("4] Manage Items							 \n");
+			view.show("3] Manage Items							 \n");
+			view.show("4] Manage Trainers						 \n");
 			view.show("5] EXIT									 \n");
 			view.show("-----------------------------------\n");
 			
@@ -55,7 +55,7 @@ public class MainController
 						  break;
 				case 3: initItemsMenu();
 						  break;
-				case 3: initTrainerMenu();
+				case 4: initTrainerMenu();
 						  break;
 				case 5: flag = true;
 					     break;
@@ -141,8 +141,10 @@ public class MainController
 			
 			switch(view.promptIntRange("",1,3))
 			{
-				case 1: break;
-				case 2: break;
+				case 1: itemsController.viewAllItems();
+						  break;
+				case 2: itemsController.searchItem();
+						  break;
 				case 3: flag = true;
 						  break;
 			}

@@ -14,7 +14,6 @@ public class PokemonManagement
 	public ArrayList<Pokemon> searchPokemon(String attribute, String key)
 	{
 		ArrayList<Pokemon> results = new ArrayList<>();
-		int i = 0;
 		
 		for(Pokemon p : pokemonList)
 		{
@@ -24,24 +23,15 @@ public class PokemonManagement
 				{
 					case "name": 
 						if(p.getName().toLowerCase().equals(key.toLowerCase()))
-						{	
 							results.add(p);
-							i++;
-						}
 						break;
 					case "type": 
 						if(p.getType1().toLowerCase().equals(key.toLowerCase()) || (p.getType2() != null && p.getType2().toLowerCase().equals(key.toLowerCase())))
-						{
 							results.add(p);
-							i++;
-						}
 						break;
 					case "pokedex": 
 						if(String.valueOf(p.getPokedexNum()).equals(key))
-						{
 							results.add(p);
-							i++;
-						}
 						break;
 					default: break;
 				}

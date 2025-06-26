@@ -9,7 +9,7 @@ public class Items
 	private double buyingPrice;
 	private double sellingPrice;
 	
-	private Items(String name, String category, String description, String effects, double buyingPrice, double sellingPrice)
+	public Items(String name, String category, String description, String effects, double buyingPrice, double sellingPrice)
 	{
 		this.name = name;
 		this.category = category;
