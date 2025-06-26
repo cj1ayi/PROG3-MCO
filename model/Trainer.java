@@ -14,17 +14,15 @@ public class Trainer {
     private String description;
     private int money;
 
-    public Trainer(int trainerID, String trainerName, String birthDate, String sex, String hometown, String description)
+    public Trainer(String trainerName, String birthDate, String sex, String hometown, String description)
     {
-        this.trainerID = trainerID;
         this.trainerName = trainerName;
         this.birthDate = birthDate;
         this.sex = sex;
         this.hometown = hometown;
         this.description = description;
-
-        // Initial Trainer Fund
-        this.money = 1000000; // PkD
+        this.money = 1000000; // Initial Trainer Fund
+        generateID(); // Automatically generate random ID
     }
 
     // Getters
