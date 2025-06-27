@@ -39,6 +39,7 @@ public class PokemonFileHandler
 					writer.write(safe(p.getHeldItem()));
 				}
 			}
+			System.out.println("Successfully Saved!");
 			writer.close();
 		} catch (IOException e)
 		{
@@ -54,7 +55,6 @@ public class PokemonFileHandler
 		
 		String moves[] = new String[Pokemon.MAX_MOVES];
 		Pokemon pokemon = new Pokemon();
-		
 		try
 		{
 			File load = new File("model/db/Pokedex.txt");
@@ -63,28 +63,32 @@ public class PokemonFileHandler
 			pokemonCount = 0;
 			while(scanner.hasNextLine())
 			{
-				int pokedexNum = Integer.parseInt(scanner.nextLine());
-				String name = fromSafe(scanner.nextLine());
-				String type1 = fromSafe(scanner.nextLine());
-				String type2 = fromSafe(scanner.nextLine());
-				int baseLevel = Integer.parseInt(scanner.nextLine());
-				int evolvesFrom = Integer.parseInt(scanner.nextLine());
-				int evolvesTo = Integer.parseInt(scanner.nextLine());
-				int evolutionLevel = Integer.parseInt(scanner.nextLine());
-				int hp = Integer.parseInt(scanner.nextLine());
-				int atk = Integer.parseInt(scanner.nextLine());
-				int def = Integer.parseInt(scanner.nextLine());
-				int spd = Integer.parseInt(scanner.nextLine());
-				for(int i = 0; i < Pokemon.MAX_MOVES; i++)
+				String tokens[] = scanner.nextLine().split("\\|");
+				int pokedexNum = Integer.parseInt(tokens[0]);
+				String name = fromSafe(tokens[1]);
+				String type1 = fromSafe(tokens[2]);
+				String type2 = fromSafe(tokens[3]);
+				int baseLevel = Integer.parseInt(tokens[4]);
+				int evolvesFrom = Integer.parseInt(tokens[5]);
+				int evolvesTo = Integer.parseInt(tokens[6]);
+				int evolutionLevel = Integer.parseInt(tokens[7]);
+				int hp = Integer.parseInt(tokens[8]);
+				int atk = Integer.parseInt(tokens[9]);
+				int def = Integer.parseInt(tokens[10]);
+				int spd = Integer.parseInt(tokens[11]);
+				int i;
+				for(i = 1; i < Pokemon.MAX_MOVES; i++)
 				{
-					moves[i] = fromSafe(scanner.nextLine());
+					moves[i] = fromSafe(tokens[11+i]);
 				}
-				String heldItem = fromSafe(scanner.nextLine());
+				String heldItem = fromSafe(tokens[11+i]);
 				
 				pokemon = new Pokemon(pokedexNum, name, type1, type2, baseLevel, evolvesFrom, evolvesTo, evolutionLevel, hp, atk, def, spd, moves, heldItem);
 				
 				pokemonList.add(pokemon);
 			}
+			System.out.println("Successfully Saved!");
+			scanner.close();
 		} catch (Exception e)
 		{
 			System.out.println("An error occurred.");

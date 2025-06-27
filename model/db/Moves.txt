@@ -1,4 +1,1 @@
-bite
-dark
-tm
-u bite them
+Bite|Dark|TM|u bite them|

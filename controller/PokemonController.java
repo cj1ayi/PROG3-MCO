@@ -44,9 +44,30 @@ public class PokemonController
 	
 	public void searchPokemonMenu()
 	{
+		String[] availableAttributes = {"name", "type", "pokedex"};	
+		String attribute;
+		String keyword;
+		
 		view.show("-----------------------------------\n");
-		view.show("Enter attribute\n");
-		String attribute = view.prompt("name/type/pokedex: ");
+		
+		attribute = view.prompt("Enter attribute (name/type/pokedex): ");
+		
+		boolean found = false;
+		while(!found)
+		{
+			//checks for available attributes in the given list
+			for(String avail : availableAttributes)
+				if(attribute.equalsIgnoreCase(avail)) 
+					found = true; 
+				
+			//validation check
+			if(!found)
+			{
+				view.show("Invalid input! Please choose an attribute to search by name/type/pokedex\n");
+				attribute = view.prompt("Enter attribute (name/type/pokedex): ");
+			}
+		}
+
 		String key = view.prompt("Enter key to search for: ");
 		for(Pokemon p : model.searchPokemon(attribute, key))
 		{	
@@ -58,8 +79,6 @@ public class PokemonController
 	public void newPokemon()
 	{
 		Pokemon pkmn = new Pokemon();
-		
-		String acceptedInputs[] = {"yes", "y"};
 		
 		int pokedexNum;
 		String name;
@@ -106,7 +125,7 @@ public class PokemonController
 		choice = view.prompt("Use Default Moves (Y/N)? ");
 		
 		moveCount = 0;
-		if(choice.equalsIgnoreCase("y"))
+		if(choice.toLowerCase().contains("yes"))
 		{
 			view.show("Default Moves Set!\n\n");
 		}
@@ -123,7 +142,7 @@ public class PokemonController
 					moveSet[moveCount] = view.prompt("Enter move: ");
 					moveCount++;
 				}
-			} while(moveCount < Pokemon.MAX_MOVES && choice.equalsIgnoreCase("y"));
+			} while(moveCount < Pokemon.MAX_MOVES && choice.toLowerCase().contains("yes"));
 				
 			pkmn.setMoveSet(moveSet);
 			

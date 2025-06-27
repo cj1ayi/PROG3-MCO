@@ -36,11 +36,32 @@ public class ItemsController
 	
 	public void searchItem()
 	{
-		view.show("-----------------------------------\n");
-		view.show("Enter attribute\n");
-		String attribute = clean(view.prompt("name/category/keyword: "));
+		String[] availableAttributes = {"name", "category", "keyword"};		
+		String attribute;
+		String keyword;
 		
-		String key = clean(view.prompt("Enter key to search for: "));
+		view.show("-----------------------------------\n");
+		
+		//input
+		attribute = view.prompt("Enter attribute (name/category/keyword): ");
+		
+		boolean found = false;
+		while(!found)
+		{
+			//checks for available attributes in the given list
+			for(String avail : availableAttributes)
+				if(attribute.equalsIgnoreCase(avail)) 
+					found = true; 
+				
+			//validation check
+			if(!found)
+			{
+				view.show("Invalid input! Please choose an attribute to search by name/category/keyword\n");
+				attribute = view.prompt("Enter attribute: ");
+			}
+		}
+
+		String key = view.prompt("Enter key to search for: ");
 		itemsView.viewItems(model.searchItems(attribute, key));
 	}
 }

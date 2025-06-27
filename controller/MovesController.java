@@ -59,7 +59,7 @@ public class MovesController
 		}
 
       // get the search keyword for the chosen attribute
-      keyword = view.prompt("Enter keyword (name/classification/type): ");
+      keyword = view.prompt("Enter key to search for: ");
 		
 		// Interact with MovesManagement to get the Move
       ArrayList<Moves> matchingMoves = model.searchMoves(attribute, keyword);
@@ -84,10 +84,10 @@ public class MovesController
 		
 		// view.show user for move details
 		view.show("=== NEW MOVE === \n");
-		name = clean(view.prompt("Enter move name: "));
-		type = clean(view.prompt("Enter move type: "));
-		classification = clean(view.prompt("Enter move classification (HM/TM): "));
-		desc = clean(view.prompt("Enter move description: "));
+		name = view.prompt("Enter move name: ");
+		type = view.prompt("Enter move type: ");
+		classification = view.prompt("Enter move classification (HM/TM): ");
+		desc = view.prompt("Enter move description: ");
 		
 		// Validation
 		

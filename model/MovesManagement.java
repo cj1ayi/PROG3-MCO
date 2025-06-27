@@ -39,13 +39,13 @@ public class MovesManagement
 			switch (attribute) 
 			{
 				case "name": 
-					matches = move.getMoveName().contains(keyword);
+					matches = move.getMoveName().toLowerCase().contains(keyword.toLowerCase());
 					break;
 				case "classification":
-					matches = move.getMoveClassification().contains(keyword);
+					matches = move.getMoveClassification().toLowerCase().contains(keyword.toLowerCase());
 					break;
 				case "type":
-					matches = move.getMoveType1().contains(keyword);
+					matches = move.getMoveType1().toLowerCase().contains(keyword.toLowerCase());
 					break;
 			}
 			

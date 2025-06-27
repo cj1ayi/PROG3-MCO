@@ -22,18 +22,20 @@ public class PokemonManagement
 				switch(attribute.toLowerCase())
 				{
 					case "name": 
-						if(p.getName().toLowerCase().equals(key.toLowerCase()))
+						if(p.getName().toLowerCase().contains(key.toLowerCase()))
 							results.add(p);
 						break;
 					case "type": 
-						if(p.getType1().toLowerCase().equals(key.toLowerCase()) || (p.getType2() != null && p.getType2().toLowerCase().equals(key.toLowerCase())))
+						if(p.getType1().toLowerCase().contains(key.toLowerCase()) || (p.getType2() != null && p.getType2().toLowerCase().contains(key.toLowerCase())))
 							results.add(p);
 						break;
 					case "pokedex": 
 						if(String.valueOf(p.getPokedexNum()).equals(key))
 							results.add(p);
 						break;
-					default: break;
+					default: 
+						
+						break;
 				}
 			}
 		}
