@@ -7,7 +7,7 @@ public class InputHelper
 	//it returns null if it is
 	public static String checkNA(String value)
 	{
-		if(value.equals("N/A") || value.equals("n/a") || value.equals("na") || value.equals("NA"))
+		if(value.equalsIgnoreCase("n/a") || value.equalsIgnoreCase("na") || value.equalsIgnoreCase(""))
 			return null;
 		return value;
 	}
