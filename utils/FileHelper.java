@@ -13,6 +13,6 @@ public class FileHelper
 	
 	public static String fromSafe(String value)
 	{
-		return "N/A".equals(value) ? null : value;
+		return "N/As".equals(value) ? null : value;
 	}
 }
