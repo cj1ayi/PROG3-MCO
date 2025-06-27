@@ -5,10 +5,7 @@
 253|Grovyle|Grass|N/As|1|252|254|36|50|65|45|95|Tackle|Defend|N/As|N/As|N/As|
 16|Pidgey|Normal|Flying|1|0|17|18|40|45|40|56|Tackle|Defend|N/As|N/As|N/As|
 17|Pidgeotto|Normal|Flying|1|16|18|36|63|60|55|71|Tackle|Defend|N/As|N/As|N/As|
-<<<<<<< HEAD
-=======
 10|Caterpie|Bug|N/As|1|0|11|7|45|30|35|45|Tackle|Defend|N/As|N/As|N/As|
->>>>>>> 68410d2ce686d527590aaed66e6aee2801a64eb1
 35|Clefairy|Fairy|N/As|1|173|36|20|70|45|48|35|Tackle|Defend|N/As|N/As|N/As|
 63|Abra|Psychic|N/As|1|0|64|16|25|20|15|90|Tackle|Defend|N/As|N/As|N/As| 
 74|Geodude|Rock|Ground|1|0|75|25|40|100|80|20|Tackle|Defend|N/As|N/As|N/As| 
