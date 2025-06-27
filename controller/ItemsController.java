@@ -57,7 +57,7 @@ public class ItemsController
 			if(!found)
 			{
 				view.show("Invalid input! Please choose an attribute to search by name/category/keyword\n");
-				attribute = view.prompt("Enter attribute: ");
+				attribute = view.prompt("Enter attribute (name/category/keyword): ");
 			}
 		}
 
