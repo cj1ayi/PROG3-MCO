@@ -25,7 +25,7 @@ public class MovesFileHandler
 					writer.write(safe(m.getMoveDesc()));
 					writer.write("\n");
             }
-            System.out.println("Moves saved successfully.");
+            System.out.println("Successfully saved!");
             writer.close();
         } catch (IOException e)
         {
@@ -55,7 +55,7 @@ public class MovesFileHandler
                     moves.add(move);
 
                 } 
-                System.out.println("Moves loaded successfully.");
+                System.out.println("Successfully loaded!");
                 scanner.close();
             } catch (IOException e)
     

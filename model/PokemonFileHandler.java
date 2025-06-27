@@ -87,7 +87,7 @@ public class PokemonFileHandler
 				
 				pokemonList.add(pokemon);
 			}
-			System.out.println("Successfully Saved!");
+			System.out.println("Successfully Loaded!");
 			scanner.close();
 		} catch (Exception e)
 		{
