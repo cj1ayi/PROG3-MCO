@@ -27,6 +27,7 @@ public class MovesFileHandler
 
                 }
             }
+            System.out.println("Moves saved successfully.");
             writer.close();
         } catch (IOException e)
         {
@@ -35,30 +36,37 @@ public class MovesFileHandler
         }
     }
 
+
     public ArrayList<Moves> load()
     {
         ArrayList<Moves> moves = new ArrayList<>();
         try
         {
-            File load = new File("model/db/Moves.txt");
-            Scanner scanner = new Scanner(load);
-
-            while(scanner.hasNextLine())
+                File load = new File("model/db/Moves.txt");
+                Scanner scanner = new Scanner(load);
+                
+                while(scanner.hasNextLine())
             {
-                String name = fromSafe(scanner.nextLine());
-                String type1 = fromSafe(scanner.nextLine());
-                String classification = fromSafe(scanner.nextLine());
-                String desc = fromSafe(scanner.nextLine());
+                    String tokens[] = scanner.nextLine().split("\\|");
+                    String name = fromSafe(tokens[0]);
+                    String type1 = fromSafe(tokens[1]);
+                    String classification = fromSafe(tokens[2]);
+                    String desc = fromSafe(tokens[3]);
 
-                Moves move = new Moves(name, type1, classification, desc);
-                moves.add(move);
+                    Moves move = new Moves(name, type1, classification, desc);
+                    moves.add(move);
+
+                } 
+                System.out.println("Moves loaded successfully.");
+                scanner.close();
+            } catch (IOException e)
+    
+            {
+                System.out.println("An error occurred.");
+                e.printStackTrace();
             }
-        } catch (IOException e)
-        {
-            System.out.println("An error occurred.");
-            e.printStackTrace();
-        }
 
         return moves;
-    }
+        }
 }
+    
