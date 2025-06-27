@@ -118,12 +118,10 @@ public class MovesController
    public void saveMoves() 
 	{
 		fileHandler.save(model.getMoves());
-		view.show("Moves saved successfully.\n");
-   }
+  	}
 	
 	public void loadMoves()
 	{
 		model.setMoveList(fileHandler.load());
-		view.show("Moves loaded successfully.\n");
 	}
 }
