@@ -69,16 +69,27 @@ public class PokemonController
 		}
 
 		String key = view.prompt("Enter key to search for: ");
+		
+		int resultCount = 0;
 		for(Pokemon p : model.searchPokemon(attribute, key))
 		{	
-			if(p != null)
-				pkmnView.viewPokemon(p);
+			if(p == null) { continue; }
+			
+			resultCount++;
+			pkmnView.viewPokemon(p);
 		}
+		
+		if(resultCount==0)
+			view.show("\nNo Pokemon found with '" + key + "' in " + attribute + "\n\n");
+		else
+			view.show("Found " + resultCount  + " Pokemon matching '" + key + "' in " + attribute + "\n\n");
 	}
 	
 	public void newPokemon()
 	{
 		Pokemon pkmn = new Pokemon();
+		
+		boolean valid;
 		
 		int pokedexNum;
 		String name;
@@ -101,8 +112,28 @@ public class PokemonController
 		view.show("NEW POKEMON ENTRY\n");
 		view.show("input N/A if the pokemon doesn't have that attribute.\n\n");
 		
-		pokedexNum = view.promptInt("Enter Pokedex Number: ");
-		name = view.prompt("Enter name: ");
+		//pokedex num validation
+		valid = false;	
+		do
+		{
+			pokedexNum = view.promptInt("Enter Pokedex Number: ");
+			if(!model.isDupePokedexNum(pokedexNum))
+				valid = true;
+			else
+				view.show("Pokedex Number is already taken!\n");
+		} while(!valid);
+		
+		//name validation
+		valid = false;
+		do
+		{
+			name = view.prompt("Enter name: ");	
+			if(!model.isDupeName(name))
+				valid = true;
+			else
+				view.show("Pokemon Name is already taken!\n");
+		} while(!valid);
+		
 		type1 = view.prompt("Enter type 1: ");
 		type2 = view.prompt("Enter type 2: ");
 		baseLevel = view.promptInt("Enter base level: ");
@@ -125,7 +156,7 @@ public class PokemonController
 		choice = view.prompt("Use Default Moves (Y/N)? ");
 		
 		moveCount = 0;
-		if(choice.toLowerCase().contains("yes"))
+		if(choice.equalsIgnoreCase("yes") || choice.equalsIgnoreCase("y"))
 		{
 			view.show("Default Moves Set!\n\n");
 		}
@@ -135,14 +166,14 @@ public class PokemonController
 			do
 			{
 				choice = view.prompt("\nAdd new moves (Y/N)? ");
-				if(choice.equalsIgnoreCase("y"))
+				if(choice.equalsIgnoreCase("yes") || choice.equalsIgnoreCase("y"))
 				{
 					//did NOT apply move restrictions yet
 					//on god im gonna cry
 					moveSet[moveCount] = view.prompt("Enter move: ");
 					moveCount++;
 				}
-			} while(moveCount < Pokemon.MAX_MOVES && choice.toLowerCase().contains("yes"));
+			} while(moveCount < Pokemon.MAX_MOVES && (choice.equalsIgnoreCase("yes") || choice.equalsIgnoreCase("y")));
 				
 			pkmn.setMoveSet(moveSet);
 			

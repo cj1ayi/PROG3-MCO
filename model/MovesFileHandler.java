@@ -18,14 +18,12 @@ public class MovesFileHandler
 
             for(Moves m : moves)
             {
-                if(m != null)
-                {
-                    writer.write(safe(m.getMoveName()));
-                    writer.write(safe(m.getMoveType1()));
-                    writer.write(safe(m.getMoveClassification()));
-                    writer.write(safe(m.getMoveDesc()));
-
-                }
+               if(m == null) { continue; }
+               writer.write(safe(m.getMoveName()));
+					writer.write(safe(m.getMoveType1()));
+					writer.write(safe(m.getMoveClassification()));
+					writer.write(safe(m.getMoveDesc()));
+					writer.write("\n");
             }
             System.out.println("Moves saved successfully.");
             writer.close();

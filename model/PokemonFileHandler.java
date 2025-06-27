@@ -18,26 +18,26 @@ public class PokemonFileHandler
 			
 			for(Pokemon p : pokemon)
 			{
-				if(p != null)
+				if(p == null) { continue; }
+				
+				writer.write(safe(p.getPokedexNum()));
+				writer.write(safe(p.getName()));
+				writer.write(safe(p.getType1()));
+				writer.write(safe(p.getType2()));
+				writer.write(safe(p.getBaseLevel()));
+				writer.write(safe(p.getEvolvesFrom()));
+				writer.write(safe(p.getEvolvesTo()));
+				writer.write(safe(p.getEvolutionLevel()));
+				writer.write(safe(p.getHp()));
+				writer.write(safe(p.getAtk()));
+				writer.write(safe(p.getDef()));
+				writer.write(safe(p.getSpd()));
+				for(String m : p.getMoveSet())
 				{
-					writer.write(safe(p.getPokedexNum()));
-					writer.write(safe(p.getName()));
-					writer.write(safe(p.getType1()));
-					writer.write(safe(p.getType2()));
-					writer.write(safe(p.getBaseLevel()));
-					writer.write(safe(p.getEvolvesFrom()));
-					writer.write(safe(p.getEvolvesTo()));
-					writer.write(safe(p.getEvolutionLevel()));
-					writer.write(safe(p.getHp()));
-					writer.write(safe(p.getAtk()));
-					writer.write(safe(p.getDef()));
-					writer.write(safe(p.getSpd()));
-					for(String m : p.getMoveSet())
-					{
-						writer.write(safe(m)); 
-					}
-					writer.write(safe(p.getHeldItem()));
+					writer.write(safe(m)); 
 				}
+				writer.write(safe(p.getHeldItem()));
+				writer.write("\n");
 			}
 			System.out.println("Successfully Saved!");
 			writer.close();

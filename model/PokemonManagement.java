@@ -47,17 +47,49 @@ public class PokemonManagement
 		pokemonList.add(pokemon);
 	}
 	
-	public void setPokemonList(ArrayList<Pokemon> pokemonList)
+	public void setPokemonList(ArrayList<Pokemon> pokemon)
 	{
-		for(Pokemon p : pokemonList)
+		pokemonList.clear();
+		for(Pokemon p : pokemon)
 		{
 			if (p == null) { continue; } 
-			this.pokemonList.add(p);
+			pokemonList.add(p);
 		}    
 	}
 	
 	public ArrayList<Pokemon> getPokemonList()
 	{
 		return pokemonList;
+	}
+	
+	
+	//returns true if dupe
+	//returns false otherwise
+	public boolean isDupePokedexNum(int num)
+	{
+		boolean flag = false;
+		for(Pokemon p : pokemonList)
+		{
+			if(p == null) { continue; }
+			if(p.getPokedexNum() == num)
+				flag = true;
+		}
+		
+		return flag;
+	}
+	
+	//returns true if dupe
+	//returns false otherwise
+	public boolean isDupeName(String name)
+	{
+		boolean flag = false;
+		for(Pokemon p : pokemonList)
+		{
+			if(p == null) { continue; }
+			if(p.getName().equalsIgnoreCase(name))
+				flag = true;
+		}
+		
+		return flag;
 	}
 }

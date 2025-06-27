@@ -38,7 +38,7 @@ public class ItemsController
 	{
 		String[] availableAttributes = {"name", "category", "keyword"};		
 		String attribute;
-		String keyword;
+		String key;
 		
 		view.show("-----------------------------------\n");
 		
@@ -61,7 +61,16 @@ public class ItemsController
 			}
 		}
 
-		String key = view.prompt("Enter key to search for: ");
-		itemsView.viewItems(model.searchItems(attribute, key));
+		key = view.prompt("Enter key to search for: ");
+		
+		ArrayList<Items> matchingItems = model.searchItems(attribute, key);
+		
+		if(matchingItems.isEmpty())
+			view.show("\nNo items found with '" + key + "' in " + attribute + "\n\n");
+		else
+		{
+			itemsView.viewItems(matchingItems);
+			view.show("Found " + matchingItems.size() + " item(s) matching '" + key + "' in " + attribute + "\n\n");
+		}
 	}
 }

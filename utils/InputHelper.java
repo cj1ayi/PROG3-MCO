@@ -11,13 +11,5 @@ public class InputHelper
 			return null;
 		return value;
 	}
-	
-	//its to "clean" the input, basically to remove 
-	//trailing whitespaces and lowercase the string 
-	//for clean comparisons
-	public static String clean(String input)
-	{
-		return input == null ? "" : input.toLowerCase();
-	}
 }
 

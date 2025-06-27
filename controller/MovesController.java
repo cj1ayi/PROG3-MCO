@@ -1,7 +1,6 @@
 package controller;
 
 //helpers and utils
-import static utils.InputHelper.clean;
 import java.util.ArrayList;
 
 //mvc implementation

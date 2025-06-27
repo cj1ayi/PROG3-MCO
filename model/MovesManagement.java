@@ -14,6 +14,7 @@ public class MovesManagement
 	//Moves Setter
 	public void setMoveList(ArrayList<Moves> moveList)
 	{
+		moves.clear();
 		for (Moves move : moveList)
 		{
 			if (move == null) { continue; } 
