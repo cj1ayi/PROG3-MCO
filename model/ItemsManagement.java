@@ -31,7 +31,7 @@ public class ItemsManagement
 					if(i.getCategory().toLowerCase().contains(key))
 						results.add(i);
 					break;
-				case "etc": 
+				case "keyword": 
 					if(i.getDescription().toLowerCase().contains(key) || i.getEffects().toLowerCase().contains(key))
 						results.add(i);
 					break;

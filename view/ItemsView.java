@@ -14,8 +14,18 @@ public class ItemsView
 			if(i == null) { continue; }
 			System.out.println(i.getName() + " | " + i.getCategory());
 			System.out.println(i.getDescription() + " " + i.getEffects());
-			System.out.println("Buying Price: " + i.getBuyingPrice());
-			System.out.println("Selling Price: " + i.getSellingPrice() + "\n");
+			
+			if(i.getBuyingPrice1() != -1)
+			{
+				System.out.print("Buying Price: P" + i.getBuyingPrice1());
+				if(i.getBuyingPrice2() != -1)
+					System.out.println(" to P" + i.getBuyingPrice2());
+				else System.out.println("");
+			}
+			else
+				System.out.println("Not Sold!");
+			
+			System.out.println("Selling Price: P" + i.getSellingPrice() + "\n");
 		}
 	}
 }

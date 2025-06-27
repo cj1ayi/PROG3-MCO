@@ -38,8 +38,8 @@ public class ItemsController
 	{
 		view.show("-----------------------------------\n");
 		view.show("Enter attribute\n");
-		String attribute = view.prompt("name/category/keyword: ");
-		String key = view.prompt("Enter key to search for: ");
+		String attribute = clean(view.prompt("name/category/keyword: "));
+		String key = clean(view.prompt("Enter key to search for: "));
 		itemsView.viewItems(model.searchItems(attribute, key));
 	}
 }

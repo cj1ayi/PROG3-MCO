@@ -20,13 +20,17 @@ public class ItemsFileHandler
 			
 			while(scanner.hasNextLine())
          {
-				String name = fromSafe(scanner.nextLine());
-				String category = fromSafe(scanner.nextLine());
-				String desc = fromSafe(scanner.nextLine());
-				String effects = fromSafe(scanner.nextLine());
-				double buyingPrice = Double.parseDouble(scanner.nextLine());
-				double sellingPrice = Double.parseDouble(scanner.nextLine());
-				Items i = new Items(name, category, desc, effects, buyingPrice, sellingPrice);
+				String tokens[] = scanner.nextLine().split("\\|");
+				String name = fromSafe(tokens[0]);
+				String category = fromSafe(tokens[1]);
+				String desc = fromSafe(tokens[2]);
+				String effects = fromSafe(tokens[3]);
+				double buyingPrice = Double.parseDouble(tokens[4]);
+				double buyingPriceCheck = Double.parseDouble(tokens[5]);
+				double sellingPrice = Double.parseDouble(tokens[6]);
+				
+				Items i = new Items(name, category, desc, effects, buyingPrice, buyingPriceCheck, sellingPrice);
+				
 				items.add(i);
             }
         } catch (IOException e)

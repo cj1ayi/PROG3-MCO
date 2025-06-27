@@ -8,7 +8,7 @@ public class FileHelper
 	//and prevent excess junk when writing to the txt file
 	public static String safe(Object value)
 	{
-		return (value != null) ? String.valueOf(value + "\n") : "N/A\n";
+		return (value != null) ? String.valueOf(value + "\n\\|") : "N/A\n\\|";
 	}
 	
 	public static String fromSafe(String value)

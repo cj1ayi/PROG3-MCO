@@ -17,7 +17,7 @@ public class InputHelper
 	//for clean comparisons
 	public static String clean(String input)
 	{
-		return input == null ? "" : input.trim().toLowerCase();
+		return input == null ? "" : input.toLowerCase();
 	}
 }
 
