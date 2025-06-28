@@ -22,6 +22,11 @@ public class MainController
 	
 	private View view;
 	
+	/**
+    * Constructs the {@code MainController}, initializing the sub-controllers or features and models.
+    *
+    * @param view 	The {@code View} interface implementation used for input/output.
+    */
 	public MainController(View view)
 	{
 		this.view = view;
@@ -35,11 +40,19 @@ public class MainController
 		this.itemsController = new ItemsController(itemsModel, view);
 	}
 	
+	/**
+    * Starts the application by launching the main menu.
+    */
 	public void start()
 	{	
 		this.initMenu();
 	}
 	
+	/**
+    * Displays the main menu, it allows a way to navigate between
+	 * the other features such as Pokemon, Moves, Items, and a mean to
+	 * exit the application.
+    */
 	public void initMenu()
 	{
 		boolean flag = false;
@@ -70,6 +83,10 @@ public class MainController
 		}
 	}
 	
+	/**
+    * Displays the Pokemon management menu and handles Pokemon related actions
+    * such as adding, viewing, searching, saving, and loading Pokemon entries.
+    */
 	public void initPokemonMenu()
 	{
 		boolean flag = false;
@@ -102,6 +119,10 @@ public class MainController
 		} 
 	}
 
+	/**
+    * Displays the Moves management menu and handles actions such as
+    * adding, viewing, searching, saving, and loading moves.
+    */
 	public void initMovesMenu()
 	{
 		boolean flag = false;
@@ -134,6 +155,10 @@ public class MainController
 		}
 	}
 	
+	/**
+    * Displays the Item management menu and handles actions such as
+    * viewing and searching items.
+    */
 	public void initItemsMenu()
 	{
 		boolean flag = false;
@@ -158,6 +183,10 @@ public class MainController
 		}
 	}
 
+	/**
+    * Placeholder for future Trainer management menu.
+    * TO BE IMPLEMENTED!
+    */
 	public void initTrainerMenu(){
 		boolean flag = false; 
 

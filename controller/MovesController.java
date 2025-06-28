@@ -10,6 +10,12 @@ import model.MovesManagement;
 import view.MovesView;
 import view.View;
 
+/**
+ * The {@code MovesController} class is part of CONTROLLER.
+ *
+ * It handles all user interactions and logic related to Pokemon moves. 
+ * It connects the move specific view and model.
+ */
 public class MovesController 
 {
 	private MovesView movesView;
@@ -18,6 +24,12 @@ public class MovesController
 
 	private View view;
 	
+	/**
+    * Constructs a {@code MovesController} with a given model and view.
+    *
+    * @param model 	The {@code MovesManagement} object that manages move data.
+    * @param view  	The {@code View} interface for user input and output.
+    */
 	public MovesController(MovesManagement model, View view) 
 	{
 		//mvc implementation of view
@@ -30,6 +42,12 @@ public class MovesController
 		this.fileHandler = new MovesFileHandler();
 	}
 	
+	/**
+    * Prompts the user to search for moves based on the available attributes.
+    * The available attributes that can be searched for are name, type, or classification. 
+	 *
+	 * It will display any matching results.
+    */
 	public void searchMoves() 
 	{
 		String[] availableAttributes = {"name", "classification", "type"};
@@ -74,6 +92,10 @@ public class MovesController
       }
    }
 
+	/**
+    * Adds a new move to the system after prompting the user for move.
+    * This method also performs some validation before creation.
+    */
    public void addMoves() 
 	{
 		String name;
@@ -109,16 +131,25 @@ public class MovesController
 		}
    }
 
+	/**
+    * Displays all available moves using the {@code MovesView}.
+    */
    public void viewMoves() 
 	{
 		movesView.displayMoves(model.getMoves());
 	}
 
+	/**
+    * Saves the current list of moves to file using the {@code MovesFileHandler}.
+    */
    public void saveMoves() 
 	{
 		fileHandler.save(model.getMoves());
   	}
 	
+	/**
+    * Loads moves from the file and updates the model's move list.
+    */
 	public void loadMoves()
 	{
 		model.setMoveList(fileHandler.load());
