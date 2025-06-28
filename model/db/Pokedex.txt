@@ -10,4 +10,3 @@
 63|Abra|Psychic|N/As|1|0|64|16|25|20|15|90|Tackle|Defend|N/As|N/As|N/As|
 74|Geodude|Rock|Ground|1|0|75|25|40|100|80|20|Tackle|Defend|N/As|N/As|N/As|
 447|Riolu|Fighting|N/As|1|0|448|20|40|70|40|60|Tackle|Defend|N/As|N/As|N/As|
-2|Nate|Grass|N/As|1|1|2|3|1|1|1|1|Tackle|Defend|N/As|N/As|N/As|

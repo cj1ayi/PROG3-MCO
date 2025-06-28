@@ -64,11 +64,21 @@ public class ItemsManagement
 		return results;
 	}
 	
+	/**
+	 * Sets the current item list to a new one.
+	 *
+	 * @param itemList the new list of {@code Items} to manage
+	 */
 	public void setItems(ArrayList<Items> itemList)
 	{
 		this.itemList = itemList;
 	}
 	
+	/**
+	 * Returns the current list of managed items.
+	 *
+	 * @return the list of {@code Items}
+	 */
 	public ArrayList<Items> getItems()
 	{
 		return itemList;
