@@ -29,6 +29,13 @@ public class PokemonManagement
 	/**
     * Searches the Pokemon list by a specific attribute and key.
     *
+	 * Supported attributes:
+	 * <ul>
+	 *   <li>{@code name} - Matches Pokemon names containing the keyword</li>
+	 *   <li>{@code type} - Matches Pokemon type containing the keyword</li>
+	 *   <li>{@code pokedex} - Matches Pokemon pokedex number containing the keyword</li>
+	 * </ul>
+	 *
     * @param 		attribute The attribute to search by (e.g., "name", "type", or "pokedex").
     * @param 		key The value to match in the given attribute.
     * @return An array list of {@code Pokemon} objects that match the search criteria.

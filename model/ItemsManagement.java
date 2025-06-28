@@ -2,15 +2,38 @@ package model;
 
 import java.util.ArrayList;
 
+/**
+ * The {@code ItemsManagement} class is part of the MODEL.
+ *
+ * This class handles the storage and logic for managing a preloaded list of {@code Items}.
+ * It provides methods to set and get the list of items, and search through items using attributes.
+ */
 public class ItemsManagement
 {
 	private ArrayList<Items> itemList;
 	
+	/**
+	 * Constructs an {@code ItemsManagement} object with a new empty item list.
+	 */
 	public ItemsManagement()
 	{
 		itemList = new ArrayList<>();
 	}
 	
+	/**
+	 * Searches the {@code itemList} based on a given attribute and keyword.
+	 *
+	 * Supported attributes:
+	 * <ul>
+	 *   <li>{@code name} - Matches item names containing the keyword</li>
+	 *   <li>{@code category} - Matches item categories containing the keyword</li>
+	 *   <li>{@code keyword} - Matches item descriptions or effects containing the keyword</li>
+	 * </ul>
+	 *
+	 * @param attribute The attribute to search by (name, category, or keyword).
+	 * @param key       The keyword to search for.
+	 * @return A list of matching {@code Items}.
+	 */
 	public ArrayList<Items> searchItems(String attribute, String key)
 	{
 		ArrayList<Items> results = new ArrayList<>();

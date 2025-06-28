@@ -37,10 +37,11 @@ public class Moves {
         this.desc = desc;
         this.classification = classification;
         this.type1 = type1;
+		  //	optional type2 will be implemented for mco2
         // this.type2 = type2;
     }
 
-    // Getters
+    ////////// Getters
     
     /**
      * Gets the name of the move.
@@ -69,10 +70,10 @@ public class Moves {
      * @return a detailed description of the move's effect
      */
     public String getMoveDesc() { return desc; }
-    //public String getMoveType2() { return type2; }
+    //optional type2 will be implemented for mco2
+	 //public String getMoveType2() { return type2; }
 
-    // Setters
-    
+    ////////// Setters
     /**
      * Sets the name of the move.
      * 
@@ -100,14 +101,4 @@ public class Moves {
      * @param desc the new description for the move
      */
     public void setMoveDesc(String desc) { this.desc = desc; }
-
-
-
-
-    // public void setMoveType2(String type2) { this.type2 = type2; }
-
-
-    // Methods
-
-
 }

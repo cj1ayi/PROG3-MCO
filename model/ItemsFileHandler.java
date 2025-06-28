@@ -8,8 +8,23 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * The {@code ItemsFileHandler} class is part of the MODEL.
+ *
+ * It's responsible for saving and loading {@code Items} objects 
+ * to and from a text file located in the {@code model/db/Items.txt}.
+ *
+ * Each {@code Items} object is saved as a line in the text file,
+ * with all fields separated by a "|" delimiter.
+ */
 public class ItemsFileHandler
 {
+	/**
+	 * Loads {@code Items} objects from the file located in the db (database) items txt file.
+	 * Each line represents one {@code Items} entry, with fields separated by a "|" delimiter.
+	 *
+	 * @return An {@code ArrayList} of {@code Items} loaded from the text file.
+	 */
    public ArrayList<Items> load()
    {
       ArrayList<Items> items = new ArrayList<>();
