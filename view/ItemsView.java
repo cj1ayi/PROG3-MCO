@@ -4,8 +4,20 @@ import java.util.ArrayList;
 
 import model.Items;
 
+/**
+ * The {@code ItemsView} class is part of VIEW.
+ * 
+ * It handles the display for items.
+ * It represents the name, category, description, effects, and pricing details of each item.
+ */
 public class ItemsView
 {
+	/**
+    * Displays a list of {@code Items} to the terminal.
+    * Each item's name, category, description, effects, and prices are shown.
+    *
+    * @param itemList The list of {@code Items} to be displayed.
+    */
 	public void viewItems(ArrayList<Items> itemList)
 	{
 		System.out.println("-----------------------------------");

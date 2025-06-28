@@ -7,6 +7,13 @@ import static utils.Dividers.printPokedexLogo;
 import model.*;
 import view.View;
 
+/**
+ * The {@code MainController} class is part of MODEL.
+ * 
+ * serves as the central hub for the application,
+ * managing navigation between modules: Pokémon, Moves, and Items.
+ * It initializes each controller and presents the main application menu.
+ */
 public class MainController
 {
 	private PokemonController pokemonController;

@@ -10,6 +10,14 @@ import model.ItemsFileHandler;
 import view.ItemsView;
 import view.View;
 
+/**
+ * The {@code ItemsController} class is part of CONTROLLER.
+ *
+ * It handles user interactions related to items.
+ * It acts as the middle man between view, model, and the file handlers.
+ * 
+ * This module contains methods for viewing, searching, and loading item data.
+ */
 public class ItemsController
 {
 	private ItemsView itemsView;
@@ -18,6 +26,17 @@ public class ItemsController
 
 	private View view;
 	
+	/**
+    * Constructs an {@code ItemsController} and initializes the model and view.
+    * Also automatically loads items from the file into the model.
+    *
+	 * This is assumign that Items are never modified or deleted from the db,
+	 * otherwise it will error. Though Items may be added, proper formatting should
+	 * be ensured.
+	 *
+    * @param model 	The {@code ItemsManagement} object managing the item data.
+    * @param view 	The generic {@code View} interface used for console I/O.
+    */
 	public ItemsController(ItemsManagement model, View view)
 	{
 		this.view = view;
@@ -29,11 +48,21 @@ public class ItemsController
 		model.setItems(fileHandler.load());
 	}
 	
+	/**
+    * Displays all loaded items to the console via the {@code ItemsView}.
+    */
 	public void viewAllItems()
 	{
 		itemsView.viewItems(model.getItems());
 	}
 	
+	/**
+    * Prompts the user to search for an item based on any of the allowed attributes.
+    * The following attributes that are searchable are name, category, or keyword. 
+	 *
+	 * It Displays the results using the {@code ItemsView} from the view folder.
+    * If no matches are found, a message is shown instead.
+    */
 	public void searchItem()
 	{
 		String[] availableAttributes = {"name", "category", "keyword"};		

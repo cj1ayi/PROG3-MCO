@@ -4,8 +4,22 @@ import java.util.ArrayList;
 
 import model.Pokemon;
 
+/**
+ * The {@code PokemonView} class is part of VIEW.
+ *
+ * It handles the display of Pokemon data.
+ * 
+ * It provides methods to display individual Pokemon details, a list of all Pokémon,
+ * and the moveset of a single Pokemon.
+ */
 public class PokemonView
 {
+	/**
+    * Displays the detailed information of a single {@code Pokemon}, including
+    * Pokedex number, name, types, base stats, and evolution information.
+    *
+    * @param p 	The {@code Pokemon} object to display.
+    */
 	//view a single pokemon entry (more detailed)
 	public void viewPokemon(Pokemon p)
 	{
@@ -28,7 +42,13 @@ public class PokemonView
 		System.out.println("-----------------------------------\n");
 	}
 	
-	//view all pokemon
+	/**
+    * Displays a shortened view of all the {@code Pokemon} 
+	 * entries in the given list. Each Pokemon will only output
+	 * its number, name, and types.
+    *
+    * @param pokemon 	The list of {@code Pokemon} objects to display. 
+    */
 	public void viewAllPokemon(ArrayList<Pokemon> pokemon)
 	{
 		boolean allNull = true;
@@ -52,7 +72,13 @@ public class PokemonView
 		System.out.println("\n-----------------------------------");
 	}
 	
-	//view all 4 moves of a single pokemon
+	/**
+    * Displays all  moves from the Pokemon's moveset, given
+	 * that the value isn't null. Moves are displayed in numbered 
+	 * order (1 to 4).
+    *
+    * @param pokemon 	The {@code Pokemon} whose moveset will be displayed.
+    */
 	public void viewMoveSet(Pokemon pokemon)
 	{
 		int i = 1;

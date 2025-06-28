@@ -8,8 +8,22 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * The {@code PokemonFileHandler} class is part of MODEL.
+ *
+ * It is responsible for saving and loading {@code Pokemon} objects 
+ * to and from a text file in a fixed txt file in the db (database) folder.
+ *
+ * It's taking in input lines with a "|" delimiter
+ */
 public class PokemonFileHandler
 {
+	/**
+    * Saves the given list of {@code Pokemon} to a file located at {@code model/db/Pokedex.txt}.
+    * Each {@code Pokemon} is saved in one line, with each field separated by a '|' character/ delimiter.
+	 *
+	 * @param pokemon 	The list of {@code Pokemon} to be saved into the txt file.
+    */
 	public void save(ArrayList<Pokemon> pokemon)
 	{
 		try
@@ -48,6 +62,12 @@ public class PokemonFileHandler
 		}
 	}
 	
+	/**
+    * Loads {@code Pokemon} objects from the file at {@code model/db/Pokedex.txt}.
+    * Each line in the file represents one {@code Pokemon} object.
+    *
+    * @return An array list of {@code Pokemon} objects that got loaded from the txt file.
+    */
 	public ArrayList<Pokemon> load()
 	{
 		ArrayList<Pokemon> pokemonList = new ArrayList<>();

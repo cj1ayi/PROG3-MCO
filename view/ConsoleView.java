@@ -3,20 +3,33 @@ package view;
 import java.util.Scanner;
 import java.util.ArrayList;
 
-
+/**
+ * The {@code ConsoleView} class is part of VIEW.
+ *
+ * It provides a console-based implementation of the {@code View} interface.
+ * It handles user input and output through the terminal using a {@code Scanner}.
+ */
 public class ConsoleView implements View
 {
 	Scanner input = new Scanner(System.in);
 	
-	//this method asks for a string message to print
+	/**
+    * Displays a message to the terminal.
+    *
+    * @param msg 	The message to display.
+    */
 	@Override
 	public void show(String msg)
 	{
 		System.out.print(msg);
 	}
 
-	//this method asks for a string message to print, and returns the users
-	//string input
+	/**
+    * Prompts the user with a message and returns their input as a {@code String}.
+    *
+    * @param msg 		The prompt message.
+    * @return The user's input as a string.
+    */
 	@Override
 	public String prompt(String msg)
 	{
@@ -24,8 +37,13 @@ public class ConsoleView implements View
 		return input.nextLine();
 	}
 	
-	//this method asks for a string message to print, and returns the users
-	//int input
+	/**
+    * Prompts the user with a message and returns their input as an {@code int}.
+    * Loops until a valid integer is entered.
+    *
+    * @param msg 		The prompt message.
+    * @return The user's valid integer input.
+    */
 	@Override
 	public int promptInt(String msg)
 	{
@@ -51,6 +69,15 @@ public class ConsoleView implements View
 		return choice;
 	}
 	
+	/**
+    * Prompts the user with a message and returns their input as an {@code int} within a specified range.
+    * Loops until the input is a valid integer and within the range.
+    *
+    * @param msg 				The prompt message.
+    * @param lowerRange 	The minimum acceptable value (inclusive).
+    * @param higherRange 	The maximum acceptable value (inclusive).
+    * @return The user's valid integer input within the specified range.
+    */
 	@Override
 	public int promptIntRange(String msg, int lowerRange, int higherRange)
 	{

@@ -10,6 +10,15 @@ import model.PokemonFileHandler;
 import view.PokemonView;
 import view.View;
 
+/**
+ * The {@code PokemonController} class is part of CONTROLLER.
+ *
+ * It handles the interaction between the {@code PokemonView} (view), 
+ * {@code Pokemon} (model), {@code PokemonManagement} (model/business logic), 
+ * and the {@code PokemonFileHandler} (model/handler).
+ *
+ * This class handles user input, data validation, and some logic.
+ */
 public class PokemonController
 {
 	private PokemonView pkmnView;
@@ -18,6 +27,12 @@ public class PokemonController
 
 	private View view;
 	
+	/**
+    * Constructs a new {@code PokemonController} with a specific model and view.
+    *
+    * @param model The Pokemon management model.
+    * @param view The general view for prompting and displaying user input.
+    */
 	public PokemonController(PokemonManagement model, View view)
 	{
 		this.view = view;
@@ -27,21 +42,34 @@ public class PokemonController
 		fileHandler = new PokemonFileHandler();
 	}
 		
+	/**
+    * Saves all current Pokemon entries in the model to a file using the file handler.
+    */
 	public void savePokemonEntries()
 	{
 		fileHandler.save(model.getPokemonList());
 	}
 	
+	/**
+    * Loads Pokemon entries from a file and updates the model with the loaded data.
+    */
 	public void loadPokemonEntries()
 	{
 		model.setPokemonList(fileHandler.load());
 	}
 
+	/**
+    * Displays all currently loaded Pokemon using the view.
+    */
 	public void viewAllPokemon()
 	{
 		pkmnView.viewAllPokemon(model.getPokemonList());
 	}
 	
+	/**
+    * Prompts the user to search for Pokemon by name, type, or Pokedex number,
+    * it then displays all the matching results.
+    */
 	public void searchPokemonMenu()
 	{
 		String[] availableAttributes = {"name", "type", "pokedex"};	
@@ -85,6 +113,11 @@ public class PokemonController
 			view.show("Found " + resultCount  + " Pokemon matching '" + key + "' in " + attribute + "\n\n");
 	}
 	
+	/**
+    * Creates a new Pokemon entry through a menu like interface that takes user input, including validation
+    * for duplicates and optional attributes. Upon completion, a new {@code Pokemon} object is added to the 
+	 * {@code PokemonManagement} (model) to keep track of the Pokemon list/ collection.
+    */
 	public void newPokemon()
 	{
 		Pokemon pkmn = new Pokemon();
