@@ -21,7 +21,7 @@ Diane Benedict S. Panganiban & Roberta Netanya S. Tan
 1. **Run the Application**:
    - From the project root, execute the main class.
      ```bash
-     > javac Main.java
+     > run
      > java Main
      ```
 2. **Follow On-Screen Prompts**:
