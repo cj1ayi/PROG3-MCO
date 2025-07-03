@@ -2,7 +2,8 @@
 An enhanced Pokedex application that supports move management and trainer profiles made using Java.
 
 ## Authors
-Diane Benedict S. Panganiban & Roberta Netanya S. Tan
+Diane Benedict S. Panganiban
+Roberta Netanya S. Tan
 
 ## Features
 - **Pokemon Module**
