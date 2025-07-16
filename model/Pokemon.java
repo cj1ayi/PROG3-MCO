@@ -353,6 +353,45 @@ public class Pokemon
 	 */
 	public void setHeldItem(String item) { heldItem = item; }
 
+	/**
+	 * Adds a single move to the Pokemon's moveset at the specified index.
+	 * If the index is valid and within bounds, the move is set at that position.
+	 *
+	 * @param index 	the index to set the move at (0-3)
+	 * @param moveName 	the name of the move to add
+	 * @return true if the move was successfully added, false otherwise
+	 */
+	public boolean addMove(int index, String moveName) {
+		if (index >= 0 && index < MAX_MOVES && moveName != null) {
+			moveSet[index] = moveName;
+			// Update move count if needed
+			if (index >= moveSetCount) {
+				moveSetCount = index + 1;
+			}
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Finds the next available slot in the moveset and adds the move there.
+	 *
+	 * @param moveName 	the name of the move to add
+	 * @return the index where the move was added, or -1 if moveset is full
+	 */
+	public int addMoveToNextSlot(String moveName) {
+		for (int i = 0; i < MAX_MOVES; i++) {
+			if (moveSet[i] == null || moveSet[i].isEmpty()) {
+				moveSet[i] = moveName;
+				if (i >= moveSetCount) {
+					moveSetCount = i + 1;
+				}
+				return i;
+			}
+		}
+		return -1; // Moveset is full
+	}
+
 	/************BEHAVIOUR************/
 	
 	/**

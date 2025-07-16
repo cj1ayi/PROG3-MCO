@@ -56,6 +56,13 @@ public class Trainer
    }
 
    // Add & Remove Money
-   public void addMoney(int money) { this.money += money; }
-   public void removeMoney(int money) { this.money -= money; }
+   public void addMoney(int amount) { this.money += amount; }
+   public boolean removeMoney(int amount) {
+      if (money >= amount) {
+         this.money -= amount;
+         return true;
+      }
+      return false;
+
+   }
 }
