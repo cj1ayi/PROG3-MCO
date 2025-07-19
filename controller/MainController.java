@@ -19,6 +19,7 @@ public class MainController
 	private PokemonController pokemonController;
 	private MovesController movesController;
 	private ItemsController itemsController;
+	private TrainerController trainerController;
 	
 	private View view;
 	
@@ -34,10 +35,12 @@ public class MainController
 		PokemonManagement pokemonModel = new PokemonManagement();
 		MovesManagement movesModel = new MovesManagement();
 		ItemsManagement itemsModel = new ItemsManagement();
+		TrainerManagement trainerModel = new TrainerManagement();
 		
 		this.pokemonController = new PokemonController(pokemonModel, view);
 		this.movesController = new MovesController(movesModel, view);
 		this.itemsController = new ItemsController(itemsModel, view);
+		this.trainerController = new TrainerController(trainerModel, view, itemsModel, movesModel, pokemonModel);
 	}
 	
 	/**
@@ -63,8 +66,8 @@ public class MainController
 			view.show("1] Manage Pokemon						 \n");
 			view.show("2] Manage Moves							 \n");
 			view.show("3] Manage Items							 \n");
-			//view.show("4] Manage Trainers						 \n");
-			view.show("4] EXIT									 \n");
+			view.show("4] Manage Trainers						 \n");
+			view.show("5] EXIT									 \n");
 			view.show("-----------------------------------\n");
 			
 			switch(view.promptIntRange("",1,7))
@@ -75,9 +78,9 @@ public class MainController
 						  break;
 				case 3: initItemsMenu();
 						  break;
-				//case 4: initTrainerMenu();
-				//		  break;
-				case 4: flag = true;
+				case 4: initTrainerMenu();
+						  break;
+				case 5: flag = true;
 					     break;
 			}
 		}
@@ -200,9 +203,11 @@ public class MainController
 			view.show("[4] SAVE   [5] LOAD        [6] EXIT\n");
 			view.show("-----------------------------------\n");
 			switch(view.promptIntRange("",1,6)){
-				case 1: break;
-				case 2: break;
-				case 3: break;
+				case 1: trainerController.createTrainerProfile();
+					break;
+				case 2: trainerController.searchTrainers();
+					break;
+				case 3: trainerController.viewAllTrainersAndSelect();
 				case 6: flag = true;
 				break;
 			}

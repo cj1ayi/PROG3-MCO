@@ -313,6 +313,12 @@ public class TrainerManagement
                 case "id":
                     matches = Integer.toString(trainer.getTrainerID()).contains(keyword.toLowerCase());
                     break;
+                case "sex":
+                    matches = trainer.getSex().toLowerCase().contains(keyword.toLowerCase());
+                    break;
+                case "hometown":
+                    matches = trainer.getHometown().toLowerCase().contains(keyword.toLowerCase());
+                    break;
             }
 
             if (matches) {
