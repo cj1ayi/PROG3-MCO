@@ -43,9 +43,45 @@ public class TrainerView {
                 Pokemon p = lineup.get(i);
                 System.out.println("  [" + (i + 1) + "] " + p.getName() + " (Level " + p.getBaseLevel() + ")");
                 
-                // Show held item if any
-                if (p.getHeldItem() != null && !p.getHeldItem().isEmpty()) {
-                    System.out.println("     Held Item: " + p.getHeldItem());
+                // Show types
+                String typeInfo = "      Type: " + p.getType1();
+                if (p.getType2() != null && !p.getType2().isEmpty()) {
+                    typeInfo += "/" + p.getType2();
+                }
+                System.out.println(typeInfo);
+                
+                // Show stats
+                System.out.println("      Stats: HP:" + p.getHp() + " ATK:" + p.getAtk() + 
+                                 " DEF:" + p.getDef() + " SPD:" + p.getSpd());
+                
+                // Show held item
+                String heldItem = p.getHeldItem();
+                if (heldItem != null && !heldItem.isEmpty()) {
+                    System.out.println("      Held Item: " + heldItem);
+                } else {
+                    System.out.println("      Held Item: None");
+                }
+                
+                // Show moves
+                String[] moves = p.getMoveSet();
+                System.out.print("      Moves: ");
+                boolean hasAnyMove = false;
+                for (int j = 0; j < moves.length; j++) {
+                    if (moves[j] != null && !moves[j].isEmpty()) {
+                        if (hasAnyMove) {
+                            System.out.print(", ");
+                        }
+                        System.out.print(moves[j]);
+                        hasAnyMove = true;
+                    }
+                }
+                if (!hasAnyMove) {
+                    System.out.print("None");
+                }
+                System.out.println();
+                
+                if (i < lineup.size() - 1) {
+                    System.out.println(); // Add spacing between Pokemon
                 }
             }
         }
@@ -57,33 +93,52 @@ public class TrainerView {
             for (int i = 0; i < storage.size(); i++) {
                 Pokemon p = storage.get(i);
                 System.out.println("  [" + (i + 1) + "] " + p.getName() + " (Level " + p.getBaseLevel() + ")");
+                
+                // Show types for storage too
+                String typeInfo = "      Type: " + p.getType1();
+                if (p.getType2() != null && !p.getType2().isEmpty()) {
+                    typeInfo += "/" + p.getType2();
+                }
+                System.out.println(typeInfo);
+                
+                // Show held item for storage
+                String heldItem = p.getHeldItem();
+                if (heldItem != null && !heldItem.isEmpty()) {
+                    System.out.println("      Held Item: " + heldItem);
+                }
+                
+                if (i < storage.size() - 1) {
+                    System.out.println(); // Add spacing between Pokemon
+                }
             }
         }
         
+        // Show inventory summary
         System.out.println("\nINVENTORY (" + inventory.size() + "/50 items):");
         if (inventory.isEmpty()) {
             System.out.println("  No items in inventory");
         } else {
-            // Count unique items
-            ArrayList<String> itemNames = new ArrayList<>();
+            // Group items by name and count them
+            ArrayList<String> uniqueItemNames = new ArrayList<>();
             ArrayList<Integer> itemCounts = new ArrayList<>();
             
             for (Items item : inventory) {
-                int index = itemNames.indexOf(item.getName());
+                String itemName = item.getName();
+                int index = uniqueItemNames.indexOf(itemName);
                 if (index == -1) {
-                    itemNames.add(item.getName());
+                    uniqueItemNames.add(itemName);
                     itemCounts.add(1);
                 } else {
                     itemCounts.set(index, itemCounts.get(index) + 1);
                 }
             }
             
-            for (int i = 0; i < itemNames.size(); i++) {
-                System.out.println("  " + itemNames.get(i) + " x" + itemCounts.get(i));
+            for (int i = 0; i < uniqueItemNames.size(); i++) {
+                System.out.println("  " + uniqueItemNames.get(i) + " x" + itemCounts.get(i));
             }
         }
         
-        System.out.println("-----------------------------------");
+        printLongDivider();
     }
 
     /**
@@ -226,13 +281,14 @@ public class TrainerView {
         System.out.println("\n========== MANAGE TRAINER ==========");
         System.out.println("Trainer: " + trainer.getTrainerName() + " (ID: " + trainer.getTrainerID() + ")");
         System.out.println("Money: P" + trainer.getMoney() + ".00");
-        System.out.println("1. Add Pokemon to Lineup");
-        System.out.println("2. Switch Pokemon from Storage");
-        System.out.println("3. Teach Moves");
-        System.out.println("4. Buy Item");
-        System.out.println("5. Use Item");
-        System.out.println("6. Release Pokemon");
-        System.out.println("7. Back to Trainer Menu");
+        System.out.println("1] Add Pokemon to Lineup");
+        System.out.println("2] Switch Pokemon from Storage");
+        System.out.println("3] Teach Moves");
+        System.out.println("4] Buy Item");
+        System.out.println("5] Sell Item");
+        System.out.println("6] Use Item");
+        System.out.println("7] Release Pokemon");
+        System.out.println("8] Back to Trainer Menu");
         System.out.println("===================================");
     }
 

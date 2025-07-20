@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class TrainerManagement
 {
@@ -19,8 +20,35 @@ public class TrainerManagement
 
     public void addTrainer(Trainer t) {
         if (t != null) {
+            // DON'T override the ID if it's already set (for loaded trainers)
+            if (t.getTrainerID() == 0) {
+                // Only generate ID for new trainers (ID defaults to 0)
+                int newID = generateUniqueID();
+                t.setTrainerID(newID);
+            }
             trainers.add(t);
         }
+    }
+
+    private int generateUniqueID() {
+        Random random = new Random();
+        int newID;
+        boolean isUnique;
+        
+        do {
+            newID = 100000 + random.nextInt(900000); // Generate 6-digit number
+            isUnique = true;
+            
+            // Check if ID already exists
+            for (Trainer trainer : trainers) {
+                if (trainer.getTrainerID() == newID) {
+                    isUnique = false;
+                    break;
+                }
+            }
+        } while (!isUnique);
+        
+        return newID;
     }
 
     public void addToStorage(Pokemon p){

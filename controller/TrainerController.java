@@ -47,7 +47,8 @@ public class TrainerController {
         boolean running = true;
         while (running) {
             
-            int choice = view.promptIntRange("Enter your choice: ", 1, 4);
+            
+            int choice = view.promptIntRange("Enter your choice: ", 1, 6); // Change from 1,4 to 1,6
             
             switch (choice) {
                 case 1:
@@ -60,6 +61,12 @@ public class TrainerController {
                     viewAllTrainersAndSelect();
                     break;
                 case 4:
+                    saveTrainers();
+                    break;
+                case 5:
+                    loadTrainers();
+                    break;
+                case 6:
                     running = false;
                     break;
             }
@@ -179,8 +186,13 @@ public class TrainerController {
     }
 
     private void manageTrainer(Trainer trainer) {
-        // Set current trainer context
+        // Set current trainer context and load their data
         this.currentTrainer = trainer;
+        
+        // Load the trainer's existing data from the trainer object itself
+        this.currentLineup = new ArrayList<>(trainer.getLineup());
+        this.currentStorage = new ArrayList<>(trainer.getStorage());
+        this.currentInventory = new ArrayList<>(trainer.getInventory());
         
         boolean managing = true;
         while (managing) {
@@ -190,7 +202,7 @@ public class TrainerController {
             // Show submenu
             trainerView.showTrainerSubmenu(trainer);
             
-            int choice = view.promptIntRange("Enter your choice: ", 1, 7);
+            int choice = view.promptIntRange("Enter your choice: ", 1, 8);
             
             switch (choice) {
                 case 1:
@@ -206,12 +218,18 @@ public class TrainerController {
                     buyItem(trainer);
                     break;
                 case 5:
-                    useItem(trainer);
+                    sellItem(trainer);
                     break;
                 case 6:
-                    releasePokemon();
+                    useItem(trainer);
                     break;
                 case 7:
+                    releasePokemon();
+                    break;
+                case 8:
+                    trainer.setLineup(new ArrayList<>(currentLineup));
+                    trainer.setStorage(new ArrayList<>(currentStorage));
+                    trainer.setInventory(new ArrayList<>(currentInventory));
                     managing = false;
                     break;
             }
@@ -291,28 +309,31 @@ public class TrainerController {
         trainerView.showSectionHeader("STORAGE BOX");
         
         if (currentStorage.isEmpty()) {
-            view.show("No Pokemon in storage.");
+            view.show("No Pokemon in storage. You can switch Pokemon to the storage when lineup is full.");
             return;
         }
-        
+
+
         view.show("Pokemon in Storage:");
         for (int i = 0; i < currentStorage.size(); i++) {
-            Pokemon p = currentStorage.get(i);
-            view.show((i + 1) + ". " + p.getName() + " (Level " + p.getBaseLevel() + ")");
+                Pokemon p = currentStorage.get(i);
+                view.show("\n" + (i + 1) + ". " + p.getName() + " (Level " + p.getBaseLevel() + ")");
         }
-        
+
+
+
         int storageIndex = view.promptIntRange("Select Pokemon from storage (number): ", 1, currentStorage.size()) - 1;
-        
+
         view.show("\nCurrent Lineup:");
         if (currentLineup.isEmpty()) {
             view.show("Lineup is empty.");
         } else {
             for (int i = 0; i < currentLineup.size(); i++) {
                 Pokemon p = currentLineup.get(i);
-                view.show((i + 1) + ". " + p.getName() + " (Level " + p.getBaseLevel() + ")");
+                view.show("\n" + (i + 1) + ". " + p.getName() + " (Level " + p.getBaseLevel() + ")");
             }
         }
-        
+
         int lineupIndex;
         if (currentLineup.size() < 6) {
             view.show((currentLineup.size() + 1) + ". Add to empty slot");
@@ -327,12 +348,12 @@ public class TrainerController {
         } else {
             lineupIndex = view.promptIntRange("Select Pokemon to replace: ", 1, currentLineup.size()) - 1;
         }
-        
+
         // Switch Pokemon between lineup and storage
         Pokemon fromStorage = currentStorage.remove(storageIndex);
         Pokemon fromLineup = currentLineup.set(lineupIndex, fromStorage);
         currentStorage.add(fromLineup);
-        
+
         view.show("Pokemon switched successfully!");
     }
 
@@ -355,7 +376,7 @@ public class TrainerController {
                 typeInfo += "/" + p.getType2();
             }
 
-            String line = (i + 1) + ". " + p.getName() + " (" + typeInfo + ")";
+            String line = "\n" + (i + 1) + ". " + p.getName() + " (" + typeInfo + ")";
             view.show(line);
         }
 
@@ -368,7 +389,7 @@ public class TrainerController {
         String[] currentMoves = selectedPokemon.getMoveSet();
         for (int i = 0; i < currentMoves.length; i++) {
             if (currentMoves[i] != null && !currentMoves[i].isEmpty()) {
-                view.show((i + 1) + ". " + currentMoves[i]);
+                view.show("\n" + (i + 1) + ". " + currentMoves[i]);
             }
         }
         
@@ -427,7 +448,7 @@ public class TrainerController {
         
         itemsView.viewItems(availableItems);
         
-        String itemName = view.prompt("Enter item name to buy: ");
+        String itemName = view.prompt("\nEnter item name to buy: ");
         Items selectedItem = null;
         
         for (Items item : availableItems) {
@@ -438,25 +459,25 @@ public class TrainerController {
         }
         
         if (selectedItem == null) {
-            view.show("Item not found.");
+            view.show("\nItem not found.");
             return;
         }
         
-        view.show("Item: " + selectedItem.getName());
-        view.show("Price: P" + selectedItem.getBuyingPrice1());
+        view.show("\nItem: " + selectedItem.getName());
+        view.show("\nPrice: P" + selectedItem.getBuyingPrice1());
         
-        int quantity = view.promptIntRange("Enter quantity: ", 1, 50);
+        int quantity = view.promptIntRange("\nEnter quantity: ", 1, 50);
         
         double totalCost = selectedItem.getBuyingPrice1() * quantity;
         
         // Check constraints
         if (trainer.getMoney() < totalCost) {
-            view.show("Not enough money!");
+            view.show("\nNot enough money!");
             return;
         }
         
         if (currentInventory.size() + quantity > 50) {
-            view.show("Inventory full! Maximum 50 items allowed.");
+            view.show("\nInventory full! Maximum 50 items allowed.");
             return;
         }
         
@@ -477,7 +498,7 @@ public class TrainerController {
         }
         
         if (!itemExists && uniqueItems.size() >= 10) {
-            view.show("Maximum 10 unique item types allowed!");
+            view.show("\nMaximum 10 unique item types allowed!");
             return;
         }
         
@@ -487,8 +508,73 @@ public class TrainerController {
             currentInventory.add(selectedItem);
         }
         
-        view.show("Successfully bought " + quantity + "x " + selectedItem.getName());
-        view.show("Balance: P" + trainer.getMoney() + ".00");
+        view.show("\nSuccessfully bought " + quantity + "x " + selectedItem.getName());
+        view.show("\nBalance: P" + trainer.getMoney() + ".00");
+    }
+
+    private void sellItem(Trainer trainer) {
+        trainerView.showSectionHeader("SELL ITEM");
+        view.show("\nBalance: P" + trainer.getMoney() + ".00");
+
+        if (currentInventory.isEmpty()) {
+            view.show("\nNo items in inventory to sell.");
+            return;
+        }
+
+        trainerView.viewInventory(trainer, currentInventory);
+
+        String itemName = view.prompt("\nEnter item name to sell: ");
+
+        // Count available quantity of the item
+        int availableQuantity = 0;
+        for (Items item : currentInventory) {
+            if (item.getName().equalsIgnoreCase(itemName)) {
+                availableQuantity++;
+            }
+        }
+
+        if (availableQuantity == 0) {
+            view.show("\nItem not found in inventory.");
+            return;
+        }
+
+        // Find the item to get its price
+        Items selectedItem = null;
+        for (Items item : currentInventory) {
+            if (item.getName().equalsIgnoreCase(itemName)) {
+                selectedItem = item;
+                break;
+            }
+        }
+
+        if (selectedItem == null) {
+            view.show("\nItem not found.");
+            return;
+        }
+
+        view.show("\nItem: " + selectedItem.getName());
+        view.show("\nSell Price (per item): P" + (selectedItem.getBuyingPrice1() * 0.5));
+        view.show("\nAvailable quantity: " + availableQuantity);
+
+        int quantity = view.promptIntRange("\nEnter quantity to sell: ", 1, availableQuantity);
+
+        // 50% of buying price
+        double totalEarnings = selectedItem.getBuyingPrice1() * 0.5 * quantity;
+
+        // Remove items from inventory
+        int itemsRemoved = 0;
+        for (int i = currentInventory.size() - 1; i >= 0 && itemsRemoved < quantity; i--) {
+            if (currentInventory.get(i).getName().equalsIgnoreCase(itemName)) {
+                currentInventory.remove(i);
+                itemsRemoved++;
+            }
+        }
+
+        // Update trainer's money
+        trainer.addMoney((int)totalEarnings);
+
+        view.show("\nSuccessfully sold " + quantity + "x " + selectedItem.getName() + " for P" + (int)totalEarnings);
+        view.show("\nBalance: P" + trainer.getMoney() + ".00");
     }
 
     private void useItem(Trainer trainer) {
@@ -501,7 +587,7 @@ public class TrainerController {
         
         trainerView.viewInventory(trainer, currentInventory);
         
-        String itemName = view.prompt("Enter item name to use: ");
+        String itemName = view.prompt("\nEnter item name to use: ");
         
         // Check if item exists in inventory
         Items itemToUse = null;
@@ -515,7 +601,7 @@ public class TrainerController {
         }
         
         if (itemToUse == null) {
-            view.show("Item not found in inventory.");
+            view.show("\nItem not found in inventory.");
             return;
         }
         
@@ -527,17 +613,17 @@ public class TrainerController {
         
         // For regular items, select Pokemon to use on
         if (currentLineup.isEmpty()) {
-            view.show("No Pokemon in lineup to use item on.");
+            view.show("\nNo Pokemon in lineup to use item on.");
             return;
         }
         
-        view.show("Select Pokemon to use item on:");
+        view.show("\nSelect Pokemon to use item on:");
         for (int i = 0; i < currentLineup.size(); i++) {
             Pokemon p = currentLineup.get(i);
-            view.show((i + 1) + ". " + p.getName() + " (Level " + p.getBaseLevel() + ")");
+            view.show("\n" + (i + 1) + ". " + p.getName() + " (Level " + p.getBaseLevel() + ")");
         }
         
-        int pokemonIndex = view.promptIntRange("Select Pokemon: ", 1, currentLineup.size()) - 1;
+        int pokemonIndex = view.promptIntRange("\nSelect Pokemon: ", 1, currentLineup.size()) - 1;
         Pokemon selectedPokemon = currentLineup.get(pokemonIndex);
         
         // Apply item effects
@@ -546,7 +632,7 @@ public class TrainerController {
         // Remove item from inventory
         currentInventory.remove(itemIndex);
         
-        view.show("Used " + itemName + " on " + selectedPokemon.getName());
+        view.show("\nUsed " + itemName + " on " + selectedPokemon.getName());
         
         // Special handling for Rare Candy
         if (itemName.equalsIgnoreCase("Rare Candy")) {
@@ -611,7 +697,7 @@ public class TrainerController {
             Pokemon p = currentLineup.get(i);
             if (canEvolveWith(p.getName(), itemName)) {
                 evolvablePokemon.add(p);
-                view.show((evolvablePokemon.size()) + ". " + p.getName() + " (can evolve to " + getEvolution(p.getName()) + ")");
+                view.show("\n" + (evolvablePokemon.size()) + ". " + p.getName() + " (can evolve to " + getEvolution(p.getName()) + ")");
             }
         }
         
@@ -686,7 +772,7 @@ public class TrainerController {
             view.show("Pokemon in Lineup:");
             for (int i = 0; i < currentLineup.size(); i++) {
                 Pokemon p = currentLineup.get(i);
-                view.show("\n" +(i + 1) + ". " + p.getName() + " (Level " + p.getBaseLevel() + ")\n");
+                view.show("\n" +"\n" +(i + 1) + ". " + p.getName() + " (Level " + p.getBaseLevel() + ")\n");
             }
             
             int index = view.promptIntRange("Select Pokemon to release: ", 1, currentLineup.size()) - 1;
@@ -708,7 +794,7 @@ public class TrainerController {
             view.show("Pokemon in Storage:");
             for (int i = 0; i < currentStorage.size(); i++) {
                 Pokemon p = currentStorage.get(i);
-                view.show((i + 1) + ". " + p.getName() + " (Level " + p.getBaseLevel() + ")");
+                view.show("\n" +(i + 1) + ". " + p.getName() + " (Level " + p.getBaseLevel() + ")");
             }
             
             int index = view.promptIntRange("Select Pokemon to release: ", 1, currentStorage.size()) - 1;
@@ -720,6 +806,59 @@ public class TrainerController {
                 view.show(toRelease.getName() + " has been released.");
             } else {
                 view.show("Release cancelled.");
+            }
+        }
+    }
+
+    /**
+     * Saves all current trainer entries in the model to a file using the file handler.
+     */
+    public void saveTrainers() {
+        ArrayList<Trainer> trainers = model.getAllTrainers();
+        ArrayList<ArrayList<Pokemon>> allLineups = new ArrayList<>();
+        ArrayList<ArrayList<Pokemon>> allStorage = new ArrayList<>();
+        ArrayList<ArrayList<Items>> allInventories = new ArrayList<>();
+        
+        // IMPORTANT: Save current session data FIRST if there's an active trainer
+        if (currentTrainer != null) {
+            currentTrainer.setLineup(new ArrayList<>(currentLineup));
+            currentTrainer.setStorage(new ArrayList<>(currentStorage));
+            currentTrainer.setInventory(new ArrayList<>(currentInventory));
+        }
+        
+        // Collect data from ALL trainers (now they all have their own data)
+        for (Trainer trainer : trainers) {
+            allLineups.add(trainer.getLineup());
+            allStorage.add(trainer.getStorage());
+            allInventories.add(trainer.getInventory());
+        }
+        
+        fileHandler.save(trainers, allLineups, allStorage, allInventories);
+    }
+
+    /**
+     * Loads trainer entries and their Pokemon/items from file.
+     */
+    public void loadTrainers() {
+        TrainerFileHandler.TrainerData data = fileHandler.load(pokemonModel, itemsModel);
+        
+        // Clear existing trainers and add loaded ones
+        model.getAllTrainers().clear();
+        for (int i = 0; i < data.trainers.size(); i++) {
+            Trainer trainer = data.trainers.get(i);
+            
+            // Set the trainer's Pokemon and items data
+            trainer.setLineup(data.lineups.get(i));
+            trainer.setStorage(data.storage.get(i));
+            trainer.setInventory(data.inventories.get(i));
+            
+            model.addTrainer(trainer);
+            
+            // If this is the currently managed trainer, update session data
+            if (currentTrainer != null && trainer.getTrainerID() == currentTrainer.getTrainerID()) {
+                currentLineup = new ArrayList<>(trainer.getLineup());
+                currentStorage = new ArrayList<>(trainer.getStorage());
+                currentInventory = new ArrayList<>(trainer.getInventory());
             }
         }
     }

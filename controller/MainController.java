@@ -197,8 +197,8 @@ public class MainController
 		{
 			view.show("------------D POKEDEX N------------\n");
 			view.show("1] Add Trainer                     \n");
-			view.show("2] View All Trainers					 \n");
-			view.show("3] Search Trainers						 \n");
+			view.show("2] Search Trainers					 \n");
+			view.show("3] View All Trainers						 \n");
 			view.show("-----------------------------------\n");
 			view.show("[4] SAVE   [5] LOAD        [6] EXIT\n");
 			view.show("-----------------------------------\n");
@@ -208,8 +208,12 @@ public class MainController
 				case 2: trainerController.searchTrainers();
 					break;
 				case 3: trainerController.viewAllTrainersAndSelect();
+				case 4: trainerController.saveTrainers();
+					break;
+				case 5: trainerController.loadTrainers();
+					break;
 				case 6: flag = true;
-				break;
+					break;
 			}
 		}
 
