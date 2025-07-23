@@ -1,5 +1,4 @@
 package view;
-
 //utils
 import static utils.Dividers.printLongDivider;
 import java.util.ArrayList;

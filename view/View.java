@@ -1,5 +1,4 @@
 package view;
-
 /**
  * The {@code View} interface defines a set of methods for displaying messages
  * and prompting user input. It provides a generic skeleton for any viewer class

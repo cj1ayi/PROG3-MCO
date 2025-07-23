@@ -1,7 +1,6 @@
 package view;
 
 import java.util.Scanner;
-import java.util.ArrayList;
 
 /**
  * The {@code ConsoleView} class is part of VIEW.
