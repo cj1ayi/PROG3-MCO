@@ -37,10 +37,10 @@ public class MainController
 		ItemsManagement itemsModel = new ItemsManagement();
 		TrainerManagement trainerModel = new TrainerManagement();
 		
-		this.pokemonController = new PokemonController(pokemonModel, view);
+		this.pokemonController = new PokemonController(pokemonModel, movesModel, itemsModel, view);
 		this.movesController = new MovesController(movesModel, view);
 		this.itemsController = new ItemsController(itemsModel, view);
-		this.trainerController = new TrainerController(trainerModel, view, itemsModel, movesModel, pokemonModel);
+		this.trainerController = new TrainerController(trainerModel, pokemonModel, itemsModel, movesModel, view);
 	}
 	
 	/**
@@ -186,10 +186,6 @@ public class MainController
 		}
 	}
 
-	/**
-    * Placeholder for future Trainer management menu.
-    * TO BE IMPLEMENTED!
-    */
 	public void initTrainerMenu(){
 		boolean flag = false; 
 
@@ -202,12 +198,14 @@ public class MainController
 			view.show("-----------------------------------\n");
 			view.show("[4] SAVE   [5] LOAD        [6] EXIT\n");
 			view.show("-----------------------------------\n");
-			switch(view.promptIntRange("",1,6)){
+			switch(view.promptIntRange("",1,6))
+			{
 				case 1: trainerController.createTrainerProfile();
 					break;
-				case 2: trainerController.searchTrainers();
+				case 2: trainerController.searchTrainersMenu();
 					break;
-				case 3: trainerController.viewAllTrainersAndSelect();
+				case 3: trainerController.viewAllTrainersAndSelectMenu();
+					break;
 				case 4: trainerController.saveTrainers();
 					break;
 				case 5: trainerController.loadTrainers();
@@ -216,6 +214,5 @@ public class MainController
 					break;
 			}
 		}
-
 	}
 }

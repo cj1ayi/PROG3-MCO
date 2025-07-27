@@ -91,6 +91,28 @@ public class MovesManagement
 		return matchingMoves;
 	}
 	
+	public Moves searchMove(String attribute, String keyword) 
+	{
+		for (Moves move : moves) 
+		{ 
+			boolean matches = false;
+			switch (attribute) 
+			{
+				case "name": 
+					matches = move.getMoveName().toLowerCase().contains(keyword.toLowerCase());
+					break;
+				case "classification":
+					matches = move.getMoveClassification().toLowerCase().contains(keyword.toLowerCase());
+					break;
+				case "type":
+					matches = move.getMoveType1().toLowerCase().contains(keyword.toLowerCase());
+					break;
+			}
+			
+			if (matches) { return move; }
+		}
+		return null;
+	}
 	/**
 	 * Adds a new {@code Moves} object to the list.
 	 *

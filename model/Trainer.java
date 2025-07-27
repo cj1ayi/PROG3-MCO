@@ -1,97 +1,97 @@
 package model;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ArrayList;
 import java.util.Random;
 
 public class Trainer 
 {
-   private static int MAX_POKEMON_LINEUP = 6;
-   private Pokemon pokemonLineup[] = new Pokemon[MAX_POKEMON_LINEUP];
-
-   private int trainerID;
-   private String trainerName;
+   public static final int MAX_POKEMON_LINEUP = 6;
+	
+	private static int nextID = 100000; 
+   private int ID;
+   private String name;
    private String birthDate;
    private String sex;
    private String hometown;
    private String description;
-   private int money;
+   private double money;
 
    // Add these fields to store trainer's Pokemon and items
-   private ArrayList<Pokemon> lineup;
-   private ArrayList<Pokemon> storage;
-   private ArrayList<Items> inventory;
+   private Pokemon pokemonLineup[];
+	private int pokemonLineupCount;
+   private ArrayList<Pokemon> pokemonBox; //pokemon storage
+   private HashMap<Items, Integer> inventory;
 
-   public Trainer(String trainerName, String birthDate, String sex, String hometown, String description)
+	//constructor for file loading
+   public Trainer(int ID, String name, String birthDate, String sex, String hometown, String description, double money)
+   {	
+      this.ID = ID;
+		if (ID >= nextID) { nextID = ID + 1; }
+      this.name = name;
+      this.birthDate = birthDate;
+      this.sex = sex;
+      this.hometown = hometown;
+      this.description = description;
+      this.money = money;
+
+      // Initialize the collections
+      pokemonLineup = new Pokemon[MAX_POKEMON_LINEUP];
+		pokemonLineupCount = 0;
+
+      pokemonBox = new ArrayList<>();
+      inventory = new HashMap<>();
+   }
+
+	//constructor for new trainers (no IDs yet)
+	public Trainer(String name, String birthDate, String sex, String hometown, String description)
    {
-    this.trainerName = trainerName;
-    this.birthDate = birthDate;
-    this.sex = sex;
-    this.hometown = hometown;
-    this.description = description;
-    this.money = 1000000; // Initial Trainer Fund
-    generateID(); // Only generate ID for new trainers
+		this.ID = nextID++;
+		this.name = name;
+   	this.birthDate = birthDate;
+      this.sex = sex;
+      this.hometown = hometown;
+      this.description = description;
+      this.money = 1000000;
 
-    // Initialize the collections
-    this.lineup = new ArrayList<>();
-    this.storage = new ArrayList<>();
-    this.inventory = new ArrayList<>();
-}
+      // Initialize the collections
+      pokemonLineup = new Pokemon[MAX_POKEMON_LINEUP];
+		pokemonLineupCount = 0;
 
-   // Add a constructor for loading from file (without ID generation)
-   public Trainer(int trainerID, String trainerName, String birthDate, String sex, String hometown, String description, int money)
-   {
-       this.trainerID = trainerID; // Don't generate new ID
-       this.trainerName = trainerName;
-       this.birthDate = birthDate;
-       this.sex = sex;
-       this.hometown = hometown;
-       this.description = description;
-       this.money = money;
-
-       // Initialize the collections
-       this.lineup = new ArrayList<>();
-       this.storage = new ArrayList<>();
-       this.inventory = new ArrayList<>();
+      pokemonBox = new ArrayList<>();
+      inventory = new HashMap<>();
    }
 
    // Getters
-   public int getTrainerID() { return trainerID; }
-   public String getTrainerName() { return trainerName; }
+   public int getID() { return ID; }
+   public String getName() { return name; }
 	public String getBirthDate() { return birthDate; }
    public String getSex() { return sex; }
    public String getHometown() { return hometown; }
    public String getDescription() { return description; }
-   public int getMoney() { return money; }
-   public Pokemon[] getActivePokemon() { return pokemonLineup; }
-   public ArrayList<Pokemon> getLineup() { return lineup; }
-   public ArrayList<Pokemon> getStorage() { return storage; }
-   public ArrayList<Items> getInventory() { return inventory; }
-
+   public double getMoney() { return money; }
+   public Pokemon[] getPokemonLineup() { return pokemonLineup; }
+	public int getPokemonLineupCount() { return pokemonLineupCount; }
+   public ArrayList<Pokemon> getPokemonBox() { return pokemonBox; }
+   public HashMap<Items, Integer> getInventory() { return inventory; }
 
    // Setters
-   public void setTrainerID(int trainerID) { this.trainerID = trainerID; }
-   public void setTrainerName(String trainerName) { this.trainerName = trainerName; }
+   public void setID(int ID) { this.ID = ID; }
+   public void setName(String name) { this.name = name; }
    public void setBirthDate(String birthDate) { this.birthDate = birthDate; }
    public void setSex(String sex) { this.sex = sex; }
    public void setHometown(String hometown) { this.hometown = hometown; }
    public void setDescription(String description) { this.description = description; }
-   public void setMoney(int money) { this.money = money; }
-   public void setLineup(ArrayList<Pokemon> lineup) { this.lineup = lineup; }
-   public void setStorage(ArrayList<Pokemon> storage) { this.storage = storage; }
-   public void setInventory(ArrayList<Items> inventory) { this.inventory = inventory; }
-
-   // Methods
-
-   // Generate Random ID
-   private void generateID() 
-	{
-		Random random = new Random();
-		trainerID = 100000 + random.nextInt(900000); // Generate 6-digit number
-   }
+   public void setMoney(double money) { this.money = money; }
+   public void setPokemonLineup(Pokemon[] lineup) { this.pokemonLineup = lineup; }
+	public void setPokemonLineupCount(int count) { this.pokemonLineupCount = count; }
+   public void setPokemonBox(ArrayList<Pokemon> box) { this.pokemonBox = box; }
+   public void setInventory(HashMap<Items, Integer> inventory) { this.inventory = inventory; }
 
    // Add & Remove Money
-   public void addMoney(int amount) { this.money += amount; }
-   public boolean removeMoney(int amount) {
+   public void addMoney(double amount) { this.money += amount; }
+   public boolean deductMoney(double amount) {
       if (money >= amount) {
          this.money -= amount;
          return true;

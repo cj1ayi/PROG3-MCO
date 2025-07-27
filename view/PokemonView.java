@@ -71,23 +71,4 @@ public class PokemonView
 		
 		System.out.println("\n-----------------------------------");
 	}
-	
-	/**
-    * Displays all  moves from the Pokemon's moveset, given
-	 * that the value isn't null. Moves are displayed in numbered 
-	 * order (1 to 4).
-    *
-    * @param pokemon 	The {@code Pokemon} whose moveset will be displayed.
-    */
-	public void viewMoveSet(Pokemon pokemon)
-	{
-		int i = 1;
-		for(String move : pokemon.getMoveSet())
-		{
-			if(move == null) { continue; }
-			
-			System.out.println(i + "] " + move);
-			i++;
-		}
-	}
 }

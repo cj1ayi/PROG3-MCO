@@ -4,7 +4,9 @@ import static utils.FileHelper.fromSafe;
 import static utils.FileHelper.safe;
 import java.io.File;
 import java.io.PrintWriter;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -17,8 +19,19 @@ import java.util.Scanner;
  * Each {@code Trainer} object is saved as a line in the text file,
  * with all fields separated by a "|" delimiter.
  */
-public class TrainerFileHandler {
-    
+public class TrainerFileHandler 
+{    
+	private PokemonFileHandler handlePkmn;
+	private MovesFileHandler handleMoves;
+	private ItemsFileHandler handleItems;
+
+	public TrainerFileHandler()
+	{
+		handlePkmn = new PokemonFileHandler();
+		handleMoves = new MovesFileHandler();
+		handleItems = new ItemsFileHandler();
+	}
+
     /**
      * Saves the given trainer data to a file located at {@code model/db/Trainers.txt}.
      * Each trainer's data is saved with their Pokemon lineup and inventory.
@@ -28,261 +41,257 @@ public class TrainerFileHandler {
      * @param allStorage The storage for each trainer (parallel to trainers list)  
      * @param allInventories The inventories for each trainer (parallel to trainers list)
      */
-    public void save(ArrayList<Trainer> trainers, ArrayList<ArrayList<Pokemon>> allLineups, 
-                    ArrayList<ArrayList<Pokemon>> allStorage, ArrayList<ArrayList<Items>> allInventories) {
-        try {
-            PrintWriter writer = new PrintWriter("model/db/Trainers.txt");
-            
-            for (int i = 0; i < trainers.size(); i++) {
-                Trainer t = trainers.get(i);
-                if (t == null) { 
-                    continue; 
-                }
-                
-                // Basic trainer info
-                writer.write(safe(t.getTrainerID()));
-                writer.write(safe(t.getTrainerName()));
-                writer.write(safe(t.getBirthDate()));
-                writer.write(safe(t.getSex()));
-                writer.write(safe(t.getHometown()));
-                writer.write(safe(t.getDescription()));
-                writer.write(safe(t.getMoney()));
-                
-                // Pokemon lineup (save Pokemon names and levels)
-                ArrayList<Pokemon> lineup = (i < allLineups.size()) ? allLineups.get(i) : new ArrayList<>();
-                StringBuilder lineupStr = new StringBuilder();
-                for (int j = 0; j < lineup.size(); j++) {
-                    if (j > 0) lineupStr.append(",");
-                    Pokemon p = lineup.get(j);
-                    lineupStr.append(p.getName()).append(":").append(p.getBaseLevel());
-                    if (p.getHeldItem() != null && !p.getHeldItem().isEmpty()) {
-                        lineupStr.append(":").append(p.getHeldItem());
-                    }
-                }
-                writer.write(safe(lineupStr.toString()));
-                
-                // Pokemon storage
-                ArrayList<Pokemon> storage = (i < allStorage.size()) ? allStorage.get(i) : new ArrayList<>();
-                StringBuilder storageStr = new StringBuilder();
-                for (int j = 0; j < storage.size(); j++) {
-                    if (j > 0) storageStr.append(",");
-                    Pokemon p = storage.get(j);
-                    storageStr.append(p.getName()).append(":").append(p.getBaseLevel());
-                    if (p.getHeldItem() != null && !p.getHeldItem().isEmpty()) {
-                        storageStr.append(":").append(p.getHeldItem());
-                    }
-                }
-                writer.write(safe(storageStr.toString()));
-                
-                // Inventory (save item names and quantities)
-                ArrayList<Items> inventory = (i < allInventories.size()) ? allInventories.get(i) : new ArrayList<>();
-                StringBuilder inventoryStr = new StringBuilder();
-                // Group items by name and count them
-                ArrayList<String> uniqueItemNames = new ArrayList<>();
-                ArrayList<Integer> itemCounts = new ArrayList<>();
-                
-                for (Items item : inventory) {
-                    String itemName = item.getName();
-                    int index = uniqueItemNames.indexOf(itemName);
-                    if (index == -1) {
-                        uniqueItemNames.add(itemName);
-                        itemCounts.add(1);
-                    } else {
-                        itemCounts.set(index, itemCounts.get(index) + 1);
-                    }
-                }
-                
-                for (int j = 0; j < uniqueItemNames.size(); j++) {
-                    if (j > 0) inventoryStr.append(",");
-                    inventoryStr.append(uniqueItemNames.get(j)).append(":").append(itemCounts.get(j));
-                }
-                writer.write(safe(inventoryStr.toString()));
-                
-                writer.write("\n");
-            }
-            System.out.println("Successfully saved trainers with their Pokemon and items!");
-            writer.close();
-        } catch (IOException e) {
-            System.out.println("An error occurred while saving trainers.");
-            e.printStackTrace();
-        }
-    }
+   public void save(ArrayList<Trainer> trainers) 
+	{
+		//String directories 
+		String trainerDir = "model/db/trainer-data/Trainers.txt";
+		String lineupDir = "model/db/trainer-data/Lineup.txt";
+		String boxDir = "model/db/trainer-data/PokemonBox.txt";
+		String inventoryDir = "model/db/trainer-data/Inventory.txt";
+
+      try 
+		{
+			FileWriter reset = new FileWriter(trainerDir);
+			reset.close();
+			reset = new FileWriter(lineupDir);
+			reset.close();
+			reset = new FileWriter(boxDir);
+			reset.close();
+			reset = new FileWriter(inventoryDir);
+			reset.close();
+
+			FileWriter fileAppender = new FileWriter(trainerDir, true);
+      	PrintWriter writer = new PrintWriter(fileAppender);
+			for(Trainer t : trainers)
+			{
+				if(t == null) { continue; }
+				System.out.println("Successfully saved " + t.getName());
+				writer.write(safe(t.getID()));
+            writer.write(safe(t.getName()));
+            writer.write(safe(t.getBirthDate()));
+            writer.write(safe(t.getSex()));
+            writer.write(safe(t.getHometown()));
+            writer.write(safe(t.getDescription()));
+            writer.write(safe(t.getMoney()));
+				writer.write("\n");
+			}
+			writer.close();
+
+			fileAppender = new FileWriter(lineupDir, true); 
+			writer = new PrintWriter(fileAppender);
+			for(Trainer t : trainers)
+			{
+				if(t == null) { continue; }
+				writer.write(safe(t.getID())); //identify whose lineup is whose
+				writer.write("LINEUP|" + String.valueOf(t.getPokemonLineupCount()) + "|\n"); //tag the lineup count
+														 
+				for(Pokemon p : t.getPokemonLineup())
+				{
+					if(p == null) { continue; }
+					handlePkmn.saveAppend(p, fileAppender);
+				}
+			}
+			writer.close();
+			
+			fileAppender = new FileWriter(boxDir, true); 
+			writer = new PrintWriter(boxDir);
+			for(Trainer t : trainers)
+			{
+				if(t == null) { continue; }
+				writer.write(safe(t.getID())); 
+				writer.write("BOX|" + String.valueOf(t.getPokemonBox().size()) + "|\n"); //tag the box count
+
+				for(Pokemon p : t.getPokemonBox())
+				{
+					if(p == null) { continue; }
+					handlePkmn.saveAppend(p, fileAppender);
+				}
+			}
+			writer.close();
+
+		 	fileAppender = new FileWriter(inventoryDir, true);
+			writer = new PrintWriter(fileAppender);
+			for(Trainer t : trainers)
+			{
+				if(t == null) { continue; }
+				writer.write(safe(t.getID()));
+				writer.write("INVENTORY|" + String.valueOf(t.getInventory().size()) + "|\n"); //tag the inventory count
+				
+				for(HashMap.Entry<Items, Integer> i : t.getInventory().entrySet())
+				{
+					Items item = i.getKey();
+					int quantity = i.getValue();
+					writer.write(safe(quantity));
+					handleItems.saveAppend(item, fileAppender);
+				}
+			}
+
+         System.out.println("Successfully saved trainers with their Pokemon and items!");
+         writer.close();
+		} catch (IOException e) 
+		{
+         System.out.println("An error occurred while saving trainers.");
+         e.printStackTrace();
+   	}
+	}
+	
     
     /**
      * Loads trainer data from the file.
      * Returns arrays for trainers, lineups, storage, and inventories.
      */
-    public TrainerData load(PokemonManagement pokemonModel, ItemsManagement itemsModel) {
-        ArrayList<Trainer> trainerList = new ArrayList<>();
-        ArrayList<ArrayList<Pokemon>> allLineups = new ArrayList<>();
-        ArrayList<ArrayList<Pokemon>> allStorage = new ArrayList<>();
-        ArrayList<ArrayList<Items>> allInventories = new ArrayList<>();
-        
-        try {
-            File load = new File("model/db/Trainers.txt");
-            if (!load.exists()) {
-                return new TrainerData(trainerList, allLineups, allStorage, allInventories);
-            }
-            
-            Scanner scanner = new Scanner(load);
-            
-            while (scanner.hasNextLine()) {
-                String tokens[] = scanner.nextLine().split("\\|");
-                
-                if (tokens.length < 10) continue; // Skip invalid lines
-                
-                int trainerID = Integer.parseInt(tokens[0]);
-                String trainerName = fromSafe(tokens[1]);
-                String birthDate = fromSafe(tokens[2]);
-                String sex = fromSafe(tokens[3]);
-                String hometown = fromSafe(tokens[4]);
-                String description = fromSafe(tokens[5]);
-                int money = Integer.parseInt(tokens[6]);
-                
-                // Create trainer with loaded data (no ID regeneration)
-                Trainer trainer = new Trainer(trainerID, trainerName, birthDate, sex, hometown, description, money);
-                
-                // Load lineup
-                ArrayList<Pokemon> lineup = new ArrayList<>();
-                String lineupStr = fromSafe(tokens[7]);
-                if (!lineupStr.isEmpty()) {
-                    String[] pokemonEntries = lineupStr.split(",");
-                    for (String entry : pokemonEntries) {
-                        String[] pokemonData = entry.split(":");
-                        if (pokemonData.length >= 2) {
-                            String pokemonName = pokemonData[0];
-                            int level = Integer.parseInt(pokemonData[1]);
-                            String heldItem = pokemonData.length > 2 ? pokemonData[2] : null;
-                            
-                            Pokemon pokemon = findAndCopyPokemon(pokemonModel, pokemonName);
-                            if (pokemon != null) {
-                                pokemon.setBaseLevel(level);
-                                if (heldItem != null && !heldItem.isEmpty()) {
-                                    pokemon.setHeldItem(heldItem);
-                                }
-                                lineup.add(pokemon);
-                            }
-                        }
-                    }
-                }
-                
-                // Load storage
-                ArrayList<Pokemon> storage = new ArrayList<>();
-                String storageStr = fromSafe(tokens[8]);
-                if (!storageStr.isEmpty()) {
-                    String[] pokemonEntries = storageStr.split(",");
-                    for (String entry : pokemonEntries) {
-                        String[] pokemonData = entry.split(":");
-                        if (pokemonData.length >= 2) {
-                            String pokemonName = pokemonData[0];
-                            int level = Integer.parseInt(pokemonData[1]);
-                            String heldItem = pokemonData.length > 2 ? pokemonData[2] : null;
-                            
-                            Pokemon pokemon = findAndCopyPokemon(pokemonModel, pokemonName);
-                            if (pokemon != null) {
-                                pokemon.setBaseLevel(level);
-                                if (heldItem != null && !heldItem.isEmpty()) {
-                                    pokemon.setHeldItem(heldItem);
-                                }
-                                storage.add(pokemon);
-                            }
-                        }
-                    }
-                }
-                
-                // Load inventory
-                ArrayList<Items> inventory = new ArrayList<>();
-                String inventoryStr = fromSafe(tokens[9]);
-                if (!inventoryStr.isEmpty()) {
-                    String[] itemEntries = inventoryStr.split(",");
-                    for (String entry : itemEntries) {
-                        String[] itemData = entry.split(":");
-                        if (itemData.length >= 2) {
-                            String itemName = itemData[0];
-                            int quantity = Integer.parseInt(itemData[1]);
-                            
-                            Items item = findItem(itemsModel, itemName);
-                            if (item != null) {
-                                for (int i = 0; i < quantity; i++) {
-                                    inventory.add(item);
-                                }
-                            }
-                        }
-                    }
-                }
-                
-                trainerList.add(trainer);
-                allLineups.add(lineup);
-                allStorage.add(storage);
-                allInventories.add(inventory);
-            }
-            System.out.println("Successfully loaded trainers with their Pokemon and items!");
-            scanner.close();
-        } catch (Exception e) {
-            System.out.println("An error occurred while loading trainers.");
-            e.printStackTrace();
-        }
-        
-        return new TrainerData(trainerList, allLineups, allStorage, allInventories);
-    }
-    
-    private Pokemon findAndCopyPokemon(PokemonManagement pokemonModel, String name) {
-        for (Pokemon p : pokemonModel.getPokemonList()) {
-            if (p.getName().equalsIgnoreCase(name)) {
-                return createPokemonCopy(p);
-            }
-        }
-        return null;
-    }
-    
-    private Pokemon createPokemonCopy(Pokemon original) {
-        Pokemon copy = new Pokemon();
-        copy.setPokedexNum(original.getPokedexNum());
-        copy.setName(original.getName());
-        copy.setType1(original.getType1());
-        copy.setType2(original.getType2());
-        copy.setBaseLevel(original.getBaseLevel());
-        copy.setEvolvesFrom(original.getEvolvesFrom());
-        copy.setEvolvesTo(original.getEvolvesTo());
-        copy.setEvolutionLevel(original.getEvolutionLevel());
-        copy.setHp(original.getHp());
-        copy.setAtk(original.getAtk());
-        copy.setDef(original.getDef());
-        copy.setSpd(original.getSpd());
-        
-        // Copy moves
-        String[] originalMoves = original.getMoveSet();
-        for (String move : originalMoves) {
-            if (move != null && !move.isEmpty()) {
-                copy.addMoveToNextSlot(move);
-            }
-        }
-        
-        return copy;
-    }
-    
-    private Items findItem(ItemsManagement itemsModel, String name) {
-        for (Items item : itemsModel.getItems()) {
-            if (item.getName().equalsIgnoreCase(name)) {
-                return item;
-            }
-        }
-        return null;
-    }
-    
-    // Helper class to return multiple data types
-    public static class TrainerData {
-        public final ArrayList<Trainer> trainers;
-        public final ArrayList<ArrayList<Pokemon>> lineups;
-        public final ArrayList<ArrayList<Pokemon>> storage;
-        public final ArrayList<ArrayList<Items>> inventories;
-        
-        public TrainerData(ArrayList<Trainer> trainers, ArrayList<ArrayList<Pokemon>> lineups,
-                          ArrayList<ArrayList<Pokemon>> storage, ArrayList<ArrayList<Items>> inventories) {
-            this.trainers = trainers;
-            this.lineups = lineups;
-            this.storage = storage;
-            this.inventories = inventories;
-        }
-    }
+	public ArrayList<Trainer> load()
+	{
+		//String directories 
+		String trainerDir = "model/db/trainer-data/Trainers.txt";
+		String lineupDir = "model/db/trainer-data/Lineup.txt";
+		String boxDir = "model/db/trainer-data/PokemonBox.txt";
+		String inventoryDir = "model/db/trainer-data/Inventory.txt";
+
+		ArrayList<Trainer> trainerList = new ArrayList<>();
+		int currId = 0; 
+
+		try 
+		{	
+			File load = new File(trainerDir);
+			Scanner scanner = new Scanner(load);
+			
+			while(scanner.hasNextLine())
+			{
+				String tokens[] = scanner.nextLine().split("\\|");
+         	int trainerID = Integer.parseInt(tokens[0]);
+            String trainerName = fromSafe(tokens[1]);
+          	String birthDate = fromSafe(tokens[2]);
+            String sex = fromSafe(tokens[3]);
+         	String hometown = fromSafe(tokens[4]);
+            String description = fromSafe(tokens[5]);
+            double money = Double.parseDouble(tokens[6]);
+				
+				Trainer t = new Trainer(trainerID, trainerName, birthDate, sex, hometown, description, money);
+				
+				trainerList.add(t);
+			}
+
+			/*LINEUP*/
+			load = new File(lineupDir);
+			scanner = new Scanner(load);
+			
+			Pokemon pkmnList[];
+			int pkmnCount;
+
+			while(scanner.hasNextLine())
+			{
+				String[] tokens = scanner.nextLine().split("\\|");
+				if(tokens.length >= 3 && fromSafe(tokens[1]).equals("LINEUP"))
+				{	
+					pkmnList = new Pokemon[Trainer.MAX_POKEMON_LINEUP];
+					pkmnCount = 0;
+					
+					currId = Integer.parseInt(tokens[0]);
+					pkmnCount = Integer.parseInt(tokens[2]);
+
+					for(int i = 0; i < pkmnCount; i++)
+					{
+						Pokemon pokemon = handlePkmn.loadPokemon(lineupDir, scanner);
+						if(pokemon != null) { pkmnList[i] = pokemon; }
+					}
+
+					//once all the pokemon for this lineup have been scanned
+					//we will locate the trainer with that ID and js shove it
+					//up in there LOL
+
+					for(Trainer t : trainerList)
+					{
+						if(t == null) { continue; }
+						if(t.getID() == currId)
+						{
+							t.setPokemonLineup(pkmnList);
+							t.setPokemonLineupCount(pkmnCount);
+							System.out.println("Successfully assigned " + pkmnCount + " Pokemon to trainer ID: " + t.getID());
+						}
+					}
+				}
+			}
+
+			load = new File(boxDir);
+			scanner = new Scanner(load);
+
+			ArrayList<Pokemon> pkmnBox;
+			while(scanner.hasNextLine())
+			{
+				String[] tokens = scanner.nextLine().split("\\|");
+				if(tokens.length >= 3 && fromSafe(tokens[1]).equals("BOX"))
+				{
+					pkmnBox = new ArrayList<>();
+					pkmnCount = 0;
+					
+					currId = Integer.parseInt(tokens[0]);
+					pkmnCount = Integer.parseInt(tokens[2]);
+
+					for(int i = 0; i < pkmnCount; i++)
+					{
+						Pokemon pokemon = handlePkmn.loadPokemon(lineupDir, scanner);
+						if(pokemon != null) { pkmnBox.add(pokemon); }
+					}
+
+					for(Trainer t : trainerList)
+					{
+						if(t == null) { continue; }
+						if(t.getID() == currId) { t.setPokemonBox(pkmnBox); }	
+					}
+				}
+			}
+
+			load = new File(inventoryDir);
+			scanner = new Scanner(load);
+
+			HashMap<Items, Integer> inventory = new HashMap<>(); 
+			while(scanner.hasNextLine())
+			{
+				String[] tokens = scanner.nextLine().split("\\|");
+				if(tokens.length >= 3 && fromSafe(tokens[1]).equals("INVENTORY")) 
+				{
+					currId = Integer.parseInt(tokens[0]);
+					int inventoryCount = Integer.parseInt(tokens[2]);
+
+					for(int i = 0; i < inventoryCount; i++)
+					{
+						tokens = scanner.nextLine().split("\\|");
+						String itemName = fromSafe(tokens[2]);
+						String itemCategory = fromSafe(tokens[3]);
+						String itemDesc = fromSafe(tokens[4]);
+						String itemEffects = fromSafe(tokens[5]);
+						double itemBuyingPrice = Double.parseDouble(tokens[6]);
+						double itemBuyingPriceCheck = Double.parseDouble(tokens[7]);
+						double itemSellingPrice = Double.parseDouble(tokens[8]);
+						int itemQuantity = Integer.parseInt(tokens[0]);
+
+						Items item = new Items(itemName, itemCategory, itemDesc, itemEffects, itemBuyingPrice, itemBuyingPriceCheck, itemSellingPrice);
+
+						if(item != null && itemQuantity > 0) { inventory.put(item, itemQuantity); }
+						else { System.out.println("Something went terribly wrong HASHMAP LOADING INVENTORY"); }
+					}
+
+					for(Trainer t : trainerList)
+					{
+						if(t == null) { continue; }
+						if(t.getID() == currId)	
+						{ 
+							t.setInventory(new HashMap<>(inventory)); 
+							inventory.clear();
+						}
+					}
+				}
+			}
+
+			System.out.println("Successfully saved Trainers!");
+			scanner.close();
+			return trainerList;
+		} catch (Exception e)
+		{
+			System.out.println("Error while loading trainer");
+			e.printStackTrace();
+		}
+		return null;
+	}
 }

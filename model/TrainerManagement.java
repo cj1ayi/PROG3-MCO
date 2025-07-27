@@ -1,369 +1,588 @@
 package model;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ArrayList;
 import java.util.Random;
 
 public class TrainerManagement
 {
-    ArrayList <Trainer> trainers = new ArrayList<>();
-    ArrayList<Pokemon> lineup = new ArrayList<>();
-    ArrayList<Pokemon> storage = new ArrayList<>();
-    ArrayList<Items> inventory = new ArrayList<>();
-    private MovesManagement movesModel;
-    private final int MAX_POKEMON = 6;
-    private final int MAX_UNIQUE_ITEMS = 10;
-    private final int MAX_TOTAL_ITEMS = 50;
+	ArrayList <Trainer> trainers;
 
-    public TrainerManagement() {
-        movesModel = new MovesManagement();
-    }
+	private PokemonManagement managePkmn;
+	private MovesManagement manageMoves;
+	private ItemsManagement manageItems;
 
-    public void addTrainer(Trainer t) {
-        if (t != null) {
-            // DON'T override the ID if it's already set (for loaded trainers)
-            if (t.getTrainerID() == 0) {
-                // Only generate ID for new trainers (ID defaults to 0)
-                int newID = generateUniqueID();
-                t.setTrainerID(newID);
-            }
-            trainers.add(t);
-        }
-    }
+   public TrainerManagement() 
+	{
+		trainers = new ArrayList<>();
 
-    private int generateUniqueID() {
-        Random random = new Random();
-        int newID;
-        boolean isUnique;
+		managePkmn = new PokemonManagement();
+		manageMoves = new MovesManagement();
+		manageItems = new ItemsManagement();
+   }
+
+	/**
+	 *	Function adds trainer to array list
+	 *
+	 *	@param trainer	Trainer to add
+	 **/
+   public void addTrainer(Trainer trainer) 
+	{
+		trainers.add(trainer);
+   }
+
+	/**
+	 *	Function adds a pokemon to storage
+	 * 
+	 * @param trainer		Trainer to change storage
+	 * @param pokemon 	Pokemon to add to storage
+	 **/
+	public void addToStorage(Trainer trainer, Pokemon pokemon)
+	{
+		ArrayList<Pokemon> pokemonBox = trainer.getPokemonBox();
+		pokemonBox.add(pokemon);
+	}
+	
+	/**
+	 *	Function checks if theres any space to add pokemon
+	 *
+	 * @param trainer		Trainer to check lineup
+	 * @return				Returns TRUE if theres space, FALSE otherwise
+	 **/
+	public boolean canAddPokemon(Trainer trainer)
+	{
+		Pokemon[] lineup = trainer.getPokemonLineup();
+		for (Pokemon p : lineup)
+			if(p == null) { return true; }
+
+		return false;
+	}
+
+	/**
+	 *	Function adds a pokemon to a given trainers lineup
+	 *
+	 *	@param trainer		Trainer to change lineup
+	 * @param pokemon		Pokemon to add to lineup
+	 * @return 				Returns -1 if its invalid, 1 if added to lineup, and 0 if added to storage
+	 **/
+	public int addPokemon(Trainer trainer, Pokemon pokemon)
+	{
+		//invalid pokemon
+		if (pokemon == null) { return -1; }
+		
+		//ddboot to the storage box lol
+		if (trainer.getPokemonLineupCount() == Trainer.MAX_POKEMON_LINEUP)
+      {
+			addToStorage(trainer, pokemon);	
+			return 0;
+		}
+		
+		//add to lineup
+		Pokemon[] lineup = trainer.getPokemonLineup();
+
+		int i;
+		for(i = 0; i < Trainer.MAX_POKEMON_LINEUP; i++)
+		{
+			if(lineup[i] != null) { continue; } 
+			
+			lineup[i] = pokemon;
+			trainer.setPokemonLineupCount(trainer.getPokemonLineupCount() + 1);
+			return 1;
+		}
+
+		return 0;
+   }
+
+	/**
+	 * Function switches lineup and storage pokemon
+	 *
+	 * @param storageIndex	The storage index at which will be modified
+	 * @param lineupIndex	The lineup index at which will be modified
+	 * @return 					Returns TRUE if successfully swapped, FALSE otherwise
+	 **/
+	public boolean switchPokemon(Trainer trainer, int boxIndex, int lineupIndex) 
+	{
+		ArrayList<Pokemon> pokemonBox = trainer.getPokemonBox();
+      if (boxIndex < 0 || boxIndex >= pokemonBox.size()) { return false; } //invalid storage index
+
+		Pokemon pokemonInBox = pokemonBox.get(boxIndex);
+		Pokemon[] lineup = trainer.getPokemonLineup();
+		Pokemon temp;
+
+		if (lineupIndex == -1)
+		{
+			int i;
+			for(i = 0; i < Trainer.MAX_POKEMON_LINEUP; i++)
+			{
+				if(lineup[i] != null) { continue; }
+				
+				//store temp lineup pokemon
+				//lineup will be swapped with storage pokemon
+				//storage removes AT that index
+				//storage adds AT that index
+				temp = lineup[i];
+				lineup[i] = pokemonInBox;
+				pokemonBox.remove(boxIndex);
+				pokemonBox.add(boxIndex, temp);
+				
+				trainer.setPokemonLineupCount(trainer.getPokemonLineupCount() + 1);
+			}
+			System.out.println("Successfully added!");
+			return true;
+		}
+
+		temp = lineup[lineupIndex];	
+		lineup[lineupIndex] = pokemonInBox;
+		pokemonBox.remove(boxIndex);
+		pokemonBox.add(boxIndex, temp);
+		System.out.println("Successfully swapped!");
+		return true;
+	}
+
+	/**
+	 * Function 'releases' Pokemon, removes every instance from lineup or storage
+	 *
+	 * @param trainer		Trainer to release pokemons from
+	 * @param pokemon		Pokemon to release
+	 **/
+	public void releasePokemon(Trainer trainer, Pokemon pokemon)
+	{
+		Pokemon[] lineup = trainer.getPokemonLineup();
+		ArrayList<Pokemon> storage = trainer.getPokemonBox();
+
+		if	(storage.remove(pokemon))
+		{
+			System.out.println("Pokemon removed from storage!");
+			return;
+		}
+		else
+			System.out.println("Pokemon NOT removed from storage!");
+
+		//soo its a bit complicated.. but basically, it goes through the entirety of
+		//the pokemon lineup array. Deletes the instance of that pokemon
+		//and shifts the array to the left
+		int i;
+		for(i = 0; i < Trainer.MAX_POKEMON_LINEUP; i++)
+		{
+			if(lineup[i] == null) { continue; } 
+			
+			if(lineup[i] == pokemon)
+			{
+				int j;
+				for(j = i; j < Trainer.MAX_POKEMON_LINEUP - 1 && lineup[j+1] != null; j++)
+				{
+					lineup[j] = lineup[j+1];
+				}
+				trainer.setPokemonLineupCount(trainer.getPokemonLineupCount() - 1);
+				System.out.println("Pokemon removed from Lineup");
+				lineup[j] = null;
+				return;
+			}
+		}
+	}
+
+	/* Items */
+	
+	public boolean canBuyItem(Items item)
+	{
+		if (item.getBuyingPrice1() == -1)
+			return false;
+		return true;
+	}
+
+	public boolean hasBuyRange(Items item)
+	{
+		if (item.getBuyingPrice2() == -1)
+			return false;
+		return true;
+	}
+
+	public double generateItemPrice(Items item)
+	{
+		Random rand = new Random();
+		return item.getBuyingPrice1() + (rand.nextDouble() * (item.getBuyingPrice2() - item.getBuyingPrice1()));
+	}
+
+	/**
+	 * Function allows trainer to buy an item given an item and quantity
+	 *
+	 * Pre-condition: Assumes you can buy the item
+	 *
+	 * @param trainer		Trainer that will add items to
+	 * @param item			Item to be added
+	 * @param quantity	Amount of items to be added 
+	 * @return				Returns TRUE if the item(s) were brought, FALSE otherwise
+	 **/
+   public int buyItem(Trainer trainer, Items item, int quantity, double currentBuyingPrice) 
+	{
+   	if (trainer == null || item == null || quantity <= 0)
+      	return 1;
+
+      Map<Items, Integer> inventory = trainer.getInventory();  
+
+		//calculate cost
+		double totalCost;
+		if (hasBuyRange(item))
+			totalCost = currentBuyingPrice * quantity;
+		else
+      	totalCost = item.getBuyingPrice1() * quantity;
         
-        do {
-            newID = 100000 + random.nextInt(900000); // Generate 6-digit number
-            isUnique = true;
+      // Check if trainer has enough money
+      if (trainer.getMoney() < totalCost)
+         return 2;
+
+		//if size is over fifty
+		if (inventory.size() > 50)
+		{
+			System.out.println("full inventory");
+			return 3;
+		}
+       
+		if (inventory.getOrDefault(item, 0) + quantity > 10)
+		{
+			System.out.println("max unique items");
+			return 4;
+		}
+
+      // Deduct money and add items
+      trainer.deductMoney(totalCost);
+		inventory.put(item, inventory.getOrDefault(item, 0) + quantity);
+      return 0;
+	}
+
+	/**
+	 *	Function allows trainer to sell an item given an item NAME and quantity
+	 *
+	 *	@param trainer		Trainer that wants to sell an item
+	 *	@param itemName	Item NAME to sell 
+	 *	@param quantity	Amount of items to be added
+	 *	@return				Returns TRUE if the item(s) were sold, FALSE otherwise
+	 **/
+   public boolean sellItem(Trainer trainer, Items item, int quantity) 
+	{
+   	if (trainer == null || item == null || quantity <= 0)
+      	return false;
+        
+		HashMap<Items, Integer> inventory = trainer.getInventory();
+
+      // Count available items
+		double totalValue = item.getSellingPrice() * quantity;
+		int available = inventory.getOrDefault(item, 0);
+		int remaining = available - quantity;
+      
+		if (remaining < 0) { return false; } // Not enough items to sell
+		else if(remaining == 0)	{ inventory.remove(item); }
+		else { inventory.put(item, available - quantity); }
+
+      // Add money to trainer
+      trainer.addMoney(totalValue);
+      return true;
+	}
+
+	public boolean useEvolutionStone(Pokemon pokemon, Items item, PokemonManagement pkmnModel)
+	{
+		int[] evolvablePokedexNum = new int[10];
+		int[] evolvedPokedexNum = new int[10];
+		switch(item.getName().toLowerCase())
+		{
+			case "fire stone":
+				evolvablePokedexNum = new int[]{37, 58, 133, 513, 951};
+				evolvedPokedexNum = new int[]{38, 59, 136, 514, 952};
+				break;
+			case "water stone":
+				evolvablePokedexNum = new int[]{61, 90, 120, 133, 271, 515};
+				evolvedPokedexNum = new int[]{62, 91, 121, 134, 272, 516};
+				break;
+			case "thunder stone":
+				evolvablePokedexNum = new int[]{25, 82, 133, 299, 603, 737, 938};
+				evolvedPokedexNum = new int[]{26, 462, 135, 476, 604, 738, 939};
+				break;
+			case "leaf stone":
+				evolvablePokedexNum = new int[]{44, 70, 102, 100, 133, 274, 511};
+				evolvedPokedexNum = new int[]{45, 71, 103, 470, 134, 275, 512};
+				break;
+			case "moon stone":
+				evolvablePokedexNum = new int[]{30, 33, 35, 39, 300, 517};
+				evolvedPokedexNum = new int[]{31, 34, 36, 40, 301, 518};
+				break;
+			case "sun stone":
+				evolvablePokedexNum = new int[]{44, 191, 546, 548, 694};
+				evolvedPokedexNum = new int[]{182, 192, 547, 549, 695};
+				break;
+			case "dusk stone":
+				evolvablePokedexNum = new int[]{198, 200, 608, 680};
+				evolvablePokedexNum = new int[]{430, 429, 609, 681};
+				break;
+			case "dawn stone":
+				evolvablePokedexNum = new int[]{281, 361};
+				evolvedPokedexNum = new int[]{475, 478};
+				break;
+			case "ice stone":
+				evolvablePokedexNum = new int[]{27, 37, 133, 554, 739, 974};
+				evolvedPokedexNum = new int[]{28, 38, 471, 555, 740, 975};
+		}
+
+		int i = 0;
+		for(int pokedex : evolvablePokedexNum)
+		{
+			if(pokedex == pokemon.getPokedexNum())
+			{
+				Pokemon evolvedPokemon = pkmnModel.searchOnePokemon("pokedex", String.valueOf(evolvedPokedexNum[i]));
+				if(evolvedPokemon == null) 
+				{
+					System.out.println("Evolution of this pokemon does not exist in the pokedex yet.");
+					return false;
+				}	
+
+				pokemon.setName(evolvedPokemon.getName());
+				pokemon.setPokedexNum(evolvedPokemon.getPokedexNum());
+				pokemon.setHp(evolvedPokemon.getHp());
+				pokemon.setAtk(evolvedPokemon.getAtk());
+				pokemon.setDef(evolvedPokemon.getDef());
+				pokemon.setSpd(evolvedPokemon.getSpd());
+				pokemon.setEvolvesFrom(evolvedPokemon.getEvolvesFrom());
+				pokemon.setEvolvesTo(evolvedPokemon.getEvolvesTo());
+				pokemon.setEvolutionLevel(evolvedPokemon.getEvolutionLevel());
+
+				return true;
+			}
+			i++;
+		}
+
+		return false;
+	}
+
+   // Helper method to apply item effects
+	private void applyItemEffects(Pokemon pokemon, Items item, PokemonManagement pkmnModel) 
+	{
+   	String category = item.getCategory().toLowerCase();
+   	String effects = item.getEffects().toLowerCase();
+        
+		if(category.contains("vitamin") || category.contains("medicine"))
+		{
+      	// Apply stat boosts or healing based on effects
+      	if (effects.contains("hp")) 
+			{
+				// Boost HP (implementation depends on Pokemon class methods)
+            pokemon.setHp(pokemon.getHp() + 10); // Example boost
+            System.out.println(pokemon.getName() + "'s HP increased by 10!");
+			}
             
-            // Check if ID already exists
-            for (Trainer trainer : trainers) {
-                if (trainer.getTrainerID() == newID) {
-                    isUnique = false;
-                    break;
-                }
-            }
-        } while (!isUnique);
-        
-        return newID;
-    }
+			if (effects.contains("attack")) 
+			{
+         	pokemon.setAtk(pokemon.getAtk() + 10);
+            System.out.println(pokemon.getName() + "'s ATK increased by 10!");
+			}
 
-    public void addToStorage(Pokemon p){
-        if (p != null) {
-            storage.add(p);
-        }
-    }
+         if (effects.contains("defense")) 
+			{
+         	pokemon.setDef(pokemon.getDef() + 10);
+            System.out.println(pokemon.getName() + "'s DEF increased by 10!");
+			}
 
-    public int addPokemon(Pokemon p)
-    {
-        if (p == null) {
-            return -1; // Invalid Pokemon
-        }
-        
-        // Add pokemon to lineup
-        if (lineup.size() < MAX_POKEMON) {
-            lineup.add(p);
-            return 1;
-        }
-        else {
-            // Add to storage if lineup is already full
-            addToStorage(p);
-            return 0;
-        }
-    }
+         if (effects.contains("speed")) 
+			{
+            pokemon.setSpd(pokemon.getSpd() + 10);
+            System.out.println(pokemon.getName() + "'s DEF increased by 10!");
+			}
+		
+   	}
 
+		if (category.contains("feather"))
+		{
+			// Apply stat boosts or healing based on effects
+      	if (effects.contains("hp")) 
+			{
+				// Boost HP (implementation depends on Pokemon class methods)
+            pokemon.setHp(pokemon.getHp() + 1); // Example boost
+            System.out.println(pokemon.getName() + "'s HP increased by 1!");
+			}
+            
+			if (effects.contains("attack")) 
+			{
+         	pokemon.setAtk(pokemon.getAtk() + 1);
+            System.out.println(pokemon.getName() + "'s ATK increased by 1!");
+			}
 
-    public boolean switchPokemon(int storageIndex, int lineupIndex) {
-        if (storageIndex < 0 || storageIndex >= storage.size()) {
-            return false; // Invalid storage index
-        }
+         if (effects.contains("defense")) 
+			{
+         	pokemon.setDef(pokemon.getDef() + 1);
+            System.out.println(pokemon.getName() + "'s DEF increased by 1!");
+			}
 
-        Pokemon toSwitch = storage.get(storageIndex);
-        if (lineupIndex == -1) { // Try to add to empty spot
-            if (lineup.size() < MAX_POKEMON) {
-                lineup.add(toSwitch);
-                storage.remove(storageIndex);
-                return true;
-            }
-            return false; // Lineup full
+         if (effects.contains("speed")) 
+			{
+            pokemon.setSpd(pokemon.getSpd() + 1);
+            System.out.println(pokemon.getName() + "'s SPD increased by 1!");
+			}
+		}
 
-        } else if (lineupIndex >= 0 && lineupIndex < lineup.size()) { // Replace existing
-            Pokemon replaced = lineup.get(lineupIndex);
-            lineup.set(lineupIndex, toSwitch);
-            storage.remove(storageIndex);
+		if (category.contains("hold"))
+		{
+			Items toHold = manageItems.searchItem("name", item.getName());	
+			pokemon.setHeldItem(toHold);
+         System.out.println(pokemon.getName() + " is now holding " + item.getName());
+		} 
 
-            if (replaced != null) {
-                storage.add(replaced);
-            }
-            return true;
-        }
-        return false; // Invalid lineup index
-    }
+		if (category.contains("evolution"))
+		{
+			String old = pokemon.getName();
+			if(useEvolutionStone(pokemon, item, pkmnModel))
+			{
+				System.out.println("Succesfully evolved " + old + " into " + pokemon.getName());
+			}
+			else
+			{
+				System.out.println("Pokemon was not evolved!");
+			}
+		} else if (category.contains("level item"))
+		{
+			pokemon.setBaseLevel(pokemon.getBaseLevel() + 1);
+		}
+   }
 
-    public void releasePokemon(Pokemon p){
-        lineup.remove(p);
-        storage.remove(p);
-    }
+   // Use Item method
+   public boolean useItem(Trainer trainer, Pokemon pokemon, Items item, PokemonManagement pkmnModel) 
+	{
+   	if (trainer == null || pokemon == null || item == null) 
+      	return false;
+        
+		HashMap<Items, Integer> inventory = trainer.getInventory();
 
-    // Buy Item method
-    public boolean buyItem(Trainer trainer, Items item, int quantity) {
-        if (trainer == null || item == null || quantity <= 0) {
-            return false;
-        }
-        
-        double totalCost = item.getBuyingPrice1() * quantity;
-        
-        // Check if trainer has enough money
-        if (trainer.getMoney() < totalCost) {
-            return false;
-        }
-        
-        // Check inventory limits
-        int currentTotalItems = getTotalItemCount();
-        int currentUniqueItems = getUniqueItemCount();
-        
-        if (currentTotalItems + quantity > MAX_TOTAL_ITEMS) {
-            return false; // Exceeds total item limit
-        }
-        
-        // Check if adding new unique item would exceed limit
-        boolean itemExists = false;
-        for (Items i : inventory) {
-            if (i.getName().equals(item.getName())) {
-                itemExists = true;
-                break;
-            }
-        }
-        
-        if (!itemExists && currentUniqueItems >= MAX_UNIQUE_ITEMS) {
-            return false; // Would exceed unique item limit
-        }
-        
-        // Deduct money and add items
-        trainer.removeMoney((int)totalCost);
-        
-        // Add items to inventory
-        for (int i = 0; i < quantity; i++) {
-            inventory.add(item);
-        }
-        
-        return true;
-    }
+      // Find and remove item from inventory
+		int available = inventory.getOrDefault(item, 0);
 
-    // Sell Item method
-    public boolean sellItem(Trainer trainer, String itemName, int quantity) {
-        if (trainer == null || itemName == null || quantity <= 0) {
-            return false;
-        }
-        
-        // Count available items
-        int availableCount = 0;
-        for (Items item : inventory) {
-            if (item.getName().equals(itemName)) {
-                availableCount++;
-            }
-        }
-        
-        if (availableCount < quantity) {
-            return false; // Not enough items to sell
-        }
-        
-        // Remove items and calculate money to add
-        double totalValue = 0;
-        int removed = 0;
-        
-        for (int i = inventory.size() - 1; i >= 0 && removed < quantity; i--) {
-            Items item = inventory.get(i);
-            if (item.getName().equals(itemName)) {
-                totalValue += item.getSellingPrice();
-                inventory.remove(i);
-                removed++;
-            }
-        }
-        
-        // Add money to trainer
-        trainer.addMoney((int)totalValue);
-        return true;
-    }
+		if(available > 0)
+		{
+			int remaining = available - 1;
 
-    // Use Item method
-    public boolean useItem(Pokemon pokemon, String itemName) {
-        if (pokemon == null || itemName == null) {
-            return false;
-        }
-        
-        // Find and remove item from inventory
-        Items itemToUse = null;
-        for (int i = 0; i < inventory.size(); i++) {
-            Items item = inventory.get(i);
-            if (item.getName().equals(itemName)) {
-                itemToUse = item;
-                inventory.remove(i);
-                break;
-            }
-        }
-        
-        if (itemToUse == null) {
-            return false; // Item not found
-        }
-        
-        // Apply item effects based on category and description
-        applyItemEffects(pokemon, itemToUse);
-        return true;
-    }
+			//remove one item of that kind from the inventory
+			if(remaining == 0) { inventory.remove(item); }
+			else { inventory.put(item, remaining); }
 
-    // Helper method to apply item effects
-    private void applyItemEffects(Pokemon pokemon, Items item) {
-        String category = item.getCategory().toLowerCase();
-        String effects = item.getEffects().toLowerCase();
-        
-        if (category.contains("vitamin") || category.contains("medicine")) {
-            // Apply stat boosts or healing based on effects
-            if (effects.contains("hp")) {
-                // Boost HP (implementation depends on Pokemon class methods)
-                pokemon.setHp(pokemon.getHp() + 10); // Example boost
-            }
-            if (effects.contains("attack")) {
-                pokemon.setAtk(pokemon.getAtk() + 10);
-            }
-            if (effects.contains("defense")) {
-                pokemon.setDef(pokemon.getDef() + 10);
-            }
-            if (effects.contains("speed")) {
-                pokemon.setSpd(pokemon.getSpd() + 10);
-            }
-        } else if (category.contains("held") || category.contains("accessory")) {
-            // Set as held item (replace current held item)
-            pokemon.setHeldItem(item.getName());
-        }
-    }
+			//for usage 
+			applyItemEffects(pokemon, item, pkmnModel);
+			return true;
+		}
 
-    public void teachMoves(Pokemon pokemon, Moves move) {
-        if (pokemon == null || move == null) {
-            return;
-        }
-        
-        // Check move compatibility - move must share at least one type with Pokemon
-        boolean compatible = false;
-        if (move.getMoveType1().equals(pokemon.getType1()) || 
-            move.getMoveType1().equals(pokemon.getType2())) {
-            compatible = true;
-        }
-        
-        if (!compatible) {
-            return; // Move not compatible
-        }
-        
-        // Check if Pokemon already knows the move
-        String[] currentMoves = pokemon.getMoveSet();
-        for (String moveName : currentMoves) {
-            if (moveName != null && moveName.equals(move.getMoveName())) {
-                return; // Already knows this move
-            }
-        }
-        
-        // Try to add move to next available slot
-        int slotIndex = pokemon.addMoveToNextSlot(move.getMoveName());
-        
-        // If moveset is full (slotIndex == -1), need to replace a move
-        if (slotIndex == -1 && currentMoves.length >= 4) {
-            // For now, replace the first non-HM move
-            for (int i = 0; i < currentMoves.length; i++) {
-                // Check if move is HM (HM moves cannot be forgotten)
-                if (currentMoves[i] != null && !isHMMove(currentMoves[i])) {
-                    pokemon.addMove(i, move.getMoveName());
-                    break;
-                }
-            }
-        }
-    }
-    
-    // Helper method to check if a move is an HM move
-    private boolean isHMMove(String moveName) {
-        // Find the move in the moves management system and check its classification
-        if (movesModel != null) {
-            ArrayList<Moves> allMoves = movesModel.getMoves();
-            for (Moves move : allMoves) {
-                if (move.getMoveName().equals(moveName)) {
-                    return move.getMoveClassification().equalsIgnoreCase("HM");
-                }
-            }
-        }
-        return false; // If move not found or no moves management, assume it's not HM
-    }
+		return false;
+   }
 
-    // Helper methods for inventory management
-    private int getTotalItemCount() {
-        return inventory.size();
-    }
-    
-    private int getUniqueItemCount() {
-        ArrayList<String> uniqueItems = new ArrayList<>();
-        for (Items item : inventory) {
-            if (!uniqueItems.contains(item.getName())) {
-                uniqueItems.add(item.getName());
-            }
-        }
-        return uniqueItems.size();
-    }
+	/*TEACH MOVES OPTION*/
+
+	/**
+	 *	Function checkes whether the move set of a Pokemon is full.
+	 *
+	 * @param pokemon		the pokemon moveset to be checked
+	 * @return 				TRUE if full, FALSE otherwise
+	 **/
+	public boolean isMovesFull(Pokemon pokemon) 
+	{
+		Moves[] knownMoves = pokemon.getMoveSet();
+		for (Moves m : knownMoves)
+			if (m == null) { return false; }
+	
+		return true;
+	}
+   
+	/**
+	 *	Function checks if passed move is an HM move 
+	 *
+	 * @param move		the move to check classification for
+	 * @return			TRUE if it can forget, FALSE otherwise
+	 **/
+   public boolean canForgetMove(Moves move) 
+	{
+      return !(move.getMoveClassification().equalsIgnoreCase("HM"));
+   }
+
+	/**
+	 *	Function replaces the move given a new move and index to replace
+	 *
+	 * @param pokemon		the pokemon to change moves
+	 * @param move 		the new move to be inserted
+	 * @param index		the index to replace 
+	 ***/
+	public void replaceMove(Pokemon pokemon, Moves move, int index)
+	{
+		Moves[] moves = pokemon.getMoveSet();
+		moves[index] = move;
+	}
+
+	/**
+	 *	Function teaches move given the pokemon and move
+	 *	
+	 *	Pre-condition: Assume that moves are in PROPER index order
+	 *						and that previous conditions have been checked 
+	 *						such as but not limited to, full move slots,
+	 *						to delete, and so on.
+	 *
+	 *	@param pokemon		the pokemon to change moves
+	 *	@param move 		the new move to be inserted
+	 **/
+	public void teachMove(Pokemon pokemon, Moves move)
+	{
+		Moves[] moves = pokemon.getMoveSet();
+		
+		int i;
+		for(i = 0; i < pokemon.MAX_MOVES; i++)
+		{
+			if(moves[i] != null) { continue; }
+
+			moves[i] = move;
+			pokemon.setMoveSetCount(pokemon.getMoveSetCount() + 1);
+			break;
+		}
+	}
+
+	public void setTrainerList(ArrayList<Trainer> trainer)
+	{
+		trainers.clear();
+		for(Trainer t : trainer)
+		{
+			if (t == null) { continue; }
+			trainers.add(t);
+		}
+	}
 
     // View methods
-    public ArrayList<Trainer> getAllTrainers() {
-        return trainers;
-    }
-    
-    public ArrayList<Pokemon> getLineup() {
-        return lineup;
-    }
-    
-    public ArrayList<Pokemon> getStorage() {
-        return storage;
-    }
-    
-    public ArrayList<Items> getInventory() {
-        return inventory;
-    }
-
-    public ArrayList<Trainer> searchTrainers(String attribute, String keyword) {
+   public ArrayList<Trainer> getAllTrainers() 
+	{
+      return trainers;
+   }
+   
+	public ArrayList<Trainer> searchTrainers(String attribute, String keyword) 
+	{
         // Search Moves
-        ArrayList<Trainer> matchingTrainers = new ArrayList<>();
+   	ArrayList<Trainer> matchingTrainers = new ArrayList<>();
 
-        for (Trainer trainer : trainers) {
-            boolean matches = false;
+      for (Trainer trainer : trainers) 
+		{
+			if(trainer == null) { continue; }
+         boolean matches = false;
 
-            switch (attribute.toLowerCase()) {
-                case "name":
-                    matches = trainer.getTrainerName().toLowerCase().contains(keyword.toLowerCase());
-                    break;
-                case "id":
-                    matches = Integer.toString(trainer.getTrainerID()).contains(keyword.toLowerCase());
-                    break;
-                case "sex":
-                    matches = trainer.getSex().toLowerCase().contains(keyword.toLowerCase());
-                    break;
-                case "hometown":
-                    matches = trainer.getHometown().toLowerCase().contains(keyword.toLowerCase());
-                    break;
-            }
+         switch (attribute.toLowerCase()) 
+			{
+         	case "name":
+               matches = trainer.getName().toLowerCase().contains(keyword.toLowerCase());
+               break;
+            case "id":
+               matches = Integer.toString(trainer.getID()).contains(keyword.toLowerCase());
+               break;
+            case "sex":
+               matches = trainer.getSex().toLowerCase().contains(keyword.toLowerCase());
+               break;
+            case "hometown":
+               matches = trainer.getHometown().toLowerCase().contains(keyword.toLowerCase());
+               break;
+         }
+      	
+			if (matches) 
+            matchingTrainers.add(trainer);
+   	}
 
-            if (matches) {
-                matchingTrainers.add(trainer);
-            }
-        }
-
-        return matchingTrainers;
-    }
+		return matchingTrainers;
+	}
 }
-
-
-    //public void buyItem()
-
-
-    //public void useItem()
-
-
-
 

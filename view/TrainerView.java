@@ -3,6 +3,7 @@ package view;
 import model.Pokemon;
 import model.Trainer;
 import model.Items;
+import java.util.HashMap;
 import java.util.ArrayList;
 import static utils.Dividers.printLongDivider;
 
@@ -14,7 +15,114 @@ import static utils.Dividers.printLongDivider;
  * It provides methods to display individual trainer details, a list of all trainers,
  * their Pokemon lineups, storage, and inventory.
  */
-public class TrainerView {
+public class TrainerView 
+{
+	private PokemonView pkmnView;
+	private MovesView moveView;
+	private ItemsView itemView;
+
+	public TrainerView() 
+	{
+		pkmnView = new PokemonView();
+		moveView = new MovesView();
+		itemView = new ItemsView();
+	}
+
+    /**
+     * Displays the Pokemon lineup for a trainer.
+     *
+     * @param trainer The trainer whose lineup to display
+     * @param lineup The Pokemon lineup
+     */
+   public void viewPokemonLineup(Trainer trainer) 
+	{
+		Pokemon[] lineup = trainer.getPokemonLineup();	
+
+      System.out.println("\n" + trainer.getName() + "'s Pokemon Lineup:");
+      if (lineup.length == 0) 
+		{
+      	System.out.println("\tNo Pokemon in lineup");
+			return;
+      } 
+		
+		int i = 1;
+		for(Pokemon p : lineup)
+		{
+			if(p == null) { continue; }
+        	System.out.println("\t" + (i++) + ". " + p.getName() + " (Level " + p.getBaseLevel() + ")");
+			
+			String typeInfo = "\tType: " + p.getType1();
+         if (p.getType2() != null && !p.getType2().isEmpty()) { typeInfo += "/" + p.getType2(); }
+         
+			// Show stats
+         System.out.println("\tStats: HP:" + p.getHp() + " ATK:" + p.getAtk() + " DEF:" + p.getDef() + " SPD:" + p.getSpd());
+         
+			System.out.println(typeInfo);
+			moveView.displayMoveSet(p.getMoveSet());
+			itemView.viewItem(p.getHeldItem());
+		}
+    }
+
+    /**
+     * Displays the Pokemon storage for a trainer.
+     *
+     * @param trainer The trainer whose storage to display
+     */
+	public void viewPokemonBox(Trainer trainer) 
+	{
+      System.out.println("\n" + trainer.getName() + "'s Pokemon Storage:");
+
+		ArrayList<Pokemon> pokemonBox = trainer.getPokemonBox(); 
+      if (pokemonBox.isEmpty()) 
+		{
+      	System.out.println("\tNo Pokemon in storage");
+			return;
+      } 
+      
+		for (int i = 0; i < pokemonBox.size(); i++) 
+		{
+         Pokemon p = pokemonBox.get(i);
+         System.out.println("\t" + (i + 1) + ". " + p.getName() + " (Level " + p.getBaseLevel() + ")");
+			
+			// Show types for storage too
+         String typeInfo = "      Type: " + p.getType1();
+         if (p.getType2() != null && !p.getType2().isEmpty()) { typeInfo += "/" + p.getType2(); }
+                
+			System.out.println(typeInfo);
+			itemView.viewItem(p.getHeldItem());
+      }
+	}
+
+    /**
+     * Displays the item inventory for a trainer.
+     *
+     * @param trainer The trainer whose inventory to display
+     * @param inventory The item inventory
+     */
+	public void viewInventory(Trainer trainer) 
+	{
+   	System.out.println("\n" + trainer.getName() + "'s Inventory (" + trainer.getInventory().size() + "/50 items):");
+
+		HashMap<Items, Integer> inventory = trainer.getInventory();
+
+   	if (inventory.isEmpty()) 
+		{
+         System.out.println("\tNo items in inventory");
+			return;
+      } 
+
+		for(HashMap.Entry<Items, Integer> i : inventory.entrySet())
+		{
+			Items item = i.getKey();
+			int quantity = i.getValue();
+					
+			System.out.printf("%-20s %-8s %-12s\n", "Item Name", "Quantity", "Sell Price");
+         printLongDivider();
+            
+         System.out.printf("%-20s %-8d P%-10.2f\n", item.getName(), quantity, item.getSellingPrice());	
+		}
+   }
+
     /**
      * Displays detailed information of a single trainer including profile,
      * Pokemon lineup, storage, and money.
@@ -24,121 +132,24 @@ public class TrainerView {
      * @param storage The trainer's Pokemon storage
      * @param inventory The trainer's item inventory
      */
-    public void viewTrainer(Trainer trainer, ArrayList<Pokemon> lineup, ArrayList<Pokemon> storage, ArrayList<Items> inventory) {
-        System.out.println("\n-----------------------------------");
-        System.out.println("TRAINER PROFILE");
-        System.out.println("ID: " + trainer.getTrainerID());
-        System.out.println("Name: " + trainer.getTrainerName());
-        System.out.println("Birthdate: " + trainer.getBirthDate());
-        System.out.println("Sex: " + trainer.getSex());
-        System.out.println("Hometown: " + trainer.getHometown());
-        System.out.println("Description: " + trainer.getDescription());
-        System.out.println("Money: P" + trainer.getMoney() + ".00");
-        
-        System.out.println("\nACTIVE POKEMON LINEUP (" + lineup.size() + "/6):");
-        if (lineup.isEmpty()) {
-            System.out.println("  No Pokemon in lineup");
-        } else {
-            for (int i = 0; i < lineup.size(); i++) {
-                Pokemon p = lineup.get(i);
-                System.out.println("  [" + (i + 1) + "] " + p.getName() + " (Level " + p.getBaseLevel() + ")");
-                
-                // Show types
-                String typeInfo = "      Type: " + p.getType1();
-                if (p.getType2() != null && !p.getType2().isEmpty()) {
-                    typeInfo += "/" + p.getType2();
-                }
-                System.out.println(typeInfo);
-                
-                // Show stats
-                System.out.println("      Stats: HP:" + p.getHp() + " ATK:" + p.getAtk() + 
-                                 " DEF:" + p.getDef() + " SPD:" + p.getSpd());
-                
-                // Show held item
-                String heldItem = p.getHeldItem();
-                if (heldItem != null && !heldItem.isEmpty()) {
-                    System.out.println("      Held Item: " + heldItem);
-                } else {
-                    System.out.println("      Held Item: None");
-                }
-                
-                // Show moves
-                String[] moves = p.getMoveSet();
-                System.out.print("      Moves: ");
-                boolean hasAnyMove = false;
-                for (int j = 0; j < moves.length; j++) {
-                    if (moves[j] != null && !moves[j].isEmpty()) {
-                        if (hasAnyMove) {
-                            System.out.print(", ");
-                        }
-                        System.out.print(moves[j]);
-                        hasAnyMove = true;
-                    }
-                }
-                if (!hasAnyMove) {
-                    System.out.print("None");
-                }
-                System.out.println();
-                
-                if (i < lineup.size() - 1) {
-                    System.out.println(); // Add spacing between Pokemon
-                }
-            }
-        }
-        
-        System.out.println("\nPOKEMON IN STORAGE (" + storage.size() + "):");
-        if (storage.isEmpty()) {
-            System.out.println("  No Pokemon in storage");
-        } else {
-            for (int i = 0; i < storage.size(); i++) {
-                Pokemon p = storage.get(i);
-                System.out.println("  [" + (i + 1) + "] " + p.getName() + " (Level " + p.getBaseLevel() + ")");
-                
-                // Show types for storage too
-                String typeInfo = "      Type: " + p.getType1();
-                if (p.getType2() != null && !p.getType2().isEmpty()) {
-                    typeInfo += "/" + p.getType2();
-                }
-                System.out.println(typeInfo);
-                
-                // Show held item for storage
-                String heldItem = p.getHeldItem();
-                if (heldItem != null && !heldItem.isEmpty()) {
-                    System.out.println("      Held Item: " + heldItem);
-                }
-                
-                if (i < storage.size() - 1) {
-                    System.out.println(); // Add spacing between Pokemon
-                }
-            }
-        }
-        
-        // Show inventory summary
-        System.out.println("\nINVENTORY (" + inventory.size() + "/50 items):");
-        if (inventory.isEmpty()) {
-            System.out.println("  No items in inventory");
-        } else {
-            // Group items by name and count them
-            ArrayList<String> uniqueItemNames = new ArrayList<>();
-            ArrayList<Integer> itemCounts = new ArrayList<>();
-            
-            for (Items item : inventory) {
-                String itemName = item.getName();
-                int index = uniqueItemNames.indexOf(itemName);
-                if (index == -1) {
-                    uniqueItemNames.add(itemName);
-                    itemCounts.add(1);
-                } else {
-                    itemCounts.set(index, itemCounts.get(index) + 1);
-                }
-            }
-            
-            for (int i = 0; i < uniqueItemNames.size(); i++) {
-                System.out.println("  " + uniqueItemNames.get(i) + " x" + itemCounts.get(i));
-            }
-        }
-        
-        printLongDivider();
+	public void viewTrainer(Trainer trainer) 
+	{
+   	System.out.println("\n-----------------------------------");
+      System.out.println("TRAINER PROFILE");
+      System.out.println("ID: " + trainer.getID());
+      System.out.println("Name: " + trainer.getName());
+      System.out.println("Birthdate: " + trainer.getBirthDate());
+      System.out.println("Sex: " + trainer.getSex());
+      System.out.println("Hometown: " + trainer.getHometown());
+      System.out.println("Description: " + trainer.getDescription());
+      System.out.println("Money: P" + trainer.getMoney());
+      
+   	System.out.println("\nACTIVE POKEMON LINEUP (" + trainer.getPokemonLineupCount() + "/6):");
+		viewPokemonLineup(trainer);
+      System.out.println("\nPOKEMON IN STORAGE (" + trainer.getPokemonBox().size() + "):");
+		viewPokemonBox(trainer);
+		viewInventory(trainer);
+      printLongDivider();
     }
 
     /**
@@ -146,10 +157,11 @@ public class TrainerView {
      *
      * @param trainer The trainer to display
      */
-    public void viewTrainerSimple(Trainer trainer) {
-        System.out.printf("%-8d %-20s %-12s %-15s P%-10d\n", 
-            trainer.getTrainerID(),
-            trainer.getTrainerName(),
+    public void viewTrainerSimple(Trainer trainer) 
+	 {
+        System.out.printf("%-8d %-20s %-12s %-15s P%-10f\n", 
+            trainer.getID(),
+            trainer.getName(),
             trainer.getSex(),
             trainer.getHometown(),
             trainer.getMoney());
@@ -160,127 +172,41 @@ public class TrainerView {
      *
      * @param trainers The list of trainers to display
      */
-    public void viewAllTrainers(ArrayList<Trainer> trainers) {
-        System.out.println("\n=== TRAINER LIST ===");
-        if (trainers.isEmpty()) {
-            System.out.println("No trainers found.");
-        } else {
-            System.out.printf("%-8s %-20s %-12s %-15s %-12s\n", "ID", "Name", "Sex", "Hometown", "Money");
-            printLongDivider();
+	public void viewAllTrainers(ArrayList<Trainer> trainers) 
+	{
+   	System.out.println("\n=== TRAINER LIST ===");
+      if (trainers.isEmpty()) 
+		{
+      	System.out.println("No trainers found.");
+      } 
+		else 
+		{
+      	System.out.printf("%-8s %-20s %-12s %-15s %-12s\n", "ID", "Name", "Sex", "Hometown", "Money");
+         printLongDivider();
             
-            for (Trainer trainer : trainers) {
-                viewTrainerSimple(trainer);
-            }
+      	for (Trainer trainer : trainers) 
+			{	
+				if (trainer == null) { continue; }
+            viewTrainerSimple(trainer);
+			}
             
-            System.out.println("\nTotal trainers: " + trainers.size());
-        }
-        System.out.println("====================");
-    }
+      	System.out.println("\nTotal trainers: " + trainers.size());
+      }
+      System.out.println("====================");
+	}
 
-    /**
-     * Displays the Pokemon lineup for a trainer.
-     *
-     * @param trainer The trainer whose lineup to display
-     * @param lineup The Pokemon lineup
-     */
-    public void viewPokemonLineup(Trainer trainer, ArrayList<Pokemon> lineup) {
-        System.out.println("\n" + trainer.getTrainerName() + "'s Pokemon Lineup:");
-        if (lineup.isEmpty()) {
-            System.out.println("  No Pokemon in lineup");
-        } else {
-            for (int i = 0; i < lineup.size(); i++) {
-                Pokemon p = lineup.get(i);
-                System.out.print("  " + (i + 1) + ". " + p.getName() + " (Level " + p.getBaseLevel() + ")");
-                
-                // Show moves
-                String[] moveset = p.getMoveSet();
-                System.out.print(" - Moves: ");
-                boolean hasAnyMove = false;
-                for (String move : moveset) {
-                    if (move != null && !move.isEmpty()) {
-                        if (hasAnyMove) System.out.print(", ");
-                        System.out.print(move);
-                        hasAnyMove = true;
-                    }
-                }
-                if (!hasAnyMove) {
-                    System.out.print("None");
-                }
-                System.out.println();
-                
-                // Show held item
-                if (p.getHeldItem() != null && !p.getHeldItem().isEmpty()) {
-                    System.out.println("     Held Item: " + p.getHeldItem());
-                }
-            }
-        }
-    }
 
-    /**
-     * Displays the Pokemon storage for a trainer.
-     *
-     * @param trainer The trainer whose storage to display
-     * @param storage The Pokemon storage
-     */
-    public void viewPokemonStorage(Trainer trainer, ArrayList<Pokemon> storage) {
-        System.out.println("\n" + trainer.getTrainerName() + "'s Pokemon Storage:");
-        if (storage.isEmpty()) {
-            System.out.println("  No Pokemon in storage");
-        } else {
-            for (int i = 0; i < storage.size(); i++) {
-                Pokemon p = storage.get(i);
-                System.out.println("  " + (i + 1) + ". " + p.getName() + " (Level " + p.getBaseLevel() + ")");
-            }
-        }
-    }
-
-    /**
-     * Displays the item inventory for a trainer.
-     *
-     * @param trainer The trainer whose inventory to display
-     * @param inventory The item inventory
-     */
-    public void viewInventory(Trainer trainer, ArrayList<Items> inventory) {
-        System.out.println("\n" + trainer.getTrainerName() + "'s Inventory (" + inventory.size() + "/50 items):");
-        if (inventory.isEmpty()) {
-            System.out.println("  No items in inventory");
-        } else {
-            // Group items by name and count them
-            ArrayList<String> itemNames = new ArrayList<>();
-            ArrayList<Integer> itemCounts = new ArrayList<>();
-            ArrayList<Double> itemPrices = new ArrayList<>();
-            
-            for (Items item : inventory) {
-                int index = itemNames.indexOf(item.getName());
-                if (index == -1) {
-                    itemNames.add(item.getName());
-                    itemCounts.add(1);
-                    itemPrices.add(item.getSellingPrice());
-                } else {
-                    itemCounts.set(index, itemCounts.get(index) + 1);
-                }
-            }
-            
-            System.out.printf("%-20s %-8s %-12s\n", "Item Name", "Quantity", "Sell Price");
-            printLongDivider();
-            
-            for (int i = 0; i < itemNames.size(); i++) {
-                System.out.printf("%-20s %-8d P%-10.2f\n", 
-                    itemNames.get(i), 
-                    itemCounts.get(i), 
-                    itemPrices.get(i));
-            }
-        }
-    }
     /**
      * Displays the trainer management submenu for a specific trainer.
      *
      * @param trainer The trainer being managed
      */
-    public void showTrainerSubmenu(Trainer trainer) {
+    public void showTrainerSubmenu(Trainer trainer) 
+	 {
         System.out.println("\n========== MANAGE TRAINER ==========");
-        System.out.println("Trainer: " + trainer.getTrainerName() + " (ID: " + trainer.getTrainerID() + ")");
-        System.out.println("Money: P" + trainer.getMoney() + ".00");
+        System.out.println("Trainer: " + trainer.getName() + " (ID: " + trainer.getID() + ")");
+        System.out.println("Money: P" + trainer.getMoney());
+
         System.out.println("1] Add Pokemon to Lineup");
         System.out.println("2] Switch Pokemon from Storage");
         System.out.println("3] Teach Moves");
@@ -295,7 +221,8 @@ public class TrainerView {
     /**
      * Displays the search attributes menu.
      */
-    public void showSearchAttributesMenu() {
+    public void showSearchAttributesMenu() 
+	 {
         System.out.println("\n=== SEARCH TRAINERS ===");
         System.out.println("Search by: name/id/sex/hometown");
     }
@@ -303,7 +230,8 @@ public class TrainerView {
     /**
      * Displays trainer selection menu.
      */
-    public void showTrainerSelectionMenu() {
+    public void showTrainerSelectionMenu() 
+	 {
         System.out.println("\nSelect trainer by:");
         System.out.println("1. Trainer ID");
         System.out.println("2. Trainer Name");
@@ -312,7 +240,8 @@ public class TrainerView {
     /**
      * Displays location selection for Pokemon release.
      */
-    public void showReleaseLocationMenu() {
+    public void showReleaseLocationMenu() 
+	 {
         System.out.println("1. Release from Lineup");
         System.out.println("2. Release from Storage");
     }
@@ -320,14 +249,16 @@ public class TrainerView {
     /**
      * Shows section headers for different operations.
      */
-    public void showSectionHeader(String section) {
+    public void showSectionHeader(String section) 
+	 {
         System.out.println("\n=== " + section.toUpperCase() + " ===");
     }
 
     /**
      * Shows trainer profile creation header.
      */
-    public void showCreateProfileHeader() {
+    public void showCreateProfileHeader() 
+	 {
         System.out.println("\n== CREATE TRAINER PROFILE ==");
     }
 }

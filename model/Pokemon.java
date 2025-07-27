@@ -17,6 +17,8 @@ public class Pokemon
 	* The maximum number of moves a Pokemon can have.
 	*/
 	public static final int MAX_MOVES = 4;
+
+	private MovesManagement manage;
 	
 	private int pokedexNum;
 	private String name;
@@ -28,14 +30,15 @@ public class Pokemon
 	private int evolvesTo;
 	private int evolutionLevel;
 	
+	private int currHp;
 	private int hp;
 	private int atk;
 	private int def;
 	private int spd;
 	
-	private String[] moveSet = new String[MAX_MOVES];
+	private Moves[] moveSet;
 	private int moveSetCount = 0;
-	private String heldItem;
+	private Items heldItem;
 	
 	/**
 	* Constructs a new empty {@code Pokemon}.
@@ -47,6 +50,46 @@ public class Pokemon
 		//empty constructor
 	}
 	
+	/**
+	 * Constructs a new {@code Pokemon} without type2 and moves.
+	 *
+	 * Missing values are to be manually set, and move set defaults to Tackle and Defend.
+	 *
+	 * @param pokedexNum			the pokedex number of the Pokemon
+	 * @param name					the name of the Pokemon
+	 * @param type1				the Pokemon typing
+	 * @param baseLevel			the starting level
+	 * @param evolvesFrom		the original pokedex number to evolve out of
+	 * @param evolvesTo			the new pokedex number to evolve into
+	 * @param evolutionLevel 	the level required to evolve
+	 * @param hp					the hp stats 
+	 * @param atk					the atk stats
+	 * @param def					the def stats
+	 * @param spd					the spd stats
+	 */
+	public Pokemon(int pokedexNum, String name, String type1, int baseLevel, int evolvesFrom, int evolvesTo, int evolutionLevel, int hp, int atk, int def, int spd, MovesManagement manage)
+	{
+		this.manage = manage;
+
+		this.pokedexNum = pokedexNum;
+		this.name = name; 
+		this.type1 = type1;
+		this.baseLevel = baseLevel;
+		this.evolvesFrom = evolvesFrom;
+		this.evolvesTo = evolvesTo;
+		this.evolutionLevel = evolutionLevel;
+		this.hp = hp;
+		this.atk = atk; 
+		this.def = def;
+		this.spd = spd;
+	
+		moveSet = new Moves[MAX_MOVES];
+
+
+		moveSet[0] = manage.searchMove("name", "tackle");
+		moveSet[1] = manage.searchMove("name", "defend");
+		moveSetCount = 2;
+	}
 	/**
 	 * Constructs a new {@code Pokemon} without type2 and moves.
 	 *
@@ -77,12 +120,11 @@ public class Pokemon
 		this.atk = atk; 
 		this.def = def;
 		this.spd = spd;
-		
-		moveSet[0] = "Tackle";
-		moveSet[1] = "Defend";
-		moveSetCount = 2;
-	}
 	
+		moveSet = new Moves[MAX_MOVES];
+		moveSetCount = 0;
+	}
+		
 	/**
 	 * Constructs a new {@code Pokemon}.
 	 *
@@ -101,7 +143,7 @@ public class Pokemon
 	 * @param moveSet[]			an array of moves
 	 * @param heldItem			the item the pokemon is currently holding 
 	 */
-	public Pokemon(int pokedexNum, String name, String type1, String type2, int baseLevel, int evolvesFrom, int evolvesTo, int evolutionLevel, int hp, int atk, int def, int spd, String moveSet[], String heldItem)
+	public Pokemon(int pokedexNum, String name, String type1, String type2, int baseLevel, int evolvesFrom, int evolvesTo, int evolutionLevel, int hp, int atk, int def, int spd, Moves moveSet[], Items heldItem)
 	{
 		this.pokedexNum = pokedexNum;
 		this.name = name; 
@@ -111,22 +153,22 @@ public class Pokemon
 		this.evolvesFrom = evolvesFrom;
 		this.evolvesTo = evolvesTo;
 		this.evolutionLevel = evolutionLevel;
+		this.currHp = hp;
 		this.hp = hp;
 		this.atk = atk; 
 		this.def = def;
 		this.spd = spd;
-		
-		moveSetCount = 0;
-		for(String m : moveSet)
-		{
-			if(m != null)
-			{
-				this.moveSet[moveSetCount] = m;
-				moveSetCount++;
-			}
-		}
-		
 		this.heldItem = heldItem;
+
+		moveSet = new Moves[MAX_MOVES];
+		moveSetCount = 0;
+		for(Moves m : moveSet)
+		{
+			if(m == null) { continue; }
+	
+			this.moveSet[moveSetCount] = m;
+			moveSetCount++;
+		}
 	}
 	
 	/************GETTERS************/
@@ -187,6 +229,13 @@ public class Pokemon
 	 * @return the evolution level
 	 */
 	public int getEvolutionLevel() { return evolutionLevel; }
+	
+	/**
+	 *	Returns the Current HP (health points) of this Pokemon.
+	 *
+	 * @return the HP status
+	 */
+	public int getCurrHp() { return currHp; }
 
 	/**
 	 * Returns the HP (health points) stat of this Pokemon.
@@ -221,7 +270,7 @@ public class Pokemon
 	 *
 	 * @return an array of move names
 	 */
-	public String[] getMoveSet() { return moveSet; }
+	public Moves[] getMoveSet() { return moveSet; }
 
 	/**
 	 * Returns the number of moves in this Pokemon's moveset.
@@ -235,7 +284,7 @@ public class Pokemon
 	 *
 	 * @return the held item, or {@code null} if none
 	 */
-	public String getHeldItem() { return heldItem; }
+	public Items getHeldItem() { return heldItem; }
 	
 	
 	/************SETTERS************/
@@ -297,6 +346,13 @@ public class Pokemon
 	public void setEvolutionLevel(int num) { evolutionLevel = num; }
 
 	/**
+	 *	Sets the current HP of this Pokemon.
+	 *
+	 *	@param hp		the HP value
+	 */
+	public void setCurrHp(int hp) { this.currHp = hp; }
+
+	/**
 	 * Sets the base HP stat of this Pokemon.
 	 *
 	 * @param hp 		the HP value
@@ -332,8 +388,10 @@ public class Pokemon
 	 *
 	 * @param moves 	an array of move names to assign
 	 */
-	public void setMoveSet(String[] moves) {
-		for(String m : moves) {
+	public void setMoveSet(Moves[] moves) {
+		moveSetCount = 0;
+		for(Moves m : moves) {
+			if(m == null) { continue; }
 			moveSet[moveSetCount] = m;
 			moveSetCount++;
 		}
@@ -351,7 +409,7 @@ public class Pokemon
 	 *
 	 * @param item 	the held item, or {@code null} if none
 	 */
-	public void setHeldItem(String item) { heldItem = item; }
+	public void setHeldItem(Items item) { heldItem = item; }
 
 	/**
 	 * Adds a single move to the Pokemon's moveset at the specified index.
@@ -361,14 +419,19 @@ public class Pokemon
 	 * @param moveName 	the name of the move to add
 	 * @return true if the move was successfully added, false otherwise
 	 */
-	public boolean addMove(int index, String moveName) {
-		if (index >= 0 && index < MAX_MOVES && moveName != null) {
-			moveSet[index] = moveName;
+	public boolean addMove(int index, Moves move) 
+	{
+		if (index >= 0 && index < MAX_MOVES && move != null) 
+		{
+			moveSet[index] = move;
 			// Update move count if needed
 			if (index >= moveSetCount) {
 				moveSetCount = index + 1;
 			}
 			return true;
+		} else 
+		{
+			System.out.println("Error: Can not add move.\n");
 		}
 		return false;
 	}
@@ -379,16 +442,15 @@ public class Pokemon
 	 * @param moveName 	the name of the move to add
 	 * @return the index where the move was added, or -1 if moveset is full
 	 */
-	public int addMoveToNextSlot(String moveName) {
-		for (int i = 0; i < MAX_MOVES; i++) {
-			if (moveSet[i] == null || moveSet[i].isEmpty()) {
-				moveSet[i] = moveName;
-				if (i >= moveSetCount) {
-					moveSetCount = i + 1;
-				}
-				return i;
-			}
+	public int checkAvailableMoveSlot(Moves move) 
+	{
+		int i = 0;
+		for(Moves m : moveSet) 
+		{
+			if(m == null) { return i; }
+			i++;
 		}
+
 		return -1; // Moveset is full
 	}
 

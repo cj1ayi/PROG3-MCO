@@ -40,4 +40,28 @@ public class ItemsView
 			System.out.println("Selling Price: P" + i.getSellingPrice() + "\n");
 		}
 	}
+
+	public void viewItem(Items i)
+	{
+		if(i == null) 
+		{
+			return;
+		}
+
+		System.out.println("-----------------------------------");
+		System.out.println(i.getName() + " | " + i.getCategory());
+		System.out.println(i.getDescription() + " " + i.getEffects());
+			
+		if(i.getBuyingPrice1() != -1)
+		{
+			System.out.print("Buying Price: P" + i.getBuyingPrice1());
+			if(i.getBuyingPrice2() != -1)
+				System.out.println(" to P" + i.getBuyingPrice2());
+			else System.out.println("");
+		}
+		else
+			System.out.println("Not Sold!");
+		
+		System.out.println("Selling Price: P" + i.getSellingPrice() + "\n");
+	}
 }

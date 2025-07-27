@@ -1,10 +1,10 @@
-Tackle|Normal|TM|Tackle is one of the most common and basic moves a Pokémon learns. It deals damage with no additional effects.|
-Defend|Normal|TM|Defend raises the user's Defense by one stage each. Stats can be raised to a maximum of +6 stages each.|
-Knock Off|Dark|TM|Knocks down the foe’s held item to prevent its use.|
-Play Rough|Fairy|TM|The user plays rough with the target and attacks it.|
-Fly|Flying|HM|Flies up on the first turn, then strikes the next turn.|
-Surf|Water|HM|A strong water-type attack.|
-Cut|Normal|HM|Cuts using claws, scythes, etc.|
-Strength|Normal|HM|A powerful physical attack.|
-Hex|Ghost|TM|Does massive damage to a target affected by status problems.|
-Thunderbolt|Electric|TM|An attack that may cause paralysis.|
+MOV|Tackle|Normal|TM|Tackle is one of the most common and basic moves a Pokémon learns. It deals damage with no additional effects.|
+MOV|Defend|Normal|TM|Defend raises the user's Defense by one stage each. Stats can be raised to a maximum of +6 stages each.|
+MOV|Knock Off|Dark|TM|Knocks down the foe’s held item to prevent its use.|
+MOV|Play Rough|Fairy|TM|The user plays rough with the target and attacks it.|
+MOV|Fly|Flying|HM|Flies up on the first turn, then strikes the next turn.|
+MOV|Surf|Water|HM|A strong water-type attack.|
+MOV|Cut|Normal|HM|Cuts using claws, scythes, etc.|
+MOV|Strength|Normal|HM|A powerful physical attack.|
+MOV|Hex|Ghost|TM|Does massive damage to a target affected by status problems.|
+MOV|Thunderbolt|Electric|TM|An attack that may cause paralysis.|

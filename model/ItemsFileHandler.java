@@ -4,6 +4,7 @@ import static utils.FileHelper.fromSafe;
 import static utils.FileHelper.safe;
 import java.io.File;
 import java.io.PrintWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -19,12 +20,28 @@ import java.util.Scanner;
  */
 public class ItemsFileHandler
 {
+	public void saveAppend(Items i, FileWriter fileAppender)
+	{
+		PrintWriter writer = new PrintWriter(fileAppender);
+
+		writer.write("ITEM|");
+		writer.write(safe(i.getName()));
+		writer.write(safe(i.getCategory()));
+		writer.write(safe(i.getDescription()));
+		writer.write(safe(i.getEffects()));
+		writer.write(safe(i.getBuyingPrice1()));
+		writer.write(safe(i.getBuyingPrice2()));
+		writer.write(safe(i.getSellingPrice()));
+		writer.write("\n");
+	}
+
 	/**
 	 * Loads {@code Items} objects from the file located in the db (database) items txt file.
 	 * Each line represents one {@code Items} entry, with fields separated by a "|" delimiter.
 	 *
 	 * @return An {@code ArrayList} of {@code Items} loaded from the text file.
 	 */
+
    public ArrayList<Items> load()
    {
       ArrayList<Items> items = new ArrayList<>();

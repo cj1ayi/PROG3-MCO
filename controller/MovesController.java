@@ -40,6 +40,8 @@ public class MovesController
 		//module specific
 		this.movesView = new MovesView();
 		this.fileHandler = new MovesFileHandler();
+
+		model.setMoveList(fileHandler.load());
 	}
 	
 	/**

@@ -63,6 +63,35 @@ public class ItemsManagement
 		}
 		return results;
 	}
+
+	public Items searchItem(String attribute, String key)
+	{
+		key = key.toLowerCase();
+		
+		for(Items i : itemList)
+		{
+			if(i == null) { continue; }
+			
+			boolean matches = false;
+			switch(attribute.toLowerCase())
+			{
+				case "name": 
+					matches = i.getName().toLowerCase().contains(key);
+					break;
+				case "category": 
+					matches = i.getCategory().toLowerCase().contains(key);
+					break;
+				case "keyword": 
+					matches = i.getDescription().toLowerCase().contains(key) || i.getEffects().toLowerCase().contains(key);
+					break;
+				default: break;
+			}
+
+			if (matches) { return i; }  
+		}
+		return null;
+	}
+	
 	
 	/**
 	 * Sets the current item list to a new one.

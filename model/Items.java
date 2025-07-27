@@ -40,6 +40,27 @@ public class Items
 		this.sellingPrice = sellingPrice;
 	}
 	
+	/************ OVERRIDES ************/
+
+	@Override
+	public boolean equals(Object itemId)
+	{
+		if(this == itemId) return true; //default implementation
+		if(!(itemId instanceof Items)) return false;
+		
+		//to check if its equal by NAME 
+		Items item = (Items) itemId;
+		return name.equals(item.getName());
+	}
+
+	@Override
+	public int hashCode()
+	{
+		//hashcode returns some int based on memory address
+		//were rewriting it so it returns 
+		return name != null ? name.hashCode() : 0;
+	}
+
 	/************ SETTERS ************/
 
 	/**

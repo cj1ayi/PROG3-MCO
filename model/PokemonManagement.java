@@ -65,6 +65,32 @@ public class PokemonManagement
 		}
 		return results;
 	}
+
+	public Pokemon searchOnePokemon(String attribute, String key)
+	{
+		for(Pokemon p : pokemonList)
+		{
+			if(p == null) { continue; }
+			
+			boolean matches = false;
+			switch(attribute.toLowerCase())
+			{
+				case "name": 
+					matches = p.getName().toLowerCase().contains(key.toLowerCase());
+					break;
+				case "type": 
+					matches = p.getType1().toLowerCase().contains(key.toLowerCase()) || (p.getType2() != null && p.getType2().toLowerCase().contains(key.toLowerCase()));
+					break;
+				case "pokedex": 
+					matches = String.valueOf(p.getPokedexNum()).equals(key);
+					break;
+			}
+
+			if (matches) { return p; }
+		}
+
+		return null;
+	}
 	
 	/**
     * Adds a new {@code Pokemon} to the list.

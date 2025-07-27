@@ -39,7 +39,20 @@ public class MovesView {
 				displayMove(m);
 			}
 		}
-   }
+	}
+
+	public void displayMoveSet(Moves[] moves) 
+	{
+		// Print Statements
+		System.out.printf("%-20s %-15s %-20s %-50s\n", "Name", "Type", "Classification", "Description");
+		printLongDivider();
+		// Loop to display moves
+		for (Moves m : moves) 
+		{
+			if(m == null) { continue; }
+			displayMove(m);
+		}
+	}
    
 	/**
     * Displays a single {@code Moves} object with a certain formatting. 
