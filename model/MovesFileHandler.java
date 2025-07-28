@@ -86,7 +86,7 @@ public class MovesFileHandler
 				moves.add(move);
 			} 
 			
-			System.out.println("Successfully loaded!");
+			System.out.println("Successfully loaded moves database!");
 			scanner.close();
 		} catch (IOException e)
 		{

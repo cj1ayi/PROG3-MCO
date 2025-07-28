@@ -39,6 +39,8 @@ public class TrainerController
 		movesView = new MovesView();
 		itemsView = new ItemsView();
 		fileHandler = new TrainerFileHandler();
+
+   	model.setTrainerList(fileHandler.load()); 
 	}
 
    void createTrainerProfile() 
@@ -404,7 +406,7 @@ public class TrainerController
 
 		if(model.sellItem(trainer, selectedItem, quantity))
 		{
-			view.show("\nSuccessfully sold " + quantity + "x " + selectedItem.getName() + " for P" + (trainer.getMoney() - (selectedItem.getSellingPrice() * quantity)));
+			view.show("\nSuccessfully sold " + quantity + "x " + selectedItem.getName() + " for P" + (selectedItem.getSellingPrice() * quantity));
         view.show("\nBalance: P" + trainer.getMoney());
 			return;
 		}

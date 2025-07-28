@@ -42,16 +42,16 @@ public class ItemsFileHandler
 	 * @return An {@code ArrayList} of {@code Items} loaded from the text file.
 	 */
 
-   public ArrayList<Items> load()
+	public ArrayList<Items> load()
    {
       ArrayList<Items> items = new ArrayList<>();
-      try
+   	try
       {
 			File load = new File("model/db/Items.txt");
 			Scanner scanner = new Scanner(load);
 			
 			while(scanner.hasNextLine())
-         {
+   		{
 				String tokens[] = scanner.nextLine().split("\\|");
 				String name = fromSafe(tokens[0]);
 				String category = fromSafe(tokens[1]);
@@ -64,13 +64,14 @@ public class ItemsFileHandler
 				Items i = new Items(name, category, desc, effects, buyingPrice, buyingPriceCheck, sellingPrice);
 				
 				items.add(i);
-            }
-        } catch (IOException e)
-        {
-            System.out.println("An error occurred.");
-            e.printStackTrace();
-        }
+      	}
+			System.out.println("Successfully loaded items database!");
+   	} catch (IOException e)
+   	{
+      	System.out.println("An error occurred.");
+      	e.printStackTrace();
+   	}
 
-      return items;
-    }
+		return items;
+	}
 }

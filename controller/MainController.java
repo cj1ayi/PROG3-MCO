@@ -35,7 +35,7 @@ public class MainController
 		PokemonManagement pokemonModel = new PokemonManagement();
 		MovesManagement movesModel = new MovesManagement();
 		ItemsManagement itemsModel = new ItemsManagement();
-		TrainerManagement trainerModel = new TrainerManagement();
+		TrainerManagement trainerModel = new TrainerManagement(pokemonModel, movesModel, itemsModel);
 		
 		this.pokemonController = new PokemonController(pokemonModel, movesModel, itemsModel, view);
 		this.movesController = new MovesController(movesModel, view);

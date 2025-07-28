@@ -284,7 +284,7 @@ public class TrainerFileHandler
 				}
 			}
 
-			System.out.println("Successfully saved Trainers!");
+			System.out.println("Successfully loaded Trainers!");
 			scanner.close();
 			return trainerList;
 		} catch (Exception e)

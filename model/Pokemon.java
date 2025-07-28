@@ -49,47 +49,31 @@ public class Pokemon
 	{
 		//empty constructor
 	}
-	
-	/**
-	 * Constructs a new {@code Pokemon} without type2 and moves.
-	 *
-	 * Missing values are to be manually set, and move set defaults to Tackle and Defend.
-	 *
-	 * @param pokedexNum			the pokedex number of the Pokemon
-	 * @param name					the name of the Pokemon
-	 * @param type1				the Pokemon typing
-	 * @param baseLevel			the starting level
-	 * @param evolvesFrom		the original pokedex number to evolve out of
-	 * @param evolvesTo			the new pokedex number to evolve into
-	 * @param evolutionLevel 	the level required to evolve
-	 * @param hp					the hp stats 
-	 * @param atk					the atk stats
-	 * @param def					the def stats
-	 * @param spd					the spd stats
-	 */
-	public Pokemon(int pokedexNum, String name, String type1, int baseLevel, int evolvesFrom, int evolvesTo, int evolutionLevel, int hp, int atk, int def, int spd, MovesManagement manage)
+
+	//constructor for making copies
+	public Pokemon(Pokemon original)
 	{
-		this.manage = manage;
+		this.pokedexNum = original.pokedexNum;
+		this.name = original.name;
+		this.type1 = original.type1;
+		this.type2 = original.type2;
 
-		this.pokedexNum = pokedexNum;
-		this.name = name; 
-		this.type1 = type1;
-		this.baseLevel = baseLevel;
-		this.evolvesFrom = evolvesFrom;
-		this.evolvesTo = evolvesTo;
-		this.evolutionLevel = evolutionLevel;
-		this.hp = hp;
-		this.atk = atk; 
-		this.def = def;
-		this.spd = spd;
-	
-		moveSet = new Moves[MAX_MOVES];
+		this.baseLevel = original.baseLevel;
+		this.evolvesFrom = original.evolvesFrom;
+		this.evolutionLevel = original.evolutionLevel;
 
+		this.currHp = original.currHp;
+		this.hp = original.hp;
+		this.atk = original.atk;
+		this.spd = original.spd;
 
-		moveSet[0] = manage.searchMove("name", "tackle");
-		moveSet[1] = manage.searchMove("name", "defend");
-		moveSetCount = 2;
+		//copy...
+
+		this.moveSet = original.moveSet;
+		this.moveSetCount = original.moveSetCount;
+		this.heldItem = original.heldItem;
 	}
+
 	/**
 	 * Constructs a new {@code Pokemon} without type2 and moves.
 	 *

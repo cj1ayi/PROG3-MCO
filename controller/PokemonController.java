@@ -51,6 +51,8 @@ public class PokemonController
 		pkmnView = new PokemonView();
 		movesView = new MovesView();
 		fileHandler = new PokemonFileHandler();
+
+		model.setPokemonList(fileHandler.load());
 	}
 		
 	/**
@@ -200,9 +202,15 @@ public class PokemonController
 		else { correctEvolutionLevel = -1; }
 		
 		//set up new temporary pokemon object
-		pkmn = new Pokemon(pokedexNum, name, type1, baseLevel, evolvesFrom, correctEvolvesTo, correctEvolutionLevel, hp, atk, def, spd, movesModel);
+		pkmn = new Pokemon(pokedexNum, name, type1, baseLevel, evolvesFrom, correctEvolvesTo, correctEvolutionLevel, hp, atk, def, spd);
 		
 		view.show("\nDefault moves are set to the ff.\n");
+
+		//default moves
+		moveCount = 0;
+		moveSet[moveCount++] = movesModel.searchMove("name", "tackle");
+		moveSet[moveCount++] = movesModel.searchMove("name", "defend");
+		
 		movesView.displayMoveSet(pkmn.getMoveSet());
 
 		choice = view.prompt("Use Default Moves (Y/N)? ");
@@ -214,6 +222,8 @@ public class PokemonController
 		}
 		else
 		{
+			moveCount = 0;
+			moveSet = new Moves[Pokemon.MAX_MOVES];
 			do
 			{
 				choice = view.prompt("\nAdd new moves (Y/N)? ");
@@ -223,14 +233,15 @@ public class PokemonController
 					if(tempMove != null) { moveSet[moveCount++] = tempMove; }
 				}
 			} while(moveCount < Pokemon.MAX_MOVES && (choice.equalsIgnoreCase("yes") || choice.equalsIgnoreCase("y")));
-				
-			pkmn.setMoveSet(moveSet);
-			
 			view.show("New moveset has been set.\n");
 			movesView.displayMoveSet(pkmn.getMoveSet());
 			view.show("\n");
 		}				
 		
+		//set moves
+		pkmn.setMoveSet(moveSet);
+		
+		//set items
 		heldItem = itemsModel.searchItem("name", view.prompt("Enter held Item: "));
 		if(heldItem == null) { view.show("No items found!"); }
 		else
@@ -238,6 +249,7 @@ public class PokemonController
 			pkmn.setHeldItem(heldItem);
 		}
 
+		//set type 2
 		if(checkNA(type2) != null)
 		{
 			pkmn.setType2(type2);

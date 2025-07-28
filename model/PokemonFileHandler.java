@@ -206,7 +206,7 @@ public class PokemonFileHandler
 				Pokemon pokemon = loadPokemon("model/db/Pokedex.txt", scanner);	
 				if(pokemon != null) { pokemonList.add(pokemon); }
 			}
-			System.out.println("Successfully Loaded!");
+			System.out.println("Successfully Loaded Pokemon database!");
 			scanner.close();
 		} catch (Exception e)
 		{

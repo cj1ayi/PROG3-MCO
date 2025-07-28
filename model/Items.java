@@ -39,7 +39,7 @@ public class Items
 		this.buyingPrice2 = buyingPrice2;
 		this.sellingPrice = sellingPrice;
 	}
-	
+
 	/************ OVERRIDES ************/
 
 	@Override

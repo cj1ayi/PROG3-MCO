@@ -13,13 +13,13 @@ public class TrainerManagement
 	private MovesManagement manageMoves;
 	private ItemsManagement manageItems;
 
-   public TrainerManagement() 
+   public TrainerManagement(PokemonManagement pkmnModel, MovesManagement movesModel, ItemsManagement itemsModel) 
 	{
 		trainers = new ArrayList<>();
 
-		managePkmn = new PokemonManagement();
-		manageMoves = new MovesManagement();
-		manageItems = new ItemsManagement();
+		managePkmn = pkmnModel;
+		manageMoves = movesModel;
+		manageItems = itemsModel;
    }
 
 	/**
@@ -71,10 +71,12 @@ public class TrainerManagement
 		//invalid pokemon
 		if (pokemon == null) { return -1; }
 		
+		Pokemon copy = new Pokemon(pokemon);
+
 		//ddboot to the storage box lol
 		if (trainer.getPokemonLineupCount() == Trainer.MAX_POKEMON_LINEUP)
       {
-			addToStorage(trainer, pokemon);	
+			addToStorage(trainer, copy);	
 			return 0;
 		}
 		
@@ -86,7 +88,7 @@ public class TrainerManagement
 		{
 			if(lineup[i] != null) { continue; } 
 			
-			lineup[i] = pokemon;
+			lineup[i] = copy;
 			trainer.setPokemonLineupCount(trainer.getPokemonLineupCount() + 1);
 			return 1;
 		}
@@ -280,7 +282,7 @@ public class TrainerManagement
       return true;
 	}
 
-	public boolean useEvolutionStone(Pokemon pokemon, Items item, PokemonManagement pkmnModel)
+	public boolean useEvolutionStone(Pokemon pokemon, Items item)
 	{
 		int[] evolvablePokedexNum = new int[10];
 		int[] evolvedPokedexNum = new int[10];
@@ -328,7 +330,7 @@ public class TrainerManagement
 		{
 			if(pokedex == pokemon.getPokedexNum())
 			{
-				Pokemon evolvedPokemon = pkmnModel.searchOnePokemon("pokedex", String.valueOf(evolvedPokedexNum[i]));
+				Pokemon evolvedPokemon = managePkmn.searchOnePokemon("pokedex", String.valueOf(evolvedPokedexNum[i]));
 				if(evolvedPokemon == null) 
 				{
 					System.out.println("Evolution of this pokemon does not exist in the pokedex yet.");
@@ -354,7 +356,7 @@ public class TrainerManagement
 	}
 
    // Helper method to apply item effects
-	private void applyItemEffects(Pokemon pokemon, Items item, PokemonManagement pkmnModel) 
+	private boolean applyItemEffects(Pokemon pokemon, Items item) 
 	{
    	String category = item.getCategory().toLowerCase();
    	String effects = item.getEffects().toLowerCase();
@@ -427,20 +429,31 @@ public class TrainerManagement
 
 		if (category.contains("evolution"))
 		{
-			String old = pokemon.getName();
-			if(useEvolutionStone(pokemon, item, pkmnModel))
+			String postPokemonEvolution = pokemon.getName();
+			if(useEvolutionStone(pokemon, item))
 			{
-				System.out.println("Succesfully evolved " + old + " into " + pokemon.getName());
+				System.out.println("Succesfully evolved " + postPokemonEvolution + " into " + pokemon.getName());
+				return true;
 			}
 			else
 			{
 				System.out.println("Pokemon was not evolved!");
-			}
-		} else if (category.contains("level item"))
+				return false;
+			}	
+		}
+
+		if (category.contains("level item"))
 		{
 			pokemon.setBaseLevel(pokemon.getBaseLevel() + 1);
 		}
+
+		return true;
    }
+
+	public boolean isEvolutionStone(Items item)
+	{
+		return item.getCategory().toLowerCase().contains("evolution");
+	}
 
    // Use Item method
    public boolean useItem(Trainer trainer, Pokemon pokemon, Items item, PokemonManagement pkmnModel) 
@@ -455,15 +468,17 @@ public class TrainerManagement
 
 		if(available > 0)
 		{
-			int remaining = available - 1;
+			//only when the item effects work will it remove the item
+			//if for example an evolution stone doesnt work, it wont
+			//delete the evol stone
+			if(applyItemEffects(pokemon, item))
+			{
+				int remaining = available - 1;
 
-			//remove one item of that kind from the inventory
-			if(remaining == 0) { inventory.remove(item); }
-			else { inventory.put(item, remaining); }
-
-			//for usage 
-			applyItemEffects(pokemon, item, pkmnModel);
-			return true;
+				//remove one item of that kind from the inventory
+				if(remaining == 0) { inventory.remove(item); }
+				else { inventory.put(item, remaining); }
+			}
 		}
 
 		return false;
