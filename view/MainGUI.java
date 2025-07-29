@@ -106,7 +106,7 @@ public class MainGUI
 		Insets insets = frame.getInsets();
 
 		int targetWidth = 640 + insets.left + insets.right;
-		int targetHeight = 480 + insets.left + insets.right;
+		int targetHeight = 480 + insets.top + insets.bottom;
 
 		frame.setSize(targetWidth, targetHeight);
 		frame.setResizable(true);
