@@ -23,12 +23,14 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.MouseWheelListener;
 import java.awt.event.MouseWheelEvent;
+import java.awt.Toolkit;
 
 import java.awt.FlowLayout;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Color;
+import java.awt.Insets;
 
 public class MainGUI
 {
@@ -100,9 +102,14 @@ public class MainGUI
 		cp = new BackgroundPanel("assets/main_menu/bg.jpg");
 		frame.setContentPane(cp);
 		cp.setLayout(null);
+		
+		Insets insets = frame.getInsets();
 
-		frame.setSize(640,480);
-		frame.setResizable(false);
+		int targetWidth = 640 + insets.left + insets.right;
+		int targetHeight = 480 + insets.left + insets.right;
+
+		frame.setSize(targetWidth, targetHeight);
+		frame.setResizable(true);
 		frame.setTitle("Pokedex");
 
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
