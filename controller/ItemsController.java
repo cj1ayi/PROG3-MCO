@@ -9,6 +9,7 @@ import model.ItemsManagement;
 import model.ItemsFileHandler;
 import view.ItemsView;
 import view.View;
+import view.MainGUI;
 
 /**
  * The {@code ItemsController} class is part of CONTROLLER.
@@ -24,7 +25,10 @@ public class ItemsController
 	private ItemsManagement model;
 	private ItemsFileHandler fileHandler;
 
+	private int cutsceneFlow;
+
 	private View view;
+	private MainGUI viewGUI;
 	
 	/**
     * Constructs an {@code ItemsController} and initializes the model and view.
@@ -39,6 +43,8 @@ public class ItemsController
     */
 	public ItemsController(ItemsManagement model, View view)
 	{
+		cutsceneFlow = 0;
+
 		this.view = view;
 		this.model = model;
 		
@@ -47,7 +53,50 @@ public class ItemsController
 		
 		model.setItems(fileHandler.load());
 	}
-	
+
+	public void setView(MainGUI viewGUI)
+	{
+		this.viewGUI = viewGUI;
+	}
+
+	public ArrayList<String> getViewItemsInfo(ArrayList<Items> itemsList)
+	{
+		ArrayList<String> itemsBuilder = new ArrayList<>();
+
+		for(Items i : itemsList)
+		{
+			if(i == null) { continue; }
+			String temp = i.getName() + " (" + i.getCategory() + ")";
+
+			itemsBuilder.add(temp);
+		}
+		return itemsBuilder;
+	}
+
+	public void startSearchItems()
+	{
+		System.out.println("Start Search Items Started");
+		viewGUI.showSearchItems();
+	}
+
+	public void startViewItems()
+	{
+		System.out.println("Start View Items Started");
+		viewGUI.showViewItems();
+	}
+
+	public ArrayList<String> handleViewItems()
+	{
+		return getViewItemsInfo(model.getItems());
+	}
+
+	public ArrayList<String> handleSearchItems(String input, String attribute)
+	{
+		ArrayList<Items> found = model.searchItems(attribute, input);
+
+		return getViewItemsInfo(found);
+	}
+
 	public void saveItemEntries()
 	{
 		fileHandler.save(model.getItems());

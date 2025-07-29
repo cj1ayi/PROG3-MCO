@@ -8,6 +8,7 @@ import model.Moves;
 import model.MovesFileHandler;
 import model.MovesManagement;
 import view.MovesView;
+import view.MainGUI;
 import view.View;
 
 /**
@@ -22,7 +23,10 @@ public class MovesController
 	private MovesManagement model;
 	private MovesFileHandler fileHandler;
 
+	private int cutsceneFlow;
+
 	private View view;
+	private MainGUI viewGUI;
 	
 	/**
     * Constructs a {@code MovesController} with a given model and view.
@@ -32,6 +36,8 @@ public class MovesController
     */
 	public MovesController(MovesManagement model, View view) 
 	{
+		cutsceneFlow = 0;
+
 		//mvc implementation of view
 		//varies for cli and gui :33
 		this.view = view;
@@ -44,6 +50,50 @@ public class MovesController
 		model.setMoveList(fileHandler.load());
 	}
 	
+	//inject the main gui controller here as well
+	public void setView(MainGUI viewGUI)
+	{
+		this.viewGUI = viewGUI;
+	}
+
+	public ArrayList<String> getViewMovesInfo(ArrayList<Moves> movesList)
+	{
+		ArrayList<String> movesBuilder = new ArrayList<>();
+
+		for(Moves m : movesList)
+		{
+			if(m == null) { continue; }
+			String temp = m.getMoveName() + " " + m.getMoveClassification() + " (" + m.getMoveType1() + ")";
+
+			movesBuilder.add(temp);
+		}
+		return movesBuilder;
+	}
+
+	public void startSearchMoves()
+	{
+		System.out.println("Start Search Moves Started");
+		viewGUI.showSearchMoves();
+	}
+
+	public void startViewMoves()
+	{
+		System.out.println("Start View Moves Started");
+		viewGUI.showViewMoves();
+	}
+
+	public ArrayList<String> handleViewMoves()
+	{
+		return getViewMovesInfo(model.getMoves());
+	}
+
+	public ArrayList<String> handleSearchMoves(String input, String attribute)
+	{
+		ArrayList<Moves> found = model.searchMoves(attribute, input);
+
+		return getViewMovesInfo(found);
+	}
+
 	/**
     * Prompts the user to search for moves based on the available attributes.
     * The available attributes that can be searched for are name, type, or classification. 

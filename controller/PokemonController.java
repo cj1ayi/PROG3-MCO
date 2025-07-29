@@ -30,7 +30,6 @@ import view.PokemonViewGUI;
  */
 public class PokemonController
 {
-	private PokemonViewGUI viewPkmnGUI;
 	private MainGUI viewGUI;
 	//console view
 	private View view;
@@ -100,6 +99,43 @@ public class PokemonController
 		pkmnView.viewAllPokemon(model.getPokemonList());
 	}
 	
+	public void showAPokemon(String pokedex, String back)
+	{
+		Pokemon p = model.searchOnePokemon("pokedex", pokedex);
+		pkmnView.viewPokemon(p);
+		
+		String[] pkmnInfo = new String[13];
+
+		//IK its gonna be so hardcoded im sorry ToT
+		pkmnInfo[0] = String.valueOf(p.getPokedexNum());
+		pkmnInfo[1] = p.getName();
+		pkmnInfo[2] = "(" + p.getType1();
+		if(p.getType2() != null)
+			pkmnInfo[2] += "/" + p.getType2() + ")";
+		else pkmnInfo[2] += ")";
+		pkmnInfo[3] = String.valueOf(p.getBaseLevel());
+		//get only the names and category(?) of moves
+		pkmnInfo[4] = "<html>";
+		for(Moves m : p.getMoveSet())
+		{
+			if(m == null) { continue; }
+			pkmnInfo[4] += m.getMoveName() + " (" + m.getMoveClassification() + ")" + "<br>";
+		}
+		pkmnInfo[4] += "</html>";
+		if(p.getHeldItem() != null)
+			pkmnInfo[5] = p.getHeldItem().getName();
+		else pkmnInfo[5] = "testing held";
+		pkmnInfo[6] = String.valueOf(p.getHp());
+		pkmnInfo[7] = String.valueOf(p.getAtk());
+		pkmnInfo[8] = String.valueOf(p.getDef());
+		pkmnInfo[9] = String.valueOf(p.getSpd());
+		pkmnInfo[10] = String.valueOf(p.getEvolvesTo());
+		pkmnInfo[11] = String.valueOf(p.getEvolvesFrom());
+		pkmnInfo[12] = String.valueOf(p.getEvolutionLevel());
+
+		viewGUI.showAPokemon(pkmnInfo,back);
+	}
+
 	//for getting the simplified view of the pokemon
 	public ArrayList<String> getViewPokemonInfo(ArrayList<Pokemon> pkmnList)
 	{	
@@ -121,16 +157,6 @@ public class PokemonController
 		return pkmnInfoBuilder;
 	}	
 
-	//this basically SETS up the cutscene by asking the first prompt
-	//and then it sets the cutscene flow to 0 cuz its like the first "STEP"
-	//so to say, and then it proceeds to the handling the actual cutscene 
-	//you get what i meannnnn
-	public void startViewPokemon()
-	{
-		System.out.println("Start View Pokemon Started");
-		viewGUI.showViewPokemon();
-	}
-
 	public ArrayList<String> handleViewPokemon()
 	{
 		return getViewPokemonInfo(model.getPokemonList());
@@ -144,13 +170,19 @@ public class PokemonController
 
 	public ArrayList<String> handleSearchPokemon(String input, String attribute)
 	{
-		ArrayList<Pokemon> found = new ArrayList<>();
-		for(Pokemon p : model.searchPokemon(attribute, input))
-		{
-			if(p == null) { continue; }
-			found.add(p);	
-		}
+		ArrayList<Pokemon> found = model.searchPokemon(attribute, input);
+
 		return getViewPokemonInfo(found);
+	}
+
+	//this basically SETS up the cutscene by asking the first prompt
+	//and then it sets the cutscene flow to 0 cuz its like the first "STEP"
+	//so to say, and then it proceeds to the handling the actual cutscene 
+	//you get what i meannnnn
+	public void startViewPokemon()
+	{
+		System.out.println("Start View Pokemon Started");
+		viewGUI.showViewPokemon();
 	}
 
 	/**
@@ -273,7 +305,7 @@ public class PokemonController
 					builderPkmn.evolvesFrom = Integer.parseInt(input);
 					cutsceneFlow++;
 
-					viewGUI.setPrompt("Please give me the Pokedex Number it evolves into, if none, just say so (type -1, or N/A).");
+					viewGUI.setPrompt("Please give me the Pokedex Number it evolves into, if none, just say so (type -1).");
 				} catch(NumberFormatException e)
 				{
 					viewGUI.setPrompt("That doesn't sound like a POKEDEX NUMBER, please give me the number it evolves from.");
@@ -287,7 +319,7 @@ public class PokemonController
 					{
 						cutsceneFlow++;
 
-						viewGUI.setPrompt("Please give me the level required to evolve, if none, just say so (type -1, or N/A).");
+						viewGUI.setPrompt("Please give me the level required to evolve, if none, just say so (type -1).");
 					}
 				} catch(NumberFormatException e)
 				{
@@ -318,7 +350,7 @@ public class PokemonController
 					viewGUI.setPrompt("Hmmm.. What's " + builderPkmn.name + "'s ATK (Attack Stats)?");
 				} catch(NumberFormatException e)
 				{
-					viewPkmnGUI.setPrompt("That doesn't sound right... Please tell me the HP.");
+					viewGUI.setPrompt("That doesn't sound right... Please tell me the HP.");
 				}
 				break;
 			case 9:

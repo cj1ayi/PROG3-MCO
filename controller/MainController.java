@@ -51,6 +51,9 @@ public class MainController
 
 		//inject gui into controllers
 		pokemonController.setView(viewGUI);
+		movesController.setView(viewGUI);
+		itemsController.setView(viewGUI);
+		trainerController.setView(viewGUI);
 	}
 
 	/**
@@ -141,10 +144,14 @@ public class MainController
 		{
 			case "add": movesController.addMoves();
 						  break;
-			case "view": movesController.viewMoves();
-						  break;
-			case "search": movesController.searchMoves();
-						  break;
+			case "view": 
+				movesController.startViewMoves();
+				//movesController.viewMoves();
+				 break;
+			case "search": 
+				movesController.startSearchMoves();
+			//	movesController.searchMoves();
+				break;
 			case "save": movesController.saveMoves();
 						  break;
 			case "load": movesController.loadMoves();
@@ -172,10 +179,14 @@ public class MainController
 		{
 			case "add": itemsController.newItem();
 					  break;
-			case "view": itemsController.viewAllItems();
-					  break;
-			case "search": itemsController.searchItem();
-					  break;
+			case "view": 
+				itemsController.startViewItems();
+				itemsController.viewAllItems();
+				break;
+			case "search":
+				itemsController.startSearchItems();
+				//itemsController.searchItem();
+				break;
 			case "save": itemsController.saveItemEntries();
 					  break;
 			case "load": itemsController.loadItemEntries();
@@ -199,9 +210,13 @@ public class MainController
 		{
 			case "add": trainerController.createTrainerProfile();
 				break;
-			case "view": trainerController.searchTrainersMenu();
+			case "view": 
+				trainerController.startViewTrainer();
+				trainerController.viewAllTrainersAndSelectMenu();
 				break;
-			case "search": trainerController.viewAllTrainersAndSelectMenu();
+			case "search": 
+				trainerController.startSearchTrainer();
+				//trainerController.searchTrainersMenu();
 				break;
 			case "save": trainerController.saveTrainers();
 				break;

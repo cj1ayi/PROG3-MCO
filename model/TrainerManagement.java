@@ -525,6 +525,13 @@ public class TrainerManagement
 		moves[index] = move;
 	}
 
+	public boolean canTeachMove(Pokemon pokemon, Moves move)
+	{
+		if (move.getMoveType1().equalsIgnoreCase(pokemon.getType1()) || move.getMoveType1().equalsIgnoreCase(pokemon.getType2()))
+			return true;
+		return false;
+	}
+
 	/**
 	 *	Function teaches move given the pokemon and move
 	 *	
@@ -599,5 +606,37 @@ public class TrainerManagement
 
 		return matchingTrainers;
 	}
+
+	public Trainer searchTrainer(String attribute, String keyword) 
+	{
+        // Search Moves
+      for (Trainer trainer : trainers) 
+		{
+			if(trainer == null) { continue; }
+         boolean matches = false;
+
+         switch (attribute.toLowerCase()) 
+			{
+         	case "name":
+               matches = trainer.getName().toLowerCase().contains(keyword.toLowerCase());
+               break;
+            case "id":
+               matches = Integer.toString(trainer.getID()).contains(keyword.toLowerCase());
+               break;
+            case "sex":
+               matches = trainer.getSex().toLowerCase().contains(keyword.toLowerCase());
+               break;
+            case "hometown":
+               matches = trainer.getHometown().toLowerCase().contains(keyword.toLowerCase());
+               break;
+         }
+      	
+			if (matches) return trainer; 
+   	}
+
+		return null;
+	}
+
+
 }
 

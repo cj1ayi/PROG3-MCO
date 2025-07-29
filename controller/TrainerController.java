@@ -10,6 +10,7 @@ import view.PokemonView;
 import view.MovesView;
 import view.ItemsView;
 import view.View;
+import view.MainGUI;
 
 //meow
 public class TrainerController 
@@ -24,10 +25,17 @@ public class TrainerController
    private MovesView movesView;
    private PokemonView pokemonView;
 
+	private PokemonController pokemonController;
+
+	private int cutsceneFlow;
+
    private View view;
+	private MainGUI viewGUI;
     
    public TrainerController(TrainerManagement model, PokemonManagement pokemonModel, ItemsManagement itemsModel, MovesManagement movesModel, View view) 
 	{
+		cutsceneFlow = 0;
+
 		this.view = view;
 		this.model = model;
 		this.pokemonModel = pokemonModel;
@@ -41,6 +49,50 @@ public class TrainerController
 		fileHandler = new TrainerFileHandler();
 
    	model.setTrainerList(fileHandler.load()); 
+	}
+
+	//inject the main gui controller here as well
+	public void setView(MainGUI viewGUI)
+	{
+		this.viewGUI = viewGUI;
+	}
+
+	public ArrayList<String> getViewTrainerInfo(ArrayList<Trainer> trainerList)
+	{
+		ArrayList<String> trainerBuilder = new ArrayList<>();
+
+		for(Trainer m : trainerList)
+		{
+			if(m == null) { continue; }
+			String temp = "[" + m.getID() + "]" + " " + m.getName(); 
+
+			trainerBuilder.add(temp);
+		}
+		return trainerBuilder;
+	}
+
+	public void startSearchTrainer()
+	{
+		System.out.println("Start Search Trainer Started");
+		viewGUI.showSearchTrainer();
+	}
+
+	public void startViewTrainer()
+	{
+		System.out.println("Start View Trainer Started");
+		viewGUI.showViewTrainer();
+	}
+
+	public ArrayList<String> handleViewTrainer()
+	{
+		return getViewTrainerInfo(model.getAllTrainers());
+	}
+
+	public ArrayList<String> handleSearchTrainer(String input, String attribute)
+	{
+		ArrayList<Trainer> found = model.searchTrainers(attribute, input);
+
+		return getViewTrainerInfo(found);
 	}
 
    void createTrainerProfile() 
@@ -129,9 +181,9 @@ public class TrainerController
    	ArrayList<Trainer> trainers = model.getAllTrainers();
       trainerView.viewAllTrainers(trainers);
         
-      String choice = view.prompt("\nWould you like to manage a trainer? (y/n): ");
-      if (choice.toLowerCase().startsWith("y")) 
-         selectAndManageTrainerMenu(trainers);
+      //String choice = view.prompt("\nWould you like to manage a trainer? (y/n): ");
+      //if (choice.toLowerCase().startsWith("y")) 
+      //  selectAndManageTrainerMenu(trainers);
     }
 
    private void selectAndManageTrainerMenu(ArrayList<Trainer> trainers) 
@@ -169,6 +221,56 @@ public class TrainerController
 		
 		manageTrainerMenu(selectedTrainer);
     }
+	
+
+
+
+
+
+
+
+
+
+
+	//GUI IMPLEMENTATION
+	public void manageTrainer(String id)
+	{
+		//implement ts
+		//guaranteed find btw
+		Trainer t = model.searchTrainer("id", id);
+		
+		trainerView.viewTrainer(t);
+
+		String[] trainerInfo = new String[14];
+		trainerInfo[0] = "ID# " + String.valueOf(t.getID());
+		trainerInfo[1] = t.getName();
+		trainerInfo[2] = "Birthday: " + t.getBirthDate();
+		trainerInfo[3] = "Sex: " + t.getSex();
+		trainerInfo[4] = "Hometown: " + t.getHometown();
+		trainerInfo[5] = "<html>" + t.getDescription() + "</html>";
+		//format motney
+		String money = String.format("%.2f", t.getMoney());
+		trainerInfo[6] = "P " + money;
+		trainerInfo[7] = String.valueOf(t.getPokemonLineupCount()); 
+		for (int i = 0; i < 6; i++) {
+			Pokemon p = t.getPokemonLineup()[i];
+			if (p != null)
+				trainerInfo[8 + i] = "lvl " + p.getBaseLevel() + " " + p.getName() + " (" + p.getType1() + ")";
+		}
+
+		viewGUI.showTrainer(trainerInfo);	
+	}
+
+	public void pokemonShowLineup(String id, int index)
+	{
+		Trainer t = model.searchTrainer("id", id);
+		trainerView.viewTrainer(t);
+
+		Pokemon[] pkmn = t.getPokemonLineup();
+		Pokemon selected = pkmn[index];
+		pokemonController.showAPokemon(String.valueOf(selected.getPokedexNum()), "trainer");
+	}
+
 
    private void manageTrainerMenu(Trainer trainer) 
 	{
@@ -298,7 +400,15 @@ public class TrainerController
          return;
 		}
 
-		ArrayList<Moves> compatibleMoves = movesModel.searchMoves("type", "HM");
+		ArrayList<Moves> removableMoves = movesModel.searchMoves("type", "HM");
+		ArrayList<Moves> compatibleMoves = new ArrayList<>();
+			
+		for(Moves m : removableMoves)
+		{
+			if(m == null) { continue; }
+			if(model.canTeachMove(selectedPokemon, m))
+				compatibleMoves.add(m);
+		}
 
       view.show("\nCompatible moves:");
       movesView.displayMoves(compatibleMoves);
