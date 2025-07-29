@@ -103,6 +103,9 @@ public class MainGUI
 		frame.setContentPane(cp);
 		cp.setLayout(null);
 		
+		frame.pack();
+		frame.setVisible(true);
+
 		Insets insets = frame.getInsets();
 
 		int targetWidth = 640 + insets.left + insets.right;
@@ -113,7 +116,6 @@ public class MainGUI
 		frame.setTitle("Pokedex");
 
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setVisible(true);
 	}
 		
 	public void showMainMenu()
@@ -121,11 +123,11 @@ public class MainGUI
 		cp.removeAll();
 		
 		JLabel title = GUIUtils.createCenterBanner("assets/main_menu/title.png",130);  
-		JLabel btnBg = GUIUtils.createCenterBanner("assets/main_menu/optionbg.png", 223);
-		JButton pkmnBtn = GUIUtils.createCenterImageButton("assets/main_menu/pkmnbtn.png", 225);
-		JButton movesBtn = GUIUtils.createCenterImageButton("assets/main_menu/movesbtn.png", 273);
-		JButton itemsBtn = GUIUtils.createCenterImageButton("assets/main_menu/itemsbtn.png", 321);
-		JButton trainerBtn = GUIUtils.createCenterImageButton("assets/main_menu/trainerbtn.png", 369);
+		JLabel btnBg = GUIUtils.createCenterBanner("assets/main_menu/optionbg.png", 240);
+		JButton pkmnBtn = GUIUtils.createCenterImageButton("assets/main_menu/pkmnbtn.png", 242);
+		JButton movesBtn = GUIUtils.createCenterImageButton("assets/main_menu/movesbtn.png", 290);
+		JButton itemsBtn = GUIUtils.createCenterImageButton("assets/main_menu/itemsbtn.png", 338);
+		JButton trainerBtn = GUIUtils.createCenterImageButton("assets/main_menu/trainerbtn.png", 386);
 
 		pkmnBtn.addActionListener(e -> controller.initMenu("pokemon"));
 		movesBtn.addActionListener(e -> controller.initMenu("moves"));
@@ -159,14 +161,14 @@ public class MainGUI
 	{
 		cp.removeAll();
 
-		JLabel title = GUIUtils.createCenterBanner("assets/pkmn_menu/title.png", 130);
-		JLabel btnBg = GUIUtils.createCenterBanner("assets/pkmn_menu/optionbg.png", 205);
-		JButton addBtn = GUIUtils.createCenterImageButton("assets/pkmn_menu/addbtn.png", 207);
-		JButton viewBtn = GUIUtils.createCenterImageButton("assets/pkmn_menu/viewbtn.png", 255);
-		JButton searchBtn = GUIUtils.createCenterImageButton("assets/pkmn_menu/searchbtn.png", 303);
-		JButton saveBtn = GUIUtils.createImageButton("assets/savebtn.png", 60, 380);
-		JButton loadBtn = GUIUtils.createImageButton("assets/loadbtn.png", 240, 380);
-		JButton backBtn = GUIUtils.createImageButton("assets/backbutton.png", 560, 390);
+		JLabel title = GUIUtils.createCenterBanner("assets/pkmn_menu/title.png", 140);
+		JLabel btnBg = GUIUtils.createCenterBanner("assets/pkmn_menu/optionbg.png", 223);//205
+		JButton addBtn = GUIUtils.createCenterImageButton("assets/pkmn_menu/addbtn.png", 225);
+		JButton viewBtn = GUIUtils.createCenterImageButton("assets/pkmn_menu/viewbtn.png", 273);
+		JButton searchBtn = GUIUtils.createCenterImageButton("assets/pkmn_menu/searchbtn.png", 321);
+		JButton saveBtn = GUIUtils.createImageButton("assets/savebtn.png", 60, 400);
+		JButton loadBtn = GUIUtils.createImageButton("assets/loadbtn.png", 240, 400);
+		JButton backBtn = GUIUtils.createImageButton("assets/backbutton.png", 560, 410);
 
 		addBtn.addActionListener(e -> controller.initPokemonMenu("add"));
 		viewBtn.addActionListener(e -> controller.initPokemonMenu("view"));
@@ -333,21 +335,72 @@ public class MainGUI
 
 	public void showSearchPokemon()
 	{
+		cp.removeAll();
+
+		JButton dropbtn = GUIUtils.createImageButton("assets/search/dropup.png", 100,100);
+		JButton namefilter = GUIUtils.createImageButton("assets/search/box.png", 20,100);
+		JButton typefilter = GUIUtils.createImageButton("assets/search/box.png", 20,40);
+		JButton pokedexfilter = GUIUtils.createImageButton("assets/search/box.png", 20,140);
+		JTextField field = GUIUtils.createTextField(80,230,270,40);
+		promptLabel.setText("");
+
 
 	}
+
+/*
+	public void showAddPokemon()
+	{
+		cp.removeAll();
+
+		JLabel title = GUIUtils.createCenterBanner("assets/pkmn_menu/add/title.png",0);
+		JLabel fieldbg = GUIUtils.createCenterBanner("assets/pkmn_menu/add/inputs.png",0);
+		JTextField field = GUIUtils.createTextField(80,230,270,40);
+		promptLabel.setText("");
+
+		//label setup
+		Font current = promptLabel.getFont();
+		promptLabel.setBounds(40,320, 460,100);
+		promptLabel.setFont(current.deriveFont(20f));
+
+		field.requestFocusInWindow();
+
+		field.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e)
+			{
+				if(e.getKeyCode() == KeyEvent.VK_ENTER)
+				{
+					String input = field.getText();
+					field.setText("");
+					pokemonController.handleAddPokemon(input);
+				}
+			}
+		});
+
+		cp = new BackgroundPanel("assets/pkmn_menu/add/bg.jpg");		
+		cp.setLayout(null);
+		frame.setContentPane(cp);
+		cp.add(title);
+		cp.add(field);
+		cp.add(fieldbg);
+		cp.add(promptLabel);
+		cp.revalidate();
+		cp.repaint();
+	}
+*/
 
 	public void showMovesMenu()
 	{
 		cp.removeAll();
 
-		JLabel title = GUIUtils.createCenterBanner("assets/moves_menu/title.png", 130);
-		JLabel btnBg = GUIUtils.createCenterBanner("assets/pkmn_menu/optionbg.png", 205);
-		JButton addBtn = GUIUtils.createCenterImageButton("assets/moves_menu/addbtn.png", 207);
-		JButton viewBtn = GUIUtils.createCenterImageButton("assets/moves_menu/viewbtn.png", 255);
-		JButton searchBtn = GUIUtils.createCenterImageButton("assets/moves_menu/searchbtn.png", 303);
-		JButton saveBtn = GUIUtils.createImageButton("assets/savebtn.png", 60, 380);
-		JButton loadBtn = GUIUtils.createImageButton("assets/loadbtn.png", 240, 380);
-		JButton backBtn = GUIUtils.createImageButton("assets/backbutton.png", 560, 390);
+		JLabel title = GUIUtils.createCenterBanner("assets/moves_menu/title.png", 140);
+		JLabel btnBg = GUIUtils.createCenterBanner("assets/pkmn_menu/optionbg.png", 223);
+		JButton addBtn = GUIUtils.createCenterImageButton("assets/moves_menu/addbtn.png", 225);
+		JButton viewBtn = GUIUtils.createCenterImageButton("assets/moves_menu/viewbtn.png", 273);
+		JButton searchBtn = GUIUtils.createCenterImageButton("assets/moves_menu/searchbtn.png", 321);
+		JButton saveBtn = GUIUtils.createImageButton("assets/savebtn.png", 60, 400);
+		JButton loadBtn = GUIUtils.createImageButton("assets/loadbtn.png", 240, 400);
+		JButton backBtn = GUIUtils.createImageButton("assets/backbutton.png", 560, 410);
 
 		addBtn.addActionListener(e -> controller.initMovesMenu("add"));
 		viewBtn.addActionListener(e -> controller.initMovesMenu("view"));
@@ -378,15 +431,87 @@ public class MainGUI
 		cp.repaint();
 	}
 
-
-
-	public void tempShowTrainerMenu()
+	public void showItemsMenu()
 	{
-		controller.initTrainerMenu();
+		cp.removeAll();
+
+		JLabel title = GUIUtils.createCenterBanner("assets/items_menu/title.png", 140);
+		JLabel btnBg = GUIUtils.createCenterBanner("assets/pkmn_menu/optionbg.png", 223);
+		JButton addBtn = GUIUtils.createCenterImageButton("assets/items_menu/addbtn.png", 225);
+		JButton viewBtn = GUIUtils.createCenterImageButton("assets/items_menu/viewbtn.png", 273);
+		JButton searchBtn = GUIUtils.createCenterImageButton("assets/items_menu/searchbtn.png", 321);
+		JButton saveBtn = GUIUtils.createImageButton("assets/savebtn.png", 60, 400);
+		JButton loadBtn = GUIUtils.createImageButton("assets/loadbtn.png", 240, 400);
+		JButton backBtn = GUIUtils.createImageButton("assets/backbutton.png", 560, 410);
+
+		addBtn.addActionListener(e -> controller.initItemsMenu("add"));
+		viewBtn.addActionListener(e -> controller.initItemsMenu("view"));
+		searchBtn.addActionListener(e -> controller.initItemsMenu("search"));
+
+		saveBtn.addActionListener(e -> {
+			controller.initItemsMenu("save");
+			buttonPressed(saveBtn, "assets/savebtnpress.png", "assets/savebtn.png", 200);
+		});
+		loadBtn.addActionListener(e -> {
+			controller.initItemsMenu("load");
+			buttonPressed(loadBtn, "assets/loadbtnpress.png", "assets/loadbtn.png", 200);
+		});
+		backBtn.addActionListener(e -> controller.initItemsMenu("back"));
+
+		cp = new BackgroundPanel("assets/pkmn_menu/bg.jpg");
+		cp.setLayout(null);
+		frame.setContentPane(cp);
+		cp.add(title);
+		cp.add(addBtn);
+		cp.add(viewBtn);
+		cp.add(searchBtn);
+		cp.add(saveBtn);
+		cp.add(loadBtn);
+		cp.add(backBtn);
+		cp.add(btnBg);
+		cp.revalidate();
+		cp.repaint();
 	}
-
-	public void tempShowItemsMenu()
+	
+	public void showTrainerMenu()
 	{
-		controller.initItemsMenu();
+		cp.removeAll();
+
+		JLabel title = GUIUtils.createCenterBanner("assets/trainer_menu/title.png", 140);
+		JLabel btnBg = GUIUtils.createCenterBanner("assets/pkmn_menu/optionbg.png", 223);
+		JButton addBtn = GUIUtils.createCenterImageButton("assets/trainer_menu/addbtn.png", 225);
+		JButton viewBtn = GUIUtils.createCenterImageButton("assets/trainer_menu/viewbtn.png", 273);
+		JButton searchBtn = GUIUtils.createCenterImageButton("assets/trainer_menu/searchbtn.png", 321);
+		JButton saveBtn = GUIUtils.createImageButton("assets/savebtn.png", 60, 400);
+		JButton loadBtn = GUIUtils.createImageButton("assets/loadbtn.png", 240, 400);
+		JButton backBtn = GUIUtils.createImageButton("assets/backbutton.png", 560, 410);
+
+		addBtn.addActionListener(e -> controller.initTrainerMenu("add"));
+		viewBtn.addActionListener(e -> controller.initTrainerMenu("view"));
+		searchBtn.addActionListener(e -> controller.initTrainerMenu("search"));
+
+		saveBtn.addActionListener(e -> {
+			controller.initTrainerMenu("save");
+			buttonPressed(saveBtn, "assets/savebtnpress.png", "assets/savebtn.png", 200);
+		});
+		loadBtn.addActionListener(e -> {
+			controller.initTrainerMenu("load");
+			buttonPressed(loadBtn, "assets/loadbtnpress.png", "assets/loadbtn.png", 200);
+		});
+		backBtn.addActionListener(e -> controller.initTrainerMenu("back"));
+
+		cp = new BackgroundPanel("assets/pkmn_menu/bg.jpg");
+		cp.setLayout(null);
+		frame.setContentPane(cp);
+		cp.add(title);
+		cp.add(addBtn);
+		cp.add(viewBtn);
+		cp.add(searchBtn);
+		cp.add(saveBtn);
+		cp.add(loadBtn);
+		cp.add(backBtn);
+		cp.add(btnBg);
+		cp.revalidate();
+		cp.repaint();
 	}
 }

@@ -14,6 +14,8 @@ public class BackgroundPanel extends JPanel
 		try
 		{
 			background = new ImageIcon(path).getImage(); //loads the background image
+			setOpaque(false);
+			setLayout(null);
 		} catch (Exception e)
 		{
 			System.out.println("Error with getting background image");
@@ -27,7 +29,7 @@ public class BackgroundPanel extends JPanel
 		super.paintComponent(g);
 		if(background != null)
 		{
-			g.drawImage(background,0,0,getWidth(),getHeight(),this);
+			g.drawImage(background,0,0,this);
 		}
 	}
 }

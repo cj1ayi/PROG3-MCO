@@ -77,10 +77,10 @@ public class MainController
 				viewGUI.showMovesMenu();
 				break;
 			case "items": 
-				viewGUI.tempShowItemsMenu();
+				viewGUI.showItemsMenu();
 				break;
 			case "trainer": 
-				viewGUI.tempShowTrainerMenu();
+				viewGUI.showTrainerMenu();
 				break;
 		}
 	}
@@ -157,65 +157,57 @@ public class MainController
     * Displays the Item management menu and handles actions such as
     * viewing and searching items.
     */
-	public void initItemsMenu()
+	public void initItemsMenu(String menuChoice)
 	{
-		boolean flag = false;
-		
-		while(!flag)
-		{
-			view.show("------------D POKEDEX N------------\n");
-			view.show("1] Add Items  							 \n");
-			view.show("2] View Items  							 \n");
-			view.show("3] Search Items							 \n");
-			view.show("-----------------------------------\n");			
-			view.show("[4] SAVE   [5] LOAD        [6] EXIT\n");
-			view.show("-----------------------------------\n");			
+		view.show("------------D POKEDEX N------------\n");
+		view.show("1] Add Items  							 \n");
+		view.show("2] View Items  							 \n");
+		view.show("3] Search Items							 \n");
+		view.show("-----------------------------------\n");			
+		view.show("[4] SAVE   [5] LOAD        [6] EXIT\n");
+		view.show("-----------------------------------\n");			
 
-			switch(view.promptIntRange("",1,6))
-			{
-				case 1: itemsController.newItem();
-						  break;
-				case 2: itemsController.viewAllItems();
-						  break;
-				case 3: itemsController.searchItem();
-						  break;
-				case 4: itemsController.saveItemEntries();
-						  break;
-				case 5: itemsController.loadItemEntries();
-						  break;
-				case 6: flag = true;
-						  break;
-			}
+		switch(menuChoice)
+		{
+			case "add": itemsController.newItem();
+					  break;
+			case "view": itemsController.viewAllItems();
+					  break;
+			case "search": itemsController.searchItem();
+					  break;
+			case "save": itemsController.saveItemEntries();
+					  break;
+			case "load": itemsController.loadItemEntries();
+					  break;
+			case "back": 
+				viewGUI.showMainMenu();
 		}
 	}
 
-	public void initTrainerMenu(){
-		boolean flag = false; 
-
-		while(!flag)
+	public void initTrainerMenu(String menuChoice)
+	{
+		view.show("------------D POKEDEX N------------\n");
+		view.show("1] Add Trainer                     \n");
+		view.show("2] Search Trainers					 \n");
+		view.show("3] View All Trainers						 \n");
+		view.show("-----------------------------------\n");
+		view.show("[4] SAVE   [5] LOAD        [6] EXIT\n");
+		view.show("-----------------------------------\n");
+	
+		switch(menuChoice)
 		{
-			view.show("------------D POKEDEX N------------\n");
-			view.show("1] Add Trainer                     \n");
-			view.show("2] Search Trainers					 \n");
-			view.show("3] View All Trainers						 \n");
-			view.show("-----------------------------------\n");
-			view.show("[4] SAVE   [5] LOAD        [6] EXIT\n");
-			view.show("-----------------------------------\n");
-			switch(view.promptIntRange("",1,6))
-			{
-				case 1: trainerController.createTrainerProfile();
-					break;
-				case 2: trainerController.searchTrainersMenu();
-					break;
-				case 3: trainerController.viewAllTrainersAndSelectMenu();
-					break;
-				case 4: trainerController.saveTrainers();
-					break;
-				case 5: trainerController.loadTrainers();
-					break;
-				case 6: flag = true;
-					break;
-			}
+			case "add": trainerController.createTrainerProfile();
+				break;
+			case "view": trainerController.searchTrainersMenu();
+				break;
+			case "search": trainerController.viewAllTrainersAndSelectMenu();
+				break;
+			case "save": trainerController.saveTrainers();
+				break;
+			case "load": trainerController.loadTrainers();
+				break;
+			case "back":		
+				viewGUI.showMainMenu();
 		}
 	}
 }
