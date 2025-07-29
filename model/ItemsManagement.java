@@ -112,4 +112,10 @@ public class ItemsManagement
 	{
 		return itemList;
 	}
+
+	public void addItem(Items item)
+	{
+		itemList.add(item);
+		System.out.println("Item succesfully added to list");
+	}
 }

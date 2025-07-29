@@ -1,20 +1,20 @@
-HP Up|Vitamin|A nutritious drink for Pokémon.|+10 HP EVs|10000|-1|5000|
-Protein|Vitamin|A nutritious drink for Pokémon.|+10 Attack EVs|10000|-1|5000|
-Iron|Vitamin|A nutritious drink for Pokémon.|+10 Defense EVs|10000|-1|5000|
-Carbos|Vitamin|A nutritious drink for Pokémon.|+10 Speed EVs|10000|-1|5000|
-Rare Candy|Level Item|A candy that is packed with energy.|Increases level by 1 (stat gain depends on Pokemon's base stats and EVs)|-1|-1|2400|
-Health Feather|Feather|A feather that slightly increases HP.|+1 HP EV|300|-1|150|
-Muscle Feather|Feather|A feather that slightly increases Attack.|+1 Attack EV|300|-1|150|
-Resist Feather|Feather|A feather that slightly increases Defense.|+1 Defense EV|300|-1|150|
-Swift Feather|Feather|A feather that slightly increases Speed.|+1 Speed EV|300|-1|150|
-Zinc|Vitamin|A nutritious drink for Pokemon.|+10 Special Defense EVs|10000|-1|5000|
-Fire Stone|Evolution Stone|A stone that radiates heat.|Evolves Pokemon like Vulpix, Growlithe, Eevee (into Flareon), etc.|3000|5000|1500|
-Water Stone|Evolution Stone|A stone with a blue, watery appearance.|Evolves Pokemon like Poliwhirl, Shellder, Eevee (into Vaporeon), etc.|3000|5000|1500|
-Thunder Stone|Evolution Stone|A stone that sparkles with electricity|Evolves Pokemon like Pikachu, Eevee (into Jolteon), Eelektrik, etc.|3000|5000|1500|
-Leaf Stone|Evolution Stone|A stone with a leaf pattern.|Evolves Pokemon like Gloom, Weepinbell, Exeggcute, etc.|3000|5000|1500|
-Moon Stone|Evolution Stone|A stone that glows faintly in the moonlight.|Evolves Pokemon like Nidorina, Clefairy, Jigglypuff, etc.|-1|-1|1500|
-Sun Stone|Evolution Stone|A stone that glows like the sun.|Evolves Pokemon into Gloom (into Bellossom), Sunken, Cottonee, etc.|3000|5000|1500|
-Shiny Stone|Evolution Stone|A stone that sparkles brightly|Evolves Pokemon like Togetic, Roselia, Minccino, etc.|3000|5000|1500|
-Dusk Stone|Evolution Stone|A dark stone that is ominous in appearance.|Evolves Pokemon like Murkrow, Misdreavus, Doublade, etc.|3000|5000|1500|
-Dawn Stone|Evolution Stone|A stone that sparkles like the morning sky.|Evolves like Kirlia into Gallade, female Snorunt into Froslass.|3000|5000|1500|
-Ice Stone|Evolution Stone|A stone that is cold to the touch.|Evolves Pokemon like Alolan Vulpix, Galarian Darumaka, Eevee (into Glaceon)|3000|5000|1500|
+ITEM|HP Up|Vitamin|A nutritious drink for Pokémon.|+10 HP EVs|10000.0|-1.0|5000.0|
+ITEM|Protein|Vitamin|A nutritious drink for Pokémon.|+10 Attack EVs|10000.0|-1.0|5000.0|
+ITEM|Iron|Vitamin|A nutritious drink for Pokémon.|+10 Defense EVs|10000.0|-1.0|5000.0|
+ITEM|Carbos|Vitamin|A nutritious drink for Pokémon.|+10 Speed EVs|10000.0|-1.0|5000.0|
+ITEM|Rare Candy|Level Item|A candy that is packed with energy.|Increases level by 1 (stat gain depends on Pokemon's base stats and EVs)|-1.0|-1.0|2400.0|
+ITEM|Health Feather|Feather|A feather that slightly increases HP.|+1 HP EV|300.0|-1.0|150.0|
+ITEM|Muscle Feather|Feather|A feather that slightly increases Attack.|+1 Attack EV|300.0|-1.0|150.0|
+ITEM|Resist Feather|Feather|A feather that slightly increases Defense.|+1 Defense EV|300.0|-1.0|150.0|
+ITEM|Swift Feather|Feather|A feather that slightly increases Speed.|+1 Speed EV|300.0|-1.0|150.0|
+ITEM|Zinc|Vitamin|A nutritious drink for Pokemon.|+10 Special Defense EVs|10000.0|-1.0|5000.0|
+ITEM|Fire Stone|Evolution Stone|A stone that radiates heat.|Evolves Pokemon like Vulpix, Growlithe, Eevee (into Flareon), etc.|3000.0|5000.0|1500.0|
+ITEM|Water Stone|Evolution Stone|A stone with a blue, watery appearance.|Evolves Pokemon like Poliwhirl, Shellder, Eevee (into Vaporeon), etc.|3000.0|5000.0|1500.0|
+ITEM|Thunder Stone|Evolution Stone|A stone that sparkles with electricity|Evolves Pokemon like Pikachu, Eevee (into Jolteon), Eelektrik, etc.|3000.0|5000.0|1500.0|
+ITEM|Leaf Stone|Evolution Stone|A stone with a leaf pattern.|Evolves Pokemon like Gloom, Weepinbell, Exeggcute, etc.|3000.0|5000.0|1500.0|
+ITEM|Moon Stone|Evolution Stone|A stone that glows faintly in the moonlight.|Evolves Pokemon like Nidorina, Clefairy, Jigglypuff, etc.|-1.0|-1.0|1500.0|
+ITEM|Sun Stone|Evolution Stone|A stone that glows like the sun.|Evolves Pokemon into Gloom (into Bellossom), Sunken, Cottonee, etc.|3000.0|5000.0|1500.0|
+ITEM|Shiny Stone|Evolution Stone|A stone that sparkles brightly|Evolves Pokemon like Togetic, Roselia, Minccino, etc.|3000.0|5000.0|1500.0|
+ITEM|Dusk Stone|Evolution Stone|A dark stone that is ominous in appearance.|Evolves Pokemon like Murkrow, Misdreavus, Doublade, etc.|3000.0|5000.0|1500.0|
+ITEM|Dawn Stone|Evolution Stone|A stone that sparkles like the morning sky.|Evolves like Kirlia into Gallade, female Snorunt into Froslass.|3000.0|5000.0|1500.0|
+ITEM|Ice Stone|Evolution Stone|A stone that is cold to the touch.|Evolves Pokemon like Alolan Vulpix, Galarian Darumaka, Eevee (into Glaceon)|3000.0|5000.0|1500.0|

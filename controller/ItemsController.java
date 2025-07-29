@@ -48,6 +48,95 @@ public class ItemsController
 		model.setItems(fileHandler.load());
 	}
 	
+	public void saveItemEntries()
+	{
+		fileHandler.save(model.getItems());
+	}
+
+	public void loadItemEntries()
+	{
+		model.setItems(fileHandler.load());
+	}
+
+	public void newItem()
+	{
+		boolean valid;
+
+		String name = null;
+		String category = null;
+		String description = null;
+		String effects = null;
+		String buyingPrice1 = null;
+		String buyingPrice2 = null;
+		double sellingPrice = 0;
+
+		view.show("NEW ITEM ENTRY\n");
+		view.show("input N/A if the pokemon doesn't have that attribtue\n\n");
+
+		boolean flag = false;
+		
+		name = view.prompt("Enter name: ");
+		do
+		{	
+			view.show("Available: vitamin, feather, evolution stone, held\n");
+			Items item = model.searchItem("category", view.prompt("Enter Category: "));
+			if(item == null)
+			{
+				view.show("Item not found! Enter again\n");
+			}
+			else
+			{
+				flag = true;
+				category = item.getCategory();
+				view.show("Category: " + category + "\n");
+			}
+		} while(!flag);
+		effects = view.prompt("effects: ");
+		description = view.prompt("description: ");
+		buyingPrice1 = view.prompt("buying price start: ");
+		buyingPrice2 = view.prompt("buying price end: ");
+		
+		double bp1= 0, bp2 = 0;
+		if(checkNA(buyingPrice1) != null) 
+		{
+			try
+			{
+				bp1 = Double.parseDouble(buyingPrice1); 
+			} catch(NumberFormatException e)
+			{	
+				bp1 = -1;
+			}
+		}
+		else
+			bp1 = -1;
+		if(checkNA(buyingPrice2) != null) 
+		{ 
+			try
+			{
+				bp2 = Double.parseDouble(buyingPrice2); 
+			} catch(NumberFormatException e)
+			{
+				bp2 = -1;
+			}
+		}
+		else
+			bp2 = -1;
+
+		if(bp1 < 0)
+		{
+			bp1 = -1;
+			sellingPrice = -1;
+		}
+		else if(bp2 < 0)
+		{
+			bp2 = -1;
+			sellingPrice = bp1 * 0.5;
+		}
+
+		Items item = new Items(name, category, description, effects, bp1, bp2, sellingPrice);
+		model.addItem(item);
+	}
+
 	/**
     * Displays all loaded items to the console via the {@code ItemsView}.
     */

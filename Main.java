@@ -1,6 +1,5 @@
 import controller.MainController;
-import view.ConsoleView;
-import view.View;
+import view.*;
 
 /**
  * The {@code Main} class is the program's entry point.
@@ -18,9 +17,10 @@ public class Main
 	public static void main(String[] args)
 	{
 		View view = new ConsoleView();
-		MainController pokedex= new MainController(view);
-		pokedex.start();
+		MainGUI viewGUI = new MainGUI();
+		MainController pokedex = new MainController(view, viewGUI);
 
+		viewGUI.start(pokedex);
 	}
 }
 

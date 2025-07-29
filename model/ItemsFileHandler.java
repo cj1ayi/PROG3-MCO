@@ -35,6 +35,25 @@ public class ItemsFileHandler
 		writer.write("\n");
 	}
 
+	public void save(ArrayList<Items> items)
+	{
+		try
+		{
+			FileWriter writer = new FileWriter("model/db/Items.txt");
+			writer = new FileWriter("model/db/Items.txt", true);
+			for(Items i : items)
+			{
+				if(i == null) { continue; }
+				saveAppend(i, writer);
+			}
+			writer.close();
+		} catch (IOException e)
+		{
+			System.out.println("An error occurred in Items save");
+			e.printStackTrace();
+		}
+	}
+
 	/**
 	 * Loads {@code Items} objects from the file located in the db (database) items txt file.
 	 * Each line represents one {@code Items} entry, with fields separated by a "|" delimiter.
@@ -53,13 +72,13 @@ public class ItemsFileHandler
 			while(scanner.hasNextLine())
    		{
 				String tokens[] = scanner.nextLine().split("\\|");
-				String name = fromSafe(tokens[0]);
-				String category = fromSafe(tokens[1]);
-				String desc = fromSafe(tokens[2]);
-				String effects = fromSafe(tokens[3]);
-				double buyingPrice = Double.parseDouble(tokens[4]);
-				double buyingPriceCheck = Double.parseDouble(tokens[5]);
-				double sellingPrice = Double.parseDouble(tokens[6]);
+				String name = fromSafe(tokens[1]);
+				String category = fromSafe(tokens[2]);
+				String desc = fromSafe(tokens[3]);
+				String effects = fromSafe(tokens[4]);
+				double buyingPrice = Double.parseDouble(tokens[5]);
+				double buyingPriceCheck = Double.parseDouble(tokens[6]);
+				double sellingPrice = Double.parseDouble(tokens[7]);
 				
 				Items i = new Items(name, category, desc, effects, buyingPrice, buyingPriceCheck, sellingPrice);
 				

@@ -11,9 +11,13 @@ import model.PokemonManagement;
 import model.MovesManagement;
 import model.ItemsManagement;
 import model.PokemonFileHandler;
+import model.PokemonBuilder;
 import view.MovesView;
 import view.PokemonView;
 import view.View;
+
+import view.MainGUI;
+import view.PokemonViewGUI;
 
 /**
  * The {@code PokemonController} class is part of CONTROLLER.
@@ -26,6 +30,11 @@ import view.View;
  */
 public class PokemonController
 {
+	private PokemonViewGUI viewPkmnGUI;
+	private MainGUI viewGUI;
+	//console view
+	private View view;
+
 	private PokemonView pkmnView;
 	private MovesView movesView;
 	private PokemonManagement model;
@@ -33,7 +42,9 @@ public class PokemonController
 	private ItemsManagement itemsModel;
 	private PokemonFileHandler fileHandler;
 
-	private View view;
+	//for the states/cutscenes
+	private PokemonBuilder builderPkmn;
+	private int cutsceneFlow;
 	
 	/**
     * Constructs a new {@code PokemonController} with a specific model and view.
@@ -41,8 +52,12 @@ public class PokemonController
     * @param model The Pokemon management model.
     * @param view The general view for prompting and displaying user input.
     */
-	public PokemonController(PokemonManagement model, MovesManagement movesModel, ItemsManagement itemsModel, View view)
+	public PokemonController(PokemonManagement model, MovesManagement movesModel, ItemsManagement itemsModel, View view, MainGUI viewGUI)
 	{
+		//handle cutscenes/inputs
+		builderPkmn = new PokemonBuilder();
+		cutsceneFlow = 0;
+
 		this.view = view;
 		this.model = model;
 		this.movesModel = movesModel;
@@ -54,7 +69,13 @@ public class PokemonController
 
 		model.setPokemonList(fileHandler.load());
 	}
-		
+	
+	//inject the main gui controller here as well
+	public void setView(MainGUI viewGUI)
+	{
+		this.viewGUI = viewGUI;
+	}
+
 	/**
     * Saves all current Pokemon entries in the model to a file using the file handler.
     */
@@ -79,6 +100,41 @@ public class PokemonController
 		pkmnView.viewAllPokemon(model.getPokemonList());
 	}
 	
+	//this is for vieww btw
+	public ArrayList<String> getViewPokemonInfo()
+	{	
+		ArrayList<String> pkmnInfoBuilder = new ArrayList<>();
+
+		for(Pokemon m : model.getPokemonList())
+		{
+			if(m == null) { continue; }
+			//build the info
+			String temp = m.getPokedexNum() + " " + m.getName() + " (" + m.getType1();
+			if(m.getType2() != null)
+				temp = temp + "/" + m.getType2() + ")";
+			else
+				temp = temp + ")";
+
+			pkmnInfoBuilder.add(temp);	
+		}
+
+		return pkmnInfoBuilder;
+	}
+
+	//this basically SETS up the cutscene by asking the first prompt
+	//and then it sets the cutscene flow to 0 cuz its like the first "STEP"
+	//so to say, and then it proceeds to the handling the actual cutscene 
+	//you get what i meannnnn
+	public void startViewPokemon()
+	{
+		System.out.println("Start View Pokemon Started");
+		cutsceneFlow = 0;
+			
+		if(viewGUI == null) System.out.println("main gui is null");
+
+		viewGUI.showViewPokemon();
+	}
+
 	/**
     * Prompts the user to search for Pokemon by name, type, or Pokedex number,
     * it then displays all the matching results.
@@ -125,12 +181,211 @@ public class PokemonController
 		else
 			view.show("Found " + resultCount  + " Pokemon matching '" + keyword + "' in " + attribute + "\n\n");
 	}
-	
-	/**
+
+	//this basically SETS up the cutscene by asking the first prompt
+	//and then it sets the cutscene flow to 0 cuz its like the first "STEP"
+	//so to say, and then it proceeds to the handling the actual cutscene 
+	//you get what i meannnnn
+	public void startAddPokemon()
+	{
+		System.out.println("Start Add Pokemon Started");
+		cutsceneFlow = 0;
+			
+		if(viewGUI == null) System.out.println("main gui is null");
+
+		viewGUI.showAddPokemon();
+		viewGUI.setPrompt("I see you found a new Pokemon! What's that Pokemon's name?");
+	}
+
+	public void handleAddPokemon(String input)
+	{
+		switch(cutsceneFlow)
+		{
+			case 0:
+				builderPkmn.name = input;
+				cutsceneFlow++;
+
+				viewGUI.setPrompt("Ahh " + builderPkmn.name + "! What is " + builderPkmn.name + " Pokedex Number?");
+				break;
+			case 1:
+				try
+				{
+					builderPkmn.pokedexNumber = Integer.parseInt(input);
+					cutsceneFlow++;
+
+					viewGUI.setPrompt("Interesting! What's it's type? Enter one type first, I need to get this entry right...");
+				} catch(NumberFormatException e)
+				{
+					viewGUI.setPrompt("Haha, very funny. Now tell me " + builderPkmn.name + "'s Pokedex Number.");
+				}
+				break;
+			case 2:
+				builderPkmn.type1 = input;
+				cutsceneFlow++;
+
+				viewGUI.setPrompt("Alright, now tell me its second type. If none, then just say so (type N/A).");
+				break;
+			case 3:
+				try
+				{
+					builderPkmn.type2 = input;
+					cutsceneFlow++;
+
+					viewGUI.setPrompt("Hmmm.. What's " + builderPkmn.name + " base level?");
+				} catch(NumberFormatException e)
+				{
+					viewGUI.setPrompt("That doesn't sound like a level... Please tell me the BASE LEVEL so I can write it down.");
+				}
+				break;
+			case 4:
+				try
+				{
+					builderPkmn.baseLevel = Integer.parseInt(input);
+					cutsceneFlow++;
+						
+					viewGUI.setPrompt("Alright, now please tell me what Pokedex Number it evolves from.");
+				} catch(NumberFormatException e)
+				{
+					viewGUI.setPrompt("That doesn't sound like a level... Please tell me the BASE LEVEL so I can write it down.");
+				}
+				break;
+			case 5:
+				try
+				{
+					builderPkmn.evolvesFrom = Integer.parseInt(input);
+					cutsceneFlow++;
+
+					viewGUI.setPrompt("Please give me the Pokedex Number it evolves into, if none, just say so (type -1, or N/A).");
+				} catch(NumberFormatException e)
+				{
+					viewGUI.setPrompt("That doesn't sound like a POKEDEX NUMBER, please give me the number it evolves from.");
+				}
+				break;
+			case 6:
+				try
+				{
+					builderPkmn.evolvesTo = Integer.parseInt(input);
+					if(Integer.parseInt(input) > 0)
+					{
+						cutsceneFlow++;
+
+						viewGUI.setPrompt("Please give me the level required to evolve, if none, just say so (type -1, or N/A).");
+					}
+				} catch(NumberFormatException e)
+				{
+					viewGUI.setPrompt("Please give me the proper Pokedex Number it evolves into. This is very serious. Just say -1 if it doesn't evolve");
+				}
+				break;
+			case 7:
+				try
+				{
+					builderPkmn.evolutionLevel = Integer.parseInt(input);
+					if(Integer.parseInt(input) > 0)
+					{
+						cutsceneFlow++;
+
+						viewGUI.setPrompt("Hmmm.. What's " + builderPkmn.name + "'s HP (Hit Points)?");
+					}
+				} catch(NumberFormatException e)
+				{
+					viewGUI.setPrompt("Nice try! That doesn't sound right at all. Please give me the proper POKEDEX NUMBER it evolves to or just say -1 otherwise.");
+				}
+				break;
+			case 8:
+				try
+				{
+					builderPkmn.hp =Integer.parseInt(input); 
+					cutsceneFlow++;
+
+					viewGUI.setPrompt("Hmmm.. What's " + builderPkmn.name + "'s ATK (Attack Stats)?");
+				} catch(NumberFormatException e)
+				{
+					viewPkmnGUI.setPrompt("That doesn't sound right... Please tell me the HP.");
+				}
+				break;
+			case 9:
+				try
+				{
+					builderPkmn.atk =Integer.parseInt(input); 
+					cutsceneFlow++;
+
+					viewGUI.setPrompt("Hmmm.. What's " + builderPkmn.name + "'s DEF (Defense Stats)?");
+				} catch(NumberFormatException e)
+				{
+					viewGUI.setPrompt("That doesn't sound right... Please tell me the ATK.");
+				}
+				break;
+			case 10:
+				try
+				{
+					builderPkmn.def =Integer.parseInt(input); 
+					cutsceneFlow++;
+
+					viewGUI.setPrompt("Hmmm.. What's " + builderPkmn.name + "'s SPD (Speed Stats)?");
+				} catch(NumberFormatException e)
+				{
+					viewGUI.setPrompt("That doesn't sound right... Please tell me the SPD.");
+				}
+				break;
+			case 11:	
+				try
+				{
+					builderPkmn.spd = Integer.parseInt(input);
+					cutsceneFlow++;
+					
+					viewGUI.setPrompt("Perfect! Let me set " + builderPkmn.name + "into your pokedex! (Respond to professor oak!)");
+				} catch(NumberFormatException e)
+				{
+					viewGUI.setPrompt("That doesn't sound right... Please tell me the SPD.");
+				}
+				break;
+			case 12:
+				//last step for cutsceneflow, time to set up all the stuff :3
+				Moves[] moveSet = new Moves[Pokemon.MAX_MOVES];
+				int moveCount = 0;
+				moveSet[moveCount++] = movesModel.searchMove("name", "tackle");
+				moveSet[moveCount++] = movesModel.searchMove("name", "defend");
+		
+				///construct final pokemon yayyyy
+				Pokemon pkmn = new Pokemon(
+						builderPkmn.pokedexNumber,
+						builderPkmn.name,
+						builderPkmn.type1,
+						builderPkmn.baseLevel,
+						builderPkmn.evolvesFrom,
+						builderPkmn.evolvesTo,
+						builderPkmn.evolutionLevel,
+						builderPkmn.hp,
+						builderPkmn.atk,
+						builderPkmn.def,
+						builderPkmn.spd
+						);
+				//set the rest like default moves and type 2
+				if(checkNA(builderPkmn.type2) != null)
+					pkmn.setType2(builderPkmn.type2);
+				pkmn.setMoveSet(moveSet);
+					
+				model.addPokemon(pkmn);
+
+				viewGUI.setPrompt("...Alright! It's all setup. Thank you, Trainer! Every Pokemon you add helps us understand them better. (Thank Professor Oak before going home!)");
+				cutsceneFlow++;
+				break;
+			case 13:
+				viewGUI.setPrompt("");
+				viewGUI.showPokemonMenu();
+				break;
+		}
+	}
+
+	/*
+	public void newPokemon()
+	{
+		viewPkmnGUI.showAddPokemon();
+	}
+
     * Creates a new Pokemon entry through a menu like interface that takes user input, including validation
     * for duplicates and optional attributes. Upon completion, a new {@code Pokemon} object is added to the 
 	 * {@code PokemonManagement} (model) to keep track of the Pokemon list/ collection.
-    */
 	public void newPokemon()
 	{
 		Pokemon pkmn = new Pokemon();
@@ -261,4 +516,5 @@ public class PokemonController
 		
 		model.addPokemon(pkmn);
 	}
+	*/
 }

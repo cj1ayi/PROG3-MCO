@@ -45,14 +45,15 @@ public class MovesFileHandler
    {
 		try
 		{
-			FileWriter fileAppender = new FileWriter("model/db/Moves.txt", true);
+			FileWriter writer = new FileWriter("model/db/Moves.txt");
+			writer = new FileWriter("model/db/Moves.txt", true);
 
 	   	for(Moves m : moves)
    	   {
       		if(m == null) { continue; }
-				saveAppend(m, fileAppender);
+				saveAppend(m, writer);
 			}
-			fileAppender.close();
+			writer.close();
 		} catch (IOException e)
 		{
 			System.out.println("An error occurred in moves save.");
