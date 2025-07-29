@@ -109,7 +109,8 @@ public class MainController
 				pokemonController.viewAllPokemon();
 				break;
 			case "search": 
-				pokemonController.searchPokemonMenu();
+				pokemonController.startSearchPokemon();
+				//pokemonController.searchPokemonMenu();
 				break;
 			case "save": 
 				pokemonController.savePokemonEntries();

@@ -100,16 +100,16 @@ public class PokemonController
 		pkmnView.viewAllPokemon(model.getPokemonList());
 	}
 	
-	//this is for vieww btw
-	public ArrayList<String> getViewPokemonInfo()
+	//for getting the simplified view of the pokemon
+	public ArrayList<String> getViewPokemonInfo(ArrayList<Pokemon> pkmnList)
 	{	
 		ArrayList<String> pkmnInfoBuilder = new ArrayList<>();
 
-		for(Pokemon m : model.getPokemonList())
+		for(Pokemon m : pkmnList)
 		{
 			if(m == null) { continue; }
 			//build the info
-			String temp = m.getPokedexNum() + " " + m.getName() + " (" + m.getType1();
+			String temp = "#" + m.getPokedexNum() + " " + m.getName() + " (" + m.getType1();
 			if(m.getType2() != null)
 				temp = temp + "/" + m.getType2() + ")";
 			else
@@ -119,7 +119,7 @@ public class PokemonController
 		}
 
 		return pkmnInfoBuilder;
-	}
+	}	
 
 	//this basically SETS up the cutscene by asking the first prompt
 	//and then it sets the cutscene flow to 0 cuz its like the first "STEP"
@@ -128,11 +128,29 @@ public class PokemonController
 	public void startViewPokemon()
 	{
 		System.out.println("Start View Pokemon Started");
-		cutsceneFlow = 0;
-			
-		if(viewGUI == null) System.out.println("main gui is null");
-
 		viewGUI.showViewPokemon();
+	}
+
+	public ArrayList<String> handleViewPokemon()
+	{
+		return getViewPokemonInfo(model.getPokemonList());
+	}
+
+	public void startSearchPokemon()
+	{
+		System.out.println("Start Search Pokemon Started");
+		viewGUI.showSearchPokemon();
+	}
+
+	public ArrayList<String> handleSearchPokemon(String input, String attribute)
+	{
+		ArrayList<Pokemon> found = new ArrayList<>();
+		for(Pokemon p : model.searchPokemon(attribute, input))
+		{
+			if(p == null) { continue; }
+			found.add(p);	
+		}
+		return getViewPokemonInfo(found);
 	}
 
 	/**

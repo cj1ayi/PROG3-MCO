@@ -209,8 +209,10 @@ public class MainGUI
 		promptLabel.setText("");
 
 		//label setup
+		promptLabel.setForeground(Color.BLACK);
 		Font current = promptLabel.getFont();
-		promptLabel.setBounds(40,320, 460,100);
+		promptLabel.setBounds(40,340,460,100);
+
 		promptLabel.setFont(current.deriveFont(20f));
 
 		field.requestFocusInWindow();
@@ -249,118 +251,47 @@ public class MainGUI
 			cp.repaint();
 		}
 	}
-	
+
 	public void showViewPokemon()
 	{
-		cp.removeAll();
-
-		cp = new JPanel(null);
-		cp.setLayout(null);
-		frame.setContentPane(cp);
-
-		//ikik i dont use this for bg but its transparent and im the coder soo
-		//JPanel whiteBG = new JPanel();
-		//whiteBG.setBounds(0,0,640,480);
-		//white.setBackground(Color.WHITE);
-		//whiteBG.setOpaque(true);
-		//cp.add(whiteBG);
-
-		JLabel overlayBg = GUIUtils.createCenterBanner("assets/pkmn_menu/view/bg.png", 0);
-		JLabel title = GUIUtils.createCenterBanner("assets/pkmn_menu/view/title.png", 130);
-		JButton backBtn = GUIUtils.createImageButton("assets/backbutton.png", 570, 390);
-
-		backBtn.addActionListener(e -> controller.initMenu("pokemon"));
-
-		
-		cp.add(title);
-		cp.add(backBtn);
-		cp.add(overlayBg);
-
-		//for the pokemon available RIGHT NOW to view
-		ArrayList<String> info = pokemonController.getViewPokemonInfo();
-
-		//the x,y for the buttons
-		JPanel buttonPanel = new JPanel(null);
-		ArrayList<JButton> buttonList = new ArrayList<>();
-		int x = 55;
-		int yStart = 0; //190 previoussly
-		int yGap = 45;
-		int visibleCount = 5;
-
-		//dynamic buttons ykyk
-		for(int i = 0; i < info.size(); i++)
-		{
-			System.out.println(info.get(i));
-			JButton btn = GUIUtils.createCenterImageButton("assets/pkmn_menu/view/box.png",0); 
-			btn.setHorizontalTextPosition(SwingConstants.CENTER);
-			btn.setVerticalTextPosition(SwingConstants.CENTER);
-			btn.setText(info.get(i));
-			btn.setLocation(x,yStart+i*yGap);
-			//add to button list (for "fake scrolling" later)
-			buttonList.add(btn);
-			//add to panel of buttons (to be added later)
-			buttonPanel.add(btn);
-		}
-
-		int panelHeight = info.size() * yGap;
-
-		buttonPanel.setOpaque(false);
-		buttonPanel.setBackground(Color.WHITE);
-		//amount of buttons * the gap 
-		buttonPanel.setSize(640,panelHeight + 40);
-		buttonPanel.setLocation(0,200);
-		cp.add(buttonPanel);
-
-		cp.addMouseWheelListener(new MouseWheelListener() {
-			int offset = 0;
-
-			@Override
-			public void mouseWheelMoved(MouseWheelEvent e) 
-			{
-				int rotation = e.getWheelRotation(); //1 down -1 up
-				offset -= rotation * 20; //so 20 is the offset like when scrolled ykykyk
-
-				int maxOffset = 0;
-				int minOffset = Math.min(0, visibleCount * yGap - panelHeight);
-				offset = Math.max(minOffset, Math.min(maxOffset, offset));
-
-				buttonPanel.setLocation(0,200+offset);
-				cp.repaint();
-			}
-		});
-	
-		cp.revalidate();
-		cp.repaint();
+		showViewScreen(pokemonController.handleViewPokemon(),"assets/pkmn_menu/view/box.png", "assets/pkmn_menu/view/title.png", "pokemon");
 	}
-
+	
 	public void showSearchPokemon()
 	{
 		cp.removeAll();
 
-		JButton dropbtn = GUIUtils.createImageButton("assets/search/dropup.png", 100,100);
-		JButton namefilter = GUIUtils.createImageButton("assets/search/box.png", 20,100);
-		JButton typefilter = GUIUtils.createImageButton("assets/search/box.png", 20,40);
-		JButton pokedexfilter = GUIUtils.createImageButton("assets/search/box.png", 20,140);
-		JTextField field = GUIUtils.createTextField(80,230,270,40);
-		promptLabel.setText("");
-
-
-	}
-
-/*
-	public void showAddPokemon()
-	{
-		cp.removeAll();
-
-		JLabel title = GUIUtils.createCenterBanner("assets/pkmn_menu/add/title.png",0);
-		JLabel fieldbg = GUIUtils.createCenterBanner("assets/pkmn_menu/add/inputs.png",0);
-		JTextField field = GUIUtils.createTextField(80,230,270,40);
-		promptLabel.setText("");
-
+		JButton dropbtn = GUIUtils.createImageButton("assets/search/dropup.png", 530,268);
+		JButton namefilter = GUIUtils.createImageButton("assets/search/box.png", 63,293);
+		JButton typefilter = GUIUtils.createImageButton("assets/search/box.png", 63,330);
+		JButton pokedexfilter = GUIUtils.createImageButton("assets/search/box.png", 63,367);
+		JButton backBtn = GUIUtils.createImageButton("assets/backbutton.png", 570, 420);
+		JTextField field = GUIUtils.createTextField(100,268,270,40);
+		promptLabel.setText("Default filter is name!");
+		
+		namefilter.setVisible(false);
+		typefilter.setVisible(false);
+		pokedexfilter.setVisible(false);
+		
 		//label setup
 		Font current = promptLabel.getFont();
-		promptLabel.setBounds(40,320, 460,100);
-		promptLabel.setFont(current.deriveFont(20f));
+		promptLabel.setBounds(100,280,460,100);
+		promptLabel.setForeground(Color.decode("#ffde67"));
+
+		//button setup
+		namefilter.setHorizontalTextPosition(SwingConstants.CENTER);
+		namefilter.setText("Name");
+		typefilter.setHorizontalTextPosition(SwingConstants.CENTER);
+		typefilter.setText("Type");
+		pokedexfilter.setHorizontalTextPosition(SwingConstants.CENTER);
+		pokedexfilter.setText("Pokedex");
+
+		namefilter.setForeground(Color.decode("#ffde67"));
+		typefilter.setForeground(Color.decode("#ffde67"));
+		pokedexfilter.setForeground(Color.decode("#ffde67"));
+
+		//default filter for the name incase they dont choose
+		String[] filter = {"name"};
 
 		field.requestFocusInWindow();
 
@@ -372,22 +303,78 @@ public class MainGUI
 				{
 					String input = field.getText();
 					field.setText("");
-					pokemonController.handleAddPokemon(input);
+					ArrayList<String> searchResult = pokemonController.handleSearchPokemon(input, filter[0]);
+					System.out.println(searchResult);
+					showViewScreen(searchResult, "assets/pkmn_menu/view/box.png", "assets/pkmn_menu/view/title.png", "pokemon");
 				}
 			}
 		});
 
-		cp = new BackgroundPanel("assets/pkmn_menu/add/bg.jpg");		
+		//it checks if the dropdown button has been clicked
+		boolean[] clicked = {false};
+		dropbtn.addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				if(!clicked[0])
+				{
+					clicked[0] = true;
+					dropbtn.setIcon(new ImageIcon("assets/search/dropdown.png"));
+				} else
+				{
+					clicked[0] = false;
+					dropbtn.setIcon(new ImageIcon("assets/search/dropup.png"));
+				}
+					namefilter.setVisible(clicked[0]);
+					typefilter.setVisible(clicked[0]);
+					pokedexfilter.setVisible(clicked[0]);
+					promptLabel.setVisible(!clicked[0]);
+			}
+		});
+		//change filters
+		namefilter.addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				filter[0] = "name";
+				promptLabel.setText("Current filter is " + filter[0]);
+				dropbtn.doClick();
+			}
+		});
+		typefilter.addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				filter[0] = "type";
+				promptLabel.setText("Current filter is " + filter[0]);
+				dropbtn.doClick();
+			}
+		});
+		pokedexfilter.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				filter[0] = "pokedex";
+				promptLabel.setText("Current filter is " + filter[0]);
+				dropbtn.doClick();
+			}
+		});
+
+		backBtn.addActionListener(e -> controller.initMenu("pokemon"));
+
+		cp = new BackgroundPanel("assets/search/bg.jpg");
 		cp.setLayout(null);
 		frame.setContentPane(cp);
-		cp.add(title);
-		cp.add(field);
-		cp.add(fieldbg);
 		cp.add(promptLabel);
+		cp.add(field);
+		cp.add(dropbtn);
+		cp.add(namefilter);
+		cp.add(typefilter);
+		cp.add(pokedexfilter);
+		cp.add(backBtn);
 		cp.revalidate();
 		cp.repaint();
 	}
-*/
 
 	public void showMovesMenu()
 	{
@@ -514,4 +501,84 @@ public class MainGUI
 		cp.revalidate();
 		cp.repaint();
 	}
+
+	public void showViewScreen(ArrayList<String> info, String btnPath, String titlePath, String backPath)
+	{
+		cp.removeAll();
+
+		cp = new JPanel(null);
+		cp.setLayout(null);
+		frame.setContentPane(cp);
+
+		//ikik i dont use this for bg but its transparent and im the coder soo
+		//JPanel whiteBG = new JPanel();
+		//whiteBG.setBounds(0,0,640,480);
+		//white.setBackground(Color.WHITE);
+		//whiteBG.setOpaque(true);
+		//cp.add(whiteBG);
+
+		JLabel overlayBg = GUIUtils.createCenterBanner("assets/pkmn_menu/view/bg.png", 0);
+		JLabel title = GUIUtils.createCenterBanner(titlePath, 130);
+		JButton backBtn = GUIUtils.createImageButton("assets/backbutton.png", 570, 390);
+
+		backBtn.addActionListener(e -> controller.initMenu(backPath));
+		
+		cp.add(title);
+		cp.add(backBtn);
+		cp.add(overlayBg);
+
+		//the x,y for the buttons
+		JPanel buttonPanel = new JPanel(null);
+		ArrayList<JButton> buttonList = new ArrayList<>();
+		int x = 55;
+		int yStart = 0; //190 previoussly
+		int yGap = 45;
+		int visibleCount = 5;
+
+		//dynamic buttons ykyk
+		for(int i = 0; i < info.size(); i++)
+		{
+			System.out.println(info.get(i));
+			JButton btn = GUIUtils.createCenterImageButton(btnPath,0); 
+			btn.setHorizontalTextPosition(SwingConstants.CENTER);
+			btn.setVerticalTextPosition(SwingConstants.CENTER);
+			btn.setText(info.get(i));
+			btn.setLocation(x,yStart+i*yGap);
+			//add to button list (for "fake scrolling" later)
+			buttonList.add(btn);
+			//add to panel of buttons (to be added later)
+			buttonPanel.add(btn);
+		}
+
+		int panelHeight = info.size() * yGap;
+
+		buttonPanel.setOpaque(false);
+		buttonPanel.setBackground(Color.WHITE);
+		//amount of buttons * the gap 
+		buttonPanel.setSize(640,panelHeight + 40);
+		buttonPanel.setLocation(0,200);
+		cp.add(buttonPanel);
+
+		cp.addMouseWheelListener(new MouseWheelListener() {
+			int offset = 0;
+
+			@Override
+			public void mouseWheelMoved(MouseWheelEvent e) 
+			{
+				int rotation = e.getWheelRotation(); //1 down -1 up
+				offset -= rotation * 20; //so 20 is the offset like when scrolled ykykyk
+
+				int maxOffset = 0;
+				int minOffset = Math.min(0, visibleCount * yGap - panelHeight);
+				offset = Math.max(minOffset, Math.min(maxOffset, offset));
+
+				buttonPanel.setLocation(0,200+offset);
+				cp.repaint();
+			}
+		});
+	
+		cp.revalidate();
+		cp.repaint();
+	}
+
 }
