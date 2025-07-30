@@ -142,8 +142,9 @@ public class MainController
 
 		switch(menuChoice)
 		{
-			case "add": movesController.addMoves();
-						  break;
+			case "add": movesController.startAddMoves();
+				//movesController.addMoves();
+				break;
 			case "view": 
 				movesController.startViewMoves();
 				//movesController.viewMoves();
@@ -177,7 +178,8 @@ public class MainController
 
 		switch(menuChoice)
 		{
-			case "add": itemsController.newItem();
+			case "add": itemsController.startAddItem();
+				//itemsController.newItem();
 					  break;
 			case "view": 
 				itemsController.startViewItems();

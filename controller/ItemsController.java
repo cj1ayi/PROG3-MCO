@@ -4,9 +4,7 @@ package controller;
 import static utils.InputHelper.*;
 import java.util.ArrayList;
 
-import model.Items;
-import model.ItemsManagement;
-import model.ItemsFileHandler;
+import model.*;
 import view.ItemsView;
 import view.View;
 import view.MainGUI;
@@ -25,6 +23,7 @@ public class ItemsController
 	private ItemsManagement model;
 	private ItemsFileHandler fileHandler;
 
+	private ItemsBuilder builderItems;
 	private int cutsceneFlow;
 
 	private View view;
@@ -47,6 +46,7 @@ public class ItemsController
 
 		this.view = view;
 		this.model = model;
+		this.builderItems = new ItemsBuilder();
 		
 		itemsView = new ItemsView();
 		fileHandler = new ItemsFileHandler();
@@ -240,4 +240,112 @@ public class ItemsController
 			view.show("Found " + matchingItems.size() + " item(s) matching '" + key + "' in " + attribute + "\n\n");
 		}
 	}
+
+	public void startAddItem()
+	{
+		System.out.println("Start Add Item Started");
+		cutsceneFlow = 0;
+
+		if(viewGUI == null) System.out.println("main gui is null");
+
+		viewGUI.showAddItems();
+		viewGUI.setPrompt("Ah, creating a new item, are we? What is the item's name?");
+	}
+
+	public void handleAddItems(String input)
+	{
+		switch(cutsceneFlow)
+		{
+			case 0:
+				builderItems.name = input;
+				cutsceneFlow++;
+
+				viewGUI.setPrompt("Good. What category does it belong to? (Vitamin, Feather, etc.)");
+				break;
+			case 1:
+					builderItems.category = input;
+					cutsceneFlow++;
+
+					viewGUI.setPrompt("Now, give me a brief description of the item.");
+				break;
+			case 2:
+				builderItems.description = input;
+				cutsceneFlow++;
+
+				viewGUI.setPrompt("What are its effects?");
+				break;
+			case 3:
+				builderItems.effects = input;
+				cutsceneFlow++;
+
+				viewGUI.setPrompt("Hmmm.. What's the starting price range of " + builderItems.name + " ? Type -1 if its NOT SOLD.");
+				break;
+			case 4:
+				try {
+					double price1 = Double.parseDouble(input);
+					if (price1 < 0) {
+						builderItems.buyingPrice1 = -1;
+					} else {
+						builderItems.buyingPrice1 = price1;
+					}
+					cutsceneFlow++;
+					viewGUI.setPrompt("And the second buying price? (Type -1 if there is none)");
+				} catch (NumberFormatException e) {
+					viewGUI.setPrompt("Please enter a valid number for the first buying price.");
+				}
+				break;
+
+			case 5:
+				try {
+					double price2 = Double.parseDouble(input);
+					if (price2 < 0) {
+						builderItems.buyingPrice2 = -1;
+					} else {
+						builderItems.buyingPrice2 = price2;
+					}
+					cutsceneFlow++;
+					viewGUI.setPrompt("Finally, what is the selling price?");
+				} catch (NumberFormatException e) {
+					viewGUI.setPrompt("Please enter a valid number for the second buying price.");
+				}
+				break;
+			case 6:
+				try
+				{
+					builderItems.sellingPrice = Double.parseDouble(input);
+					if(Double.parseDouble(input) < 0)
+					{
+						viewGUI.setPrompt("Selling price cannot be negative. Please enter a valid amount.");
+						break;
+					}
+
+				} catch(NumberFormatException e) {
+					viewGUI.setPrompt("Please enter a valid number for the selling price.");
+				}
+
+				Items item = new Items(
+						builderItems.name,
+						builderItems.category,
+						builderItems.description,
+						builderItems.effects,
+						builderItems.buyingPrice1,
+						builderItems.buyingPrice2,
+						builderItems.sellingPrice
+				);
+
+				model.addItem(item);
+
+				viewGUI.setPrompt("...Excellent! This new item is now ready for Trainers everywhere. (Thank Professor Oak before going home!)");
+				cutsceneFlow++;
+				break;
+			case 7:
+				viewGUI.setPrompt("");
+				viewGUI.showItemsMenu();
+				break;
+		}
+	}
+
+
+
+
 }

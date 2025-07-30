@@ -8,3 +8,7 @@ MOV|Cut|Normal|HM|Cuts using claws, scythes, etc.|
 MOV|Strength|Normal|HM|A powerful physical attack.|
 MOV|Hex|Ghost|TM|Does massive damage to a target affected by status problems.|
 MOV|Thunderbolt|Electric|TM|An attack that may cause paralysis.|
+<<<<<<< Updated upstream
+=======
+MOV|Coil|Poison|TM|Raises users DEF|
+>>>>>>> Stashed changes

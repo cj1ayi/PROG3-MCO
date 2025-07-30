@@ -9,7 +9,7 @@ public class Trainer
 {
    public static final int MAX_POKEMON_LINEUP = 6;
 	
-	private static int nextID = 100000; 
+   private static int nextID = 100000;
    private int ID;
    private String name;
    private String birthDate;
@@ -47,9 +47,9 @@ public class Trainer
 	//constructor for new trainers (no IDs yet)
 	public Trainer(String name, String birthDate, String sex, String hometown, String description)
    {
-		this.ID = nextID++;
-		this.name = name;
-   	this.birthDate = birthDate;
+      this.ID = nextID++;
+      this.name = name;
+   	  this.birthDate = birthDate;
       this.sex = sex;
       this.hometown = hometown;
       this.description = description;

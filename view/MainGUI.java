@@ -466,6 +466,11 @@ public class MainGUI
 		cp.repaint();
 	}
 
+	public void showAddMoves()
+	{
+		createCutScene("assets/moves_menu/add/title.png", "addMoves");
+	}
+
 	public void showViewMoves()
 	{
 		showViewScreen(movesController.handleViewMoves(),"assets/pkmn_menu/view/box.png", "assets/moves_menu/view/title.png", "moves");
@@ -635,7 +640,13 @@ public class MainGUI
 		cp.revalidate();
 		cp.repaint();
 	}
-	
+
+	public void showAddItems()
+	{
+		createCutScene("assets/items_menu/add/title.png", "addItems");
+	}
+
+
 	public void showViewItems()
 	{
 		showViewScreen(itemsController.handleViewItems(),"assets/pkmn_menu/view/box.png", "assets/items_menu/view/title.png", "items");
@@ -1303,24 +1314,29 @@ public class MainGUI
 		cp.repaint();
 	}
 
+<<<<<<< Updated upstream
 	public void createCutScene(String titlePath, String action)
 	{
+=======
+	public void createCutScene(String titlePath, String action) {
+>>>>>>> Stashed changes
 		cp.removeAll();
 
-		JLabel title = GUIUtils.createCenterBanner(titlePath,0);
-		JLabel fieldbg = GUIUtils.createCenterBanner("assets/pkmn_menu/add/inputs.png",0);
-		JTextField field = GUIUtils.createTextField(80,230,270,40);
+		JLabel title = GUIUtils.createCenterBanner(titlePath, 0);
+		JLabel fieldbg = GUIUtils.createCenterBanner("assets/pkmn_menu/add/inputs.png", 0);
+		JTextField field = GUIUtils.createTextField(80, 230, 270, 40);
 		promptLabel.setText("");
 
 		//label setup
 		promptLabel.setForeground(Color.BLACK);
 		Font current = promptLabel.getFont();
-		promptLabel.setBounds(40,340,460,100);
+		promptLabel.setBounds(40, 340, 460, 100);
 
 		promptLabel.setFont(current.deriveFont(20f));
 
 		field.requestFocusInWindow();
 
+<<<<<<< Updated upstream
 		switch(action)
 		{
 			case "addPkmn":
@@ -1338,6 +1354,31 @@ public class MainGUI
 				});
 				break;
 		}
+=======
+			field.addKeyListener(new KeyAdapter() {
+				@Override
+				public void keyPressed(KeyEvent e) {
+						if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+							String input = field.getText();
+							field.setText("");
+							if (action.equals("addPkmn")) {
+								//System.out.println("Going to add Pokemon");
+								pokemonController.handleAddPokemon(input);
+							}
+							else if (action.equals("addMoves")) {
+								//System.out.println("Going to add Moves");
+								movesController.handleAddMoves(input);
+							}
+							else if (action.equals("addItems")) {
+								//System.out.println("Going to add Moves");
+								itemsController.handleAddItems(input);
+							}
+
+						}
+					}
+
+			});
+>>>>>>> Stashed changes
 
 		cp = new BackgroundPanel("assets/pkmn_menu/add/bg.jpg");		
 		cp.setLayout(null);
