@@ -107,6 +107,80 @@ public class ItemsController
 		model.setItems(fileHandler.load());
 	}
 
+	/**
+	 * Shows detailed information about an item.
+	 * This method extracts the item name from the display text, finds the matching item,
+	 * and passes all the item attributes to the view to be displayed.
+	 *
+	 * @param itemNameInput The display text of the item (may include category in parentheses)
+	 * @param backPath The screen to return to when back button is clicked
+	 */
+	public void showAnItem(String itemNameInput, String backPath) {
+		System.out.println("Searching for item: " + itemNameInput);
+		
+		// Extract the item name from the display format
+		String itemName = "";
+		
+		// Try to extract from format: "Name (Category)"
+		if (itemNameInput.contains(" (")) {
+			itemName = itemNameInput.substring(0, itemNameInput.indexOf(" ("));
+		}
+		// Otherwise use as is
+		else {
+			itemName = itemNameInput;
+		}
+		
+		System.out.println("Extracted item name: " + itemName);
+		
+		// Find the item
+		Items item = null;
+		
+		// First try exact match with extracted name
+		for (Items i : model.getItems()) {
+			if (i != null && i.getName().equalsIgnoreCase(itemName)) {
+				item = i;
+				break;
+			}
+		}
+		
+		// If not found, try original input
+		if (item == null) {
+			for (Items i : model.getItems()) {
+				if (i != null && i.getName().equalsIgnoreCase(itemNameInput)) {
+					item = i;
+					break;
+				}
+			}
+		}
+		
+		// If still not found, try substring match
+		if (item == null) {
+			for (Items i : model.getItems()) {
+				if (i != null && (itemNameInput.toLowerCase().contains(i.getName().toLowerCase()) || 
+				    i.getName().toLowerCase().contains(itemNameInput.toLowerCase()))) {
+					item = i;
+					break;
+				}
+			}
+		}
+		
+		// Display item if found
+		if (item != null) {
+			String[] itemInfo = new String[7];
+			itemInfo[0] = item.getName();
+			itemInfo[1] = item.getCategory();
+			itemInfo[2] = item.getDescription();
+			itemInfo[3] = item.getEffects();
+			itemInfo[4] = String.valueOf(item.getBuyingPrice1());
+			itemInfo[5] = String.valueOf(item.getBuyingPrice2());
+			itemInfo[6] = String.valueOf(item.getSellingPrice());
+			
+			viewGUI.showAnItem(itemInfo, backPath);
+		} else {
+			System.out.println("Item not found: " + itemNameInput);
+		}
+	}
+
 	public void newItem()
 	{
 		boolean valid;

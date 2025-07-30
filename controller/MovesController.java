@@ -66,6 +66,7 @@ public class MovesController
 		for(Moves m : movesList)
 		{
 			if(m == null) { continue; }
+			// Format: "Name Classification (Type)"
 			String temp = m.getMoveName() + " " + m.getMoveClassification() + " (" + m.getMoveType1() + ")";
 
 			movesBuilder.add(temp);
@@ -261,6 +262,81 @@ public class MovesController
 				viewGUI.setPrompt("");
 				viewGUI.showMovesMenu();
 				break;
+		}
+	}
+	
+	/**
+	 * Handles the request to show detailed information about a specific move.
+	 * 
+	 * @param moveNameInput the name or display text of the move to display
+	 * @param backPath the path to return to when back button is clicked
+	 */
+	public void showAMove(String moveNameInput, String backPath) {
+		System.out.println("Searching for move: " + moveNameInput);
+		
+		// Extract the move name from the display format
+		String moveName = "";
+		
+		// Try to extract from format: "Name TM/HM (Type)"
+		if (moveNameInput.contains(" TM (")) {
+			moveName = moveNameInput.substring(0, moveNameInput.indexOf(" TM ("));
+		} else if (moveNameInput.contains(" HM (")) {
+			moveName = moveNameInput.substring(0, moveNameInput.indexOf(" HM ("));
+		} 
+		// Try to extract from format: "Name (Type)"
+		else if (moveNameInput.contains(" (")) {
+			moveName = moveNameInput.substring(0, moveNameInput.indexOf(" ("));
+		}
+		// Otherwise use as is
+		else {
+			moveName = moveNameInput;
+		}
+		
+		System.out.println("Extracted move name: " + moveName);
+		
+		// Find the move
+		Moves move = null;
+		
+		// First try exact match with extracted name
+		for (Moves m : model.getMoves()) {
+			if (m.getMoveName().equalsIgnoreCase(moveName)) {
+				move = m;
+				break;
+			}
+		}
+		
+		// If not found, try original input
+		if (move == null) {
+			for (Moves m : model.getMoves()) {
+				if (m.getMoveName().equalsIgnoreCase(moveNameInput)) {
+					move = m;
+					break;
+				}
+			}
+		}
+		
+		// If still not found, try substring match
+		if (move == null) {
+			for (Moves m : model.getMoves()) {
+				if (moveNameInput.toLowerCase().contains(m.getMoveName().toLowerCase()) || 
+				    m.getMoveName().toLowerCase().contains(moveNameInput.toLowerCase())) {
+					move = m;
+					break;
+				}
+			}
+		}
+		
+		// Display move if found
+		if (move != null) {
+			String[] moveInfo = new String[4];
+			moveInfo[0] = move.getMoveName();
+			moveInfo[1] = move.getMoveType1();
+			moveInfo[2] = move.getMoveClassification();
+			moveInfo[3] = move.getMoveDesc();
+			
+			viewGUI.showAMove(moveInfo, backPath);
+		} else {
+			System.out.println("Move not found: " + moveNameInput);
 		}
 	}
 
