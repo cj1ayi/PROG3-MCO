@@ -26,21 +26,26 @@ public class TrainerController
    private PokemonView pokemonView;
 
 	private PokemonController pokemonController;
+	private ItemsController itemsController;
 
+	private UseItemBuilder useItemBuilder;
 	private int cutsceneFlow;
 
    private View view;
 	private MainGUI viewGUI;
     
-   public TrainerController(TrainerManagement model, PokemonManagement pokemonModel, ItemsManagement itemsModel, MovesManagement movesModel, View view) 
+   public TrainerController(TrainerManagement model, PokemonManagement pokemonModel, ItemsManagement itemsModel, MovesManagement movesModel, PokemonController pokemonController, ItemsController itemsController, View view) 
 	{
 		cutsceneFlow = 0;
+		useItemBuilder = new UseItemBuilder();
 
 		this.view = view;
 		this.model = model;
 		this.pokemonModel = pokemonModel;
 		this.movesModel = movesModel;
 		this.itemsModel = itemsModel; 
+		this.pokemonController  = pokemonController;
+		this.itemsController = itemsController;
 
 		trainerView = new TrainerView();
 		pokemonView = new PokemonView();
@@ -268,8 +273,127 @@ public class TrainerController
 
 		Pokemon[] pkmn = t.getPokemonLineup();
 		Pokemon selected = pkmn[index];
-		pokemonController.showAPokemon(String.valueOf(selected.getPokedexNum()), "trainer");
+		System.out.println(selected.getPokedexNum());	
+		pokemonController.showAPokemon(String.valueOf(selected.getPokedexNum()), "check");
 	}
+
+	public ArrayList<String> handleShowPC(String id)
+	{
+		Trainer t = model.searchTrainer("id", id);
+		if(t == null)
+			System.out.println("t is null! id is " + id);
+		else System.out.println("T is not null but id is " + id + " vs id " + t.getID());
+		trainerView.viewTrainer(t);
+
+		ArrayList<Pokemon> pkmn = t.getPokemonBox();
+		return pokemonController.getViewPokemonInfo(pkmn);
+	}
+
+	public ArrayList<String> getItemsInfo(HashMap<Items, Integer> itemsList)
+	{
+		ArrayList<String> itemBuilder = new ArrayList<>();
+		for(HashMap.Entry<Items, Integer> entry : itemsList.entrySet())
+		{
+			Items item = entry.getKey();
+			Integer quantity = entry.getValue();
+
+			String temp = item.getName() + " (qty." + quantity + ")"; 
+
+			itemBuilder.add(temp);
+		}
+		return itemBuilder;
+	}
+
+	public ArrayList<String> handleShowBag(String id)
+	{
+		Trainer t = model.searchTrainer("id", id);
+		trainerView.viewTrainer(t);
+
+		HashMap<Items, Integer> bag = t.getInventory();
+
+		return getItemsInfo(bag);
+	}
+
+	public void handleAddPokemon(String id, String dexNum)
+	{
+		Trainer t = model.searchTrainer("id",id);
+		trainerView.viewTrainer(t);
+		
+		Pokemon p = pokemonModel.searchOnePokemon("pokedex", dexNum); 
+
+   	// Display available Pokemon from PokemonManagement
+      ArrayList<Pokemon> availablePokemon = pokemonModel.getPokemonList();
+      if (availablePokemon.size() == 0)
+		{
+      	view.show("No Pokemon available. Add Pokemon to the system first.");
+         return;
+      }
+        
+      pokemonView.viewAllPokemon(availablePokemon);
+       
+		model.addPokemon(t,p);
+		
+		//viewGUI.createCutScene("assets/pkmn_menu/add/title.png", "show");
+		//viewGUI.setPrompt("Good to see you! Here's your pokemon, " + p.getName());
+		manageTrainer(id);
+   }
+
+	public ArrayList<String> handleAvailableItems(String id)
+	{	
+		Trainer t = model.searchTrainer("id", id);
+
+      trainerView.viewInventory(t);
+		HashMap<Items, Integer> items = t.getInventory();
+
+		//set use item builders
+		useItemBuilder.trainerId = id;
+		
+		return getItemsInfo(items);
+	}
+
+
+	public ArrayList<String> getPkmnInfoList(Pokemon[] pkmn)
+	{
+		ArrayList<String> pkmnBuilder = new ArrayList<>();
+		for(Pokemon p : pkmn)
+		{
+			if(p == null) { continue; }
+
+			String temp = "#" + p.getPokedexNum() + " " + p.getName() + " Lvl." + p.getBaseLevel(); 
+
+			pkmnBuilder.add(temp);
+		}
+		return pkmnBuilder;
+	}
+
+	public ArrayList<String> handleAvailablePokemon(String itemName)
+	{
+		useItemBuilder.itemName = itemName;
+
+		Trainer trainer = model.searchTrainer("id", useItemBuilder.trainerId);
+		Items itemToUse = itemsModel.searchItem("name", itemName);
+
+		Pokemon[] lineup = trainer.getPokemonLineup();
+
+		return getPkmnInfoList(model.canUseItem(lineup, itemToUse));
+	}
+
+	public void handleUseItem(String dex)
+	{
+		Trainer trainer = model.searchTrainer("id", useItemBuilder.trainerId);
+		Items item = itemsModel.searchItem("name", useItemBuilder.itemName);
+		Pokemon pkmn = pokemonModel.searchOnePokemon("pokedex", dex);
+
+		model.useItem(trainer,pkmn,item,pokemonModel);
+		manageTrainer(useItemBuilder.trainerId);
+	}
+
+
+
+
+
+
+
 
 
    private void manageTrainerMenu(Trainer trainer) 

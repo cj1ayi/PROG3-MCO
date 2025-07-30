@@ -484,6 +484,27 @@ public class TrainerManagement
 		return false;
    }
 
+	public Pokemon[] canUseItem(Pokemon[] lineup, Items item)
+	{
+		Pokemon[] pkmn = new Pokemon[6];
+	
+		int i = 0;
+		for(Pokemon p : lineup)
+		{
+			if(isEvolutionStone(item))
+			{
+				Pokemon temp = new Pokemon(p);
+				
+				//true if it can evolve, then add it 
+				if(useEvolutionStone(temp, item))
+					pkmn[i++] = p;
+			}
+			else pkmn[i++] = p;
+		}
+
+		return pkmn;
+	}
+
 	/*TEACH MOVES OPTION*/
 
 	/**
@@ -621,7 +642,7 @@ public class TrainerManagement
                matches = trainer.getName().toLowerCase().contains(keyword.toLowerCase());
                break;
             case "id":
-               matches = Integer.toString(trainer.getID()).contains(keyword.toLowerCase());
+               matches = Integer.toString(trainer.getID()).equals(keyword.toLowerCase());
                break;
             case "sex":
                matches = trainer.getSex().toLowerCase().contains(keyword.toLowerCase());

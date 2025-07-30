@@ -40,6 +40,8 @@ public class MainGUI
 	private Container cp;
 	private JLabel promptLabel;
 
+	private String trainerId;
+
 	//controllers
 	MainController controller;
 	PokemonController pokemonController;
@@ -202,7 +204,7 @@ public class MainGUI
 
 	public void showAddPokemon()
 	{
-		createCutScene("assets/pkmn_menu/add/title.png");
+		createCutScene("assets/pkmn_menu/add/title.png", "addPkmn");
 	}
 
 
@@ -221,7 +223,7 @@ public class MainGUI
 		JLabel type = GUIUtils.createText(info[2],59,182,100,100); //this is okay
 		JLabel lvl = GUIUtils.createText(info[3],204,185,100,50); //this is okay
 		JLabel moveSet = GUIUtils.createText(info[4],0,294,250,100); // this is ok
-		JLabel item = GUIUtils.createText(info[5],20,407,100,100); //this is ok
+		JLabel item = GUIUtils.createText(info[5],20,407,250,100); //this is ok
 		JLabel hp = GUIUtils.createText(info[6],500,124,100,100); //this is ok
 		JLabel atk = GUIUtils.createText(info[7],500,162,100,100); //this is ok
 		JLabel def = GUIUtils.createText(info[8],500,200,100,100); // this is ok
@@ -229,7 +231,7 @@ public class MainGUI
 		JLabel evolvesTo = GUIUtils.createText(info[10],560,312,100,100); //this is ok
 		JLabel evolvesFrom = GUIUtils.createText(info[11],	300,312,100,100);
 		JLabel evolutionLvl = GUIUtils.createText(info[12],469,344,100,100);
-		JButton saveBtn = GUIUtils.createImageButton("assets/pkmn_menu/view_solo/savebtn.png", 60, 400);
+		JButton saveBtn = GUIUtils.createImageButton("assets/pkmn_menu/view_solo/savebtn.png", 300, 420);
 		JButton backBtn = GUIUtils.createImageButton("assets/pkmn_menu/view_solo/backbtn.png", 520, 420);
 		
 		moveSet.setVerticalAlignment(SwingConstants.TOP);
@@ -245,17 +247,38 @@ public class MainGUI
 
 		saveBtn.setVisible(false);
 			
-		saveBtn.addActionListener(e -> {
-			controller.initPokemonMenu("save");
-			buttonPressed(saveBtn, "assets/pkmn_menu/view_solo/savebtnpressed.png", "assets/pkmn_menu/view_solo/savebtn.png", 200);
-		});
-		backBtn.addActionListener(e -> {
-			controller.initPokemonMenu(back);
-			buttonPressed(backBtn, "assets/pkmn_menu/view_solo/backbtnpressed.png", "assets/pkmn_menu/view_solo/backbtn.png", 200);
-		});
-		backBtn.addActionListener(e -> controller.initPokemonMenu("back"));
-
-
+		if("add".equals(back))
+		{
+			System.out.println(back);
+			saveBtn.setVisible(true);
+			saveBtn.addActionListener(e -> {
+				trainerController.handleAddPokemon(trainerId, info[0]);
+				buttonPressed(saveBtn, "assets/pkmn_menu/view_solo/savebtnpressed.png", "assets/pkmn_menu/view_solo/savebtn.png", 200);
+			});
+			backBtn.addActionListener(e -> trainerController.manageTrainer(trainerId));
+		}
+		else if("use".equals(back))
+		{
+			System.out.println(back);
+			saveBtn.setVisible(true);
+			saveBtn.addActionListener(e -> {
+				trainerController.handleUseItem(info[0]);
+				buttonPressed(saveBtn, "assets/pkmn_menu/view_solo/savebtnpressed.png", "assets/pkmn_menu/view_solo/savebtn.png", 200);
+			});
+			backBtn.addActionListener(e -> trainerController.manageTrainer(trainerId));
+		}
+		else if("check".equals(back))
+		{
+			backBtn.addActionListener(e -> trainerController.manageTrainer(trainerId));
+		}
+		else
+		{
+			backBtn.addActionListener(e -> {
+				controller.initPokemonMenu("back");
+				buttonPressed(backBtn, "assets/pkmn_menu/view_solo/backbtnpressed.png", "assets/pkmn_menu/view_solo/backbtn.png", 200);
+			});
+		}
+		
 		cp = new BackgroundPanel("assets/pkmn_menu/view_solo/bg.jpg");
 		cp.setLayout(null);
 		frame.setContentPane(cp);
@@ -795,7 +818,7 @@ public class MainGUI
 		cp.setLayout(null);
 		frame.setContentPane(cp);
 
-		JLabel id = GUIUtils.createText(info[0], 520, 117, 100, 40);
+		JLabel idLabel = GUIUtils.createText(info[0], 520, 117, 100, 40);
 		JLabel name = GUIUtils.createText(info[1], 370, 117, 200, 40);
 		JLabel bday = GUIUtils.createText(info[2], 370, 157, 250, 40);
 		JLabel sex = GUIUtils.createText(info[3], 370, 140, 250, 40);
@@ -816,6 +839,18 @@ public class MainGUI
 		JButton pcBtn = GUIUtils.createImageButton("assets/trainer_menu/view_solo/pcbtn.png",130,416);
 		JButton bag = GUIUtils.createImageButton("assets/trainer_menu/view_solo/bagbtn.png",0,416);
 		JButton backBtn = GUIUtils.createImageButton("assets/backbutton.png", 560, 410);
+		
+
+		String str = info[0];
+		String idBuild = "";
+		for(char c : str.toCharArray())
+		{
+			if(Character.isDigit(c))
+				idBuild += c;
+			else if(!idBuild.isEmpty())
+				break;
+		}
+		final String id = idBuild;
 
 		//FORMATTINGG!!
 		desc.setVerticalAlignment(SwingConstants.TOP);
@@ -846,8 +881,8 @@ public class MainGUI
 					@Override
 					public void actionPerformed(ActionEvent e)
 					{
-						if(btn.getText().trim().isEmpty())
-							trainerController.pokemonShowLineup(info[0], index);
+						if(!btn.getText().trim().isEmpty())
+							trainerController.pokemonShowLineup(id, index);
 					}
 				});
 			cp.add(btn);
@@ -855,13 +890,57 @@ public class MainGUI
 			cp.repaint();
 		}	
 
+		//global id is now set from local id 
+		trainerId = id; 	
+		//to be used by these funny buttons
+		
+		useBtn.addActionListener(e -> {
+			ArrayList<String> itemDb = trainerController.handleAvailableItems(id);	
+			showViewScreen(itemDb, "assets/pkmn_menu/view/box.png", "assets/items_menu/view/title.png", "use");	
+		});
+/*
+		sellBtn.addActionListener(e -> {
+			 // TODO: handle sell
+		});
+		
+		buyBtn.addActionListener(e -> {
+			 // TODO: handle buy
+		});
+
+		switchBtn.addActionListener(e -> {
+			 // TODO: handle switch
+		});
+
+		teachBtn.addActionListener(e -> {
+			 // TODO: handle teach
+		});
+
+		releaseBtn.addActionListener(e -> {
+			 // TODO: handle release
+		});
+
+*/
+		addBtn.addActionListener(e -> {
+			ArrayList<String> pkmnDb = pokemonController.handleViewPokemon();
+			showViewScreen(pkmnDb, "assets/pkmn_menu/view/box.png", "assets/items_menu/view/title.png", "add");	
+		});
+		bag.addActionListener(e -> {
+			ArrayList<String> itemList = trainerController.handleShowBag(id);
+			showViewScreen(itemList, "assets/pkmn_menu/view/box.png", "assets/items_menu/view/title.png", "bag");
+		});
+
+		pcBtn.addActionListener(e -> {
+			ArrayList<String> pkmnList = trainerController.handleShowPC(id);
+			showViewScreen(pkmnList, "assets/pkmn_menu/view/box.png", "assets/pkmn_menu/view/title.png", "pc");
+		});
+
 		backBtn.addActionListener(e -> {
 			controller.initMenu("trainer");
 		});
 		backBtn.addActionListener(e -> controller.initMenu("back"));
 
 
-		cp.add(id);
+		cp.add(idLabel);
 		cp.add(name);
 		cp.add(bday);
 		cp.add(sex);
@@ -885,6 +964,11 @@ public class MainGUI
 
 		cp.revalidate();
 		cp.repaint();	
+	}
+
+	public void showUseItemPokemon(ArrayList<String> availablePokemon)
+	{
+		showViewScreen(trainerController.handleViewTrainer(),"assets/pkmn_menu/view/box.png", "assets/trainer_menu/view/title.png", "trainer");
 	}
 
 	public void showViewTrainer()
@@ -968,6 +1052,7 @@ public class MainGUI
 				}
 					namefilter.setVisible(clicked[0]);
 					classfilter.setVisible(clicked[0]);
+					typefilter.setVisible(clicked[0]);
 					hmtwnfilter.setVisible(clicked[0]);
 					promptLabel.setVisible(!clicked[0]);
 			}
@@ -1049,8 +1134,18 @@ public class MainGUI
 		JLabel title = GUIUtils.createCenterBanner(titlePath, 130);
 		JButton backBtn = GUIUtils.createImageButton("assets/backbutton.png", 573, 390);
 
-		backBtn.addActionListener(e -> controller.initMenu(backPath));
-		
+		switch(backPath)
+		{
+			case "add":
+			case "bag":
+			case "pc":
+				backBtn.addActionListener(e -> trainerController.manageTrainer(trainerId));
+				break;
+			default: 
+				backBtn.addActionListener(e -> controller.initMenu(backPath));
+				break;
+		}
+
 		cp.add(title);
 		cp.add(backBtn);
 		cp.add(overlayBg);
@@ -1117,6 +1212,56 @@ public class MainGUI
 							trainerController.manageTrainer(idBuilder);
 						}
 						break;
+					case "add":
+						//get the pokedex
+						pokedexBuilder = "";
+						for(char c : str.toCharArray())
+						{
+							if(Character.isDigit(c))
+								pokedexBuilder = pokedexBuilder + c;
+							else if(!pokedexBuilder.isEmpty())
+								break;
+						}
+
+						if(!pokedexBuilder.isEmpty())
+						{
+							System.out.println("CLICKED POKEDEX: " + pokedexBuilder);
+							pokemonController.showAPokemon(pokedexBuilder, "add");
+						}
+					case "use":
+						String nameBuilder = "";
+						for(char c : str.toCharArray())
+						{
+							if(Character.isWhitespace(c))
+								break;
+							else
+								nameBuilder += c;
+						}
+						if(!nameBuilder.isEmpty())
+						{
+							System.out.println("CLICKED ITEM: " + nameBuilder);
+							ArrayList<String> availablePkmn = trainerController.handleAvailablePokemon(nameBuilder);
+							showViewScreen(availablePkmn, "assets/pkmn_menu/view/box.png", "assets/trainer_menu/view/title.png", "useItem");
+						}
+					case "useItem":
+						//get the pokedex
+						pokedexBuilder = "";
+						for(char c : str.toCharArray())
+						{
+							if(Character.isDigit(c))
+								pokedexBuilder = pokedexBuilder + c;
+							else if(!pokedexBuilder.isEmpty())
+								break;
+						}
+
+						if(!pokedexBuilder.isEmpty())
+						{
+							System.out.println("CLICKED POKEDEX: " + pokedexBuilder);
+							pokemonController.showAPokemon(pokedexBuilder, "use");
+						}
+						break;
+					default:
+						break;
 				}
 			});
 			
@@ -1158,7 +1303,7 @@ public class MainGUI
 		cp.repaint();
 	}
 
-	public void createCutScene(String titlePath)
+	public void createCutScene(String titlePath, String action)
 	{
 		cp.removeAll();
 
@@ -1176,18 +1321,23 @@ public class MainGUI
 
 		field.requestFocusInWindow();
 
-		field.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent e)
-			{
-				if(e.getKeyCode() == KeyEvent.VK_ENTER)
-				{
-					String input = field.getText();
-					field.setText("");
-					pokemonController.handleAddPokemon(input);
-				}
-			}
-		});
+		switch(action)
+		{
+			case "addPkmn":
+				field.addKeyListener(new KeyAdapter() {
+					@Override
+					public void keyPressed(KeyEvent e)
+					{
+						if(e.getKeyCode() == KeyEvent.VK_ENTER)
+						{
+							String input = field.getText();
+							field.setText("");
+							pokemonController.handleAddPokemon(input);
+						}
+					}
+				});
+				break;
+		}
 
 		cp = new BackgroundPanel("assets/pkmn_menu/add/bg.jpg");		
 		cp.setLayout(null);
