@@ -42,7 +42,7 @@ public class MainController
 		this.pokemonController = new PokemonController(pokemonModel, movesModel, itemsModel, view, viewGUI);
 		this.movesController = new MovesController(movesModel, view);
 		this.itemsController = new ItemsController(itemsModel, view);
-		this.trainerController = new TrainerController(trainerModel, pokemonModel, itemsModel, movesModel, view);
+		this.trainerController = new TrainerController(trainerModel, pokemonModel, itemsModel, movesModel, pokemonController, itemsController, view);
 		
 		//circular dependency (and 2 steps closer to a heart attack)
 

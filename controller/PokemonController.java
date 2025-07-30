@@ -124,7 +124,7 @@ public class PokemonController
 		pkmnInfo[4] += "</html>";
 		if(p.getHeldItem() != null)
 			pkmnInfo[5] = p.getHeldItem().getName();
-		else pkmnInfo[5] = "testing held";
+		else pkmnInfo[5] = "No Held Items";
 		pkmnInfo[6] = String.valueOf(p.getHp());
 		pkmnInfo[7] = String.valueOf(p.getAtk());
 		pkmnInfo[8] = String.valueOf(p.getDef());
