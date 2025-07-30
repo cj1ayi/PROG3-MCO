@@ -616,9 +616,11 @@ public class TrainerController
 		return getMovesInfoArrayList(canTeach); 
    }
 
-	public void handleTeachPkmn(String moveName, int index)
+	public void handleTeachPkmn(String moveName)
 	{
 		useItemBuilder.moveName = moveName;
+
+		int index = useItemBuilder.index;
 
 		Trainer t = model.searchTrainer("id", useItemBuilder.trainerId);	
 		Pokemon selectedPokemon = t.getPokemonLineup()[index];

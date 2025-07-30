@@ -148,7 +148,8 @@ public class GUIUtils
 		JTextField textField = new JTextField();
 
 		textField.setBounds(x,y,w,h);
-		textField.setBorder(BorderFactory.createLineBorder(Color.RED));
+		//textField.setBorder(BorderFactory.createLineBorder(Color.RED));
+		textField.setBorder(null);
 		textField.setOpaque(false);
 		textField.setBackground(new Color(0,0,0,0));
 		textField.setForeground(Color.BLACK);

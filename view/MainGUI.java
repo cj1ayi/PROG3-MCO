@@ -1507,7 +1507,7 @@ public class MainGUI
 								nameBuilder += c;
 						}
 						if(!nameBuilder.isEmpty())
-							trainerController.handleTeachPkmn(nameBuilder, index);
+							trainerController.handleTeachPkmn(nameBuilder);
 						break;
 					case "release":
 						trainerController.handleReleasePkmn(index, trainerId);

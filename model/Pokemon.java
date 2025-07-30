@@ -65,6 +65,7 @@ public class Pokemon
 		this.currHp = original.currHp;
 		this.hp = original.hp;
 		this.atk = original.atk;
+		this.def = original.def;
 		this.spd = original.spd;
 
 		//copy...
@@ -79,6 +80,7 @@ public class Pokemon
 	 *
 	 * Missing values are to be manually set, and move set defaults to Tackle and Defend.
 	 *
+	{
 	 * @param pokedexNum			the pokedex number of the Pokemon
 	 * @param name					the name of the Pokemon
 	 * @param type1				the Pokemon typing
