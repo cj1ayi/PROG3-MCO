@@ -20,10 +20,10 @@ Roberta Netanya S. Tan
    
 ### Running the Program
 1. **Run the Application**:
-   - From the project root, execute the main class.
+   - On Windows, simply click the 'run.bat' to get started.
+   - On Linux, from the project root, execute the .sh file.
      ```bash
-     > run
-     > java Main
+     > ./run.sh
      ```
-2. **Follow On-Screen Prompts**:
+3. **Follow On-Screen Prompts**:
    - The console will display a menu to select options like managing Pokemon, managing moves, viewing items, or managing trainers.
