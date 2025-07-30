@@ -116,7 +116,9 @@ public class PokemonController
 		Pokemon p;
 
 		if(index == -1)
-			p = model.searchOnePokemon("pokedex", t);
+		{
+			p = new Pokemon(model.searchOnePokemon("pokedex", t));
+		}
 		else
 		{
 			Trainer trainer = trainerModel.searchTrainer("id", t);	

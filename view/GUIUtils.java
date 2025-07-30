@@ -86,7 +86,7 @@ public class GUIUtils
 	{
 		JLabel label = new JLabel(txt);
 		label.setBounds(x,y,w,h);
-		label.setBorder(BorderFactory.createLineBorder(Color.RED,2));
+		//label.setBorder(BorderFactory.createLineBorder(Color.RED,2));
 		return label;
 	}
 

@@ -302,7 +302,8 @@ public class TrainerController
 			Items item = entry.getKey();
 			Integer quantity = entry.getValue();
 
-			String temp = item.getName() + " (qty." + quantity + ")"; 
+			String temp = "";
+			temp = item.getName() + " (qty." + quantity + ")"; 
 			System.out.println(temp);
 
 			itemBuilder.add(temp);
@@ -356,8 +357,21 @@ public class TrainerController
 		
 		return getItemsInfo(items);
 	}
+/*
+	public void handleItemChosen(String itemName, String id)
+	{
+		useItemBuilder.itemName = itemName;
 
+		Trainer trainer = model.searchTrainer("id", id);
+		Items itemToUse = itemsModel.searchItem("name", itemName);
+		System.out.println(itemName + "<--ITEM NAME IS ");
 
+		Pokemon[] lineup = trainer.getPokemonLineup();
+
+		viewGUI.showViewScreen(getPkmnInfoList(model.canUseItem(lineup, itemToUse)),"assets/pkmn_menu/view/box.png", "assets/moves_menu/view/title.png","useItem");
+	}
+
+*/
 	public ArrayList<String> getPkmnInfoList(Pokemon[] pkmn)
 	{
 		ArrayList<String> pkmnBuilder = new ArrayList<>();
@@ -366,6 +380,7 @@ public class TrainerController
 			if(p == null) { continue; }
 			String temp = "#" + p.getPokedexNum() + " " + p.getName() + " Lvl." + p.getBaseLevel(); 
 
+			System.out.println(temp);
 			pkmnBuilder.add(temp);
 		}
 		return pkmnBuilder;
@@ -384,15 +399,14 @@ public class TrainerController
 		return getPkmnInfoList(model.canUseItem(lineup, itemToUse));
 	}
 
-	public void handleUseItem(int index)
+	public void handleUseItem(int index, String trainerId)
 	{
-		useItemBuilder.index = index;
 		Trainer trainer = model.searchTrainer("id", useItemBuilder.trainerId);
 		Items item = itemsModel.searchItem("name", useItemBuilder.itemName);
 		Pokemon pkmn = trainer.getPokemonLineup()[index];
 
 		model.useItem(trainer,pkmn,item,pokemonModel);
-		pokemonController.showAPokemon(useItemBuilder.trainerId, -1, "use");
+		pokemonController.showAPokemon(useItemBuilder.trainerId, index, "use");
 	}
 
 	public void saveUseItem(String id)
