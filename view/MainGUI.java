@@ -262,11 +262,12 @@ public class MainGUI
 			System.out.println(back);
 			saveBtn.setVisible(true);
 			saveBtn.addActionListener(e -> {
-				trainerController.handleUseItem(info[0]);
+				trainerController.saveUseItem(trainerId);
 				buttonPressed(saveBtn, "assets/pkmn_menu/view_solo/savebtnpressed.png", "assets/pkmn_menu/view_solo/savebtn.png", 200);
 			});
 			backBtn.addActionListener(e -> trainerController.manageTrainer(trainerId));
 		}
+
 		else if("check".equals(back))
 		{
 			backBtn.addActionListener(e -> trainerController.manageTrainer(trainerId));
@@ -806,10 +807,6 @@ public class MainGUI
 		cp.repaint();
 	}
 
-
-
-
-
 	public void showTrainer(String[] info)
 	{
 		cp.removeAll();
@@ -898,28 +895,38 @@ public class MainGUI
 			ArrayList<String> itemDb = trainerController.handleAvailableItems(id);	
 			showViewScreen(itemDb, "assets/pkmn_menu/view/box.png", "assets/items_menu/view/title.png", "use");	
 		});
-/*
+
 		sellBtn.addActionListener(e -> {
-			 // TODO: handle sell
+			ArrayList<String> itemDb = trainerController.handleShowSell(id);
+			showViewScreen(itemDb, "assets/pkmn_menu/view/box.png", "assets/items_menu/view/title.png", "sell");
 		});
-		
+
 		buyBtn.addActionListener(e -> {
-			 // TODO: handle buy
+			ArrayList<String> itemDb = trainerController.handleShowBuy(id);
+			showViewScreen(itemDb, "assets/pkmn_menu/view/box.png", "assets/items_menu/view/title.png", "buy");
 		});
 
 		switchBtn.addActionListener(e -> {
-			 // TODO: handle switch
+			ArrayList<String> lineup = trainerController.handleShowBox(id);
+			if(lineup == null)
+				System.out.println("No pokemon in pokemon box");
+			else
+			showViewScreen(lineup, "assets/pkmn_menu/view/box.png", "assets/pkmn_menu/view/title.png", "swap");
 		});
 
+	
 		teachBtn.addActionListener(e -> {
-			 // TODO: handle teach
+			ArrayList<String> curr = trainerController.showCurrLineup(id);
+			if(curr != null)
+			showViewScreen(curr, "assets/pkmn_menu/view/box.png", "assets/pkmn_menu/view/title.png", "teach");
 		});
-
+		
 		releaseBtn.addActionListener(e -> {
-			 // TODO: handle release
+			ArrayList<String> curr = trainerController.showCurrLineup(id);
+			if(curr!= null)
+				showViewScreen(curr, "assets/pkmn_menu/view/box.png", "assets/pkmn_menu/view/title.png", "release");
 		});
 
-*/
 		addBtn.addActionListener(e -> {
 			ArrayList<String> pkmnDb = pokemonController.handleViewPokemon();
 			showViewScreen(pkmnDb, "assets/pkmn_menu/view/box.png", "assets/items_menu/view/title.png", "add");	
@@ -1139,6 +1146,16 @@ public class MainGUI
 			case "add":
 			case "bag":
 			case "pc":
+			case "sell":
+			case "buy":
+			case "use":
+			case "useItem":
+			case "swap":
+			case "swapPkmn":
+			case "teach":
+			case "teachPkmn":
+			case "forget":
+			case "release":
 				backBtn.addActionListener(e -> trainerController.manageTrainer(trainerId));
 				break;
 			default: 
@@ -1171,11 +1188,12 @@ public class MainGUI
 			btn.setText(info.get(i));
 			btn.setLocation(x,yStart+i*yGap);
 			
+			final int index = i;
 			//action listeners
 			btn.addActionListener(e -> {
 					
 				String str = btn.getText();
-
+			
 				switch(backPath)
 				{
 					case "pokemon":
@@ -1192,7 +1210,7 @@ public class MainGUI
 						if(!pokedexBuilder.isEmpty())
 						{
 							System.out.println("CLICKED POKEDEX: " + pokedexBuilder);
-							pokemonController.showAPokemon(pokedexBuilder, backPath);
+							pokemonController.showAPokemon(pokedexBuilder, -1, backPath);
 						}
 
 						break;
@@ -1226,7 +1244,7 @@ public class MainGUI
 						if(!pokedexBuilder.isEmpty())
 						{
 							System.out.println("CLICKED POKEDEX: " + pokedexBuilder);
-							pokemonController.showAPokemon(pokedexBuilder, "add");
+							pokemonController.showAPokemon(pokedexBuilder, -1, "add");
 						}
 					case "use":
 						String nameBuilder = "";
@@ -1240,11 +1258,89 @@ public class MainGUI
 						if(!nameBuilder.isEmpty())
 						{
 							System.out.println("CLICKED ITEM: " + nameBuilder);
-							ArrayList<String> availablePkmn = trainerController.handleAvailablePokemon(nameBuilder);
+							ArrayList<String> availablePkmn = trainerController.handleAvailablePokemon(nameBuilder, trainerId);
 							showViewScreen(availablePkmn, "assets/pkmn_menu/view/box.png", "assets/trainer_menu/view/title.png", "useItem");
 						}
 					case "useItem":
+						trainerController.handleUseItem(index);
+						break;
+					case "sell":
+						JLabel messageLabel = new JLabel("");
+						nameBuilder = "";
+						for(char c : str.toCharArray())
+						{
+							if(Character.isWhitespace(c))
+								break;
+							else
+								nameBuilder += c;
+						}
+						if(!nameBuilder.isEmpty())
+						{
+							System.out.println("CLICKED ITEM: " + nameBuilder);
+
+							String moneyBuilder = "";
+							for(char c : str.toCharArray())
+							{
+								if(Character.isDigit(c))
+									moneyBuilder = moneyBuilder + c;
+								else if(!moneyBuilder.isEmpty())
+									break;
+							}
+
+							if(!moneyBuilder.isEmpty())
+								messageLabel.setText("Sold for P " + moneyBuilder);
+
+
+							ArrayList<String> items = trainerController.handleSell(nameBuilder);
+							showViewScreen(items, "assets/pkmn_menu/view/box.png", "assets/items_menu/view/title.png", "sell");
+						}
+						break;
+					case "buy":
+						messageLabel = new JLabel("");
+						nameBuilder = "";
+						for(char c : str.toCharArray())
+						{
+							if(Character.isWhitespace(c))
+								break;
+							else
+								nameBuilder += c;
+						}
+						if(!nameBuilder.isEmpty())
+						{
+							System.out.println("CLICKED ITEM: " + nameBuilder);
+
+							String moneyBuilder = "";
+							for(char c : str.toCharArray())
+							{
+								if(Character.isDigit(c))
+									moneyBuilder = moneyBuilder + c;
+								else if(!moneyBuilder.isEmpty())
+									break;
+							}
+
+							if(!moneyBuilder.isEmpty())
+								messageLabel.setText("Brought for P " + moneyBuilder);
+
+							ArrayList<String> items = trainerController.handleBuy(nameBuilder);
+							showViewScreen(items, "assets/pkmn_menu/view/box.png", "assets/items_menu/view/title.png", "buy");
+							
+						}
+						break;
+					case "swap":
 						//get the pokedex
+						System.out.println("CLICKED POKEDEX INDEX: " + index);
+						ArrayList<String> pkmn = trainerController.handleShowLineup(index);
+						if(pkmn == null)
+							trainerController.manageTrainer(trainerId);
+						else
+							showViewScreen(pkmn, "assets/pkmn_menu/view/box.png", "assets/items_menu/view/title.png", "swapPkmn");
+						break;	
+					case "swapPkmn":
+						System.out.println("CLICKED POKEDEX: " + index);
+						trainerController.handleSwap(index);
+						break;	
+					case "teach":
+		//get the pokedex
 						pokedexBuilder = "";
 						for(char c : str.toCharArray())
 						{
@@ -1257,9 +1353,27 @@ public class MainGUI
 						if(!pokedexBuilder.isEmpty())
 						{
 							System.out.println("CLICKED POKEDEX: " + pokedexBuilder);
-							pokemonController.showAPokemon(pokedexBuilder, "use");
+							pkmn = trainerController.handleTeachableMoves(trainerId, index);
+							showViewScreen(pkmn, "assets/pkmn_menu/view/box.png", "assets/moves_menu/view/title.png", "teachPkmn");
 						}
 						break;
+					case "forget": 
+							trainerController.handleForgetMove(index);
+						break;
+					case "teachPkmn":
+						nameBuilder = "";
+						for(char c : str.toCharArray())
+						{
+							if(Character.isWhitespace(c))
+								break;
+							else
+								nameBuilder += c;
+						}
+						if(!nameBuilder.isEmpty())
+							trainerController.handleTeachPkmn(nameBuilder, index);
+						break;
+					case "release":
+						trainerController.handleReleasePkmn(index, trainerId);
 					default:
 						break;
 				}

@@ -1,6 +1,2 @@
 100000|BOX|1|
-POK|38|Ninetails|Fire|N/As|1|38|-1|-1|73|76|75|100|
-MOV|Tackle|Normal|TM|Tackle is one of the most common and basic moves a Pokémon learns. It deals damage with no additional effects.|
-MOV|Defend|Normal|TM|Defend raises the user's Defense by one stage each. Stats can be raised to a maximum of +6 stages each.|
-
 100001|BOX|0|

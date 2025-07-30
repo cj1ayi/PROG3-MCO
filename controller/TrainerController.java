@@ -27,6 +27,7 @@ public class TrainerController
 
 	private PokemonController pokemonController;
 	private ItemsController itemsController;
+	private MovesController movesController;
 
 	private UseItemBuilder useItemBuilder;
 	private int cutsceneFlow;
@@ -34,7 +35,7 @@ public class TrainerController
    private View view;
 	private MainGUI viewGUI;
     
-   public TrainerController(TrainerManagement model, PokemonManagement pokemonModel, ItemsManagement itemsModel, MovesManagement movesModel, PokemonController pokemonController, ItemsController itemsController, View view) 
+   public TrainerController(TrainerManagement model, PokemonManagement pokemonModel, ItemsManagement itemsModel, MovesManagement movesModel, PokemonController pokemonController, ItemsController itemsController, MovesController movesController, View view) 
 	{
 		cutsceneFlow = 0;
 		useItemBuilder = new UseItemBuilder();
@@ -46,6 +47,7 @@ public class TrainerController
 		this.itemsModel = itemsModel; 
 		this.pokemonController  = pokemonController;
 		this.itemsController = itemsController;
+		this.movesController = movesController;
 
 		trainerView = new TrainerView();
 		pokemonView = new PokemonView();
@@ -273,8 +275,10 @@ public class TrainerController
 
 		Pokemon[] pkmn = t.getPokemonLineup();
 		Pokemon selected = pkmn[index];
+
+		movesView.displayMoveSet(selected.getMoveSet());
 		System.out.println(selected.getPokedexNum());	
-		pokemonController.showAPokemon(String.valueOf(selected.getPokedexNum()), "check");
+		pokemonController.showAPokemon(id, index, "check");
 	}
 
 	public ArrayList<String> handleShowPC(String id)
@@ -298,6 +302,7 @@ public class TrainerController
 			Integer quantity = entry.getValue();
 
 			String temp = item.getName() + " (qty." + quantity + ")"; 
+			System.out.println(temp);
 
 			itemBuilder.add(temp);
 		}
@@ -358,7 +363,6 @@ public class TrainerController
 		for(Pokemon p : pkmn)
 		{
 			if(p == null) { continue; }
-
 			String temp = "#" + p.getPokedexNum() + " " + p.getName() + " Lvl." + p.getBaseLevel(); 
 
 			pkmnBuilder.add(temp);
@@ -366,27 +370,302 @@ public class TrainerController
 		return pkmnBuilder;
 	}
 
-	public ArrayList<String> handleAvailablePokemon(String itemName)
+	public ArrayList<String> handleAvailablePokemon(String itemName, String id)
 	{
 		useItemBuilder.itemName = itemName;
 
-		Trainer trainer = model.searchTrainer("id", useItemBuilder.trainerId);
+		Trainer trainer = model.searchTrainer("id", id);
 		Items itemToUse = itemsModel.searchItem("name", itemName);
+		System.out.println(itemName + "<--ITEM NAME IS ");
 
 		Pokemon[] lineup = trainer.getPokemonLineup();
 
 		return getPkmnInfoList(model.canUseItem(lineup, itemToUse));
 	}
 
-	public void handleUseItem(String dex)
+	public void handleUseItem(int index)
 	{
+		useItemBuilder.index = index;
 		Trainer trainer = model.searchTrainer("id", useItemBuilder.trainerId);
 		Items item = itemsModel.searchItem("name", useItemBuilder.itemName);
-		Pokemon pkmn = pokemonModel.searchOnePokemon("pokedex", dex);
+		Pokemon pkmn = trainer.getPokemonLineup()[index];
 
 		model.useItem(trainer,pkmn,item,pokemonModel);
-		manageTrainer(useItemBuilder.trainerId);
+		pokemonController.showAPokemon(useItemBuilder.trainerId, -1, "use");
 	}
+
+	public void saveUseItem(String id)
+	{
+		Trainer trainer = model.searchTrainer("id", id);
+		Items item = itemsModel.searchItem("name", useItemBuilder.itemName);
+		Pokemon pkmn = trainer.getPokemonLineup()[useItemBuilder.index];
+
+		model.useItem(trainer,pkmn,item,pokemonModel);
+	}
+
+	public ArrayList<String> getItemsSellInfo(HashMap<Items, Integer> itemsList)
+	{
+		ArrayList<String> itemBuilder = new ArrayList<>();
+		for(HashMap.Entry<Items, Integer> entry : itemsList.entrySet())
+		{
+			Items item = entry.getKey();
+			Integer quantity = entry.getValue();
+
+			String temp = item.getName() + " (qty." + quantity + ")" + " P " + item.getSellingPrice(); 
+
+			itemBuilder.add(temp);
+		}
+		return itemBuilder;
+	}
+
+	public ArrayList<String> handleShowSell(String id)
+	{
+		useItemBuilder.trainerId = id;
+
+		Trainer t = model.searchTrainer("id", id);
+		trainerView.viewTrainer(t);
+
+		HashMap<Items, Integer> bag = t.getInventory();
+
+		return getItemsSellInfo(bag);
+	}
+
+	public ArrayList<String> handleSell(String itemName)
+	{
+		Trainer trainer = model.searchTrainer("id", useItemBuilder.trainerId);
+		Items selectedItem = itemsModel.searchItem("name", itemName);
+
+		HashMap<Items, Integer> inventory = trainer.getInventory();
+
+      if (inventory.isEmpty()) 
+		{
+			manageTrainer(useItemBuilder.trainerId);
+         return null;
+      }
+
+		//view inventory items 
+      trainerView.viewInventory(trainer);
+		
+		model.sellItem(trainer, selectedItem, 1);
+		return handleShowSell(useItemBuilder.trainerId);
+   }
+
+	public ArrayList<String> getItemsBuyInfo(ArrayList<Items> itemsList)
+	{
+		ArrayList<String> itemBuilder = new ArrayList<>();
+		for(Items item: itemsList)
+		{
+			if(!model.canBuyItem(item)) { continue; }
+
+			String temp = item.getName() + " "; 
+
+			if(item.getBuyingPrice2() ==-1)
+				temp += "P " + item.getBuyingPrice1();
+			else
+				temp += "P " + item.getBuyingPrice1() + " - " + item.getBuyingPrice2();
+
+			itemBuilder.add(temp);
+		}
+		return itemBuilder;
+	}
+
+	public ArrayList<String> handleShowBuy(String id)
+	{
+		useItemBuilder.trainerId = id;
+		ArrayList<Items> bag = itemsModel.getItems();
+		return getItemsBuyInfo(bag);
+	}
+
+	public ArrayList<String> handleBuy(String itemName)
+	{
+		Trainer trainer = model.searchTrainer("id", useItemBuilder.trainerId);
+		Items selectedItem = itemsModel.searchItem("name", itemName);
+
+		HashMap<Items, Integer> inventory = trainer.getInventory();
+
+		if(!model.canBuyItem(selectedItem))
+			return null;
+
+		//view inventory items 
+      trainerView.viewInventory(trainer);
+
+		double buyingPrice;
+		if(model.hasBuyRange(selectedItem))
+			buyingPrice = model.generateItemPrice(selectedItem);
+		else
+			buyingPrice = selectedItem.getBuyingPrice1();
+		
+		int capacity = 0;
+		for(int quantity : trainer.getInventory().values())
+			capacity+=quantity;
+		System.out.println("CAPACITY: " + capacity);
+
+		model.buyItem(trainer, selectedItem, 1, buyingPrice, capacity);	
+
+		return handleShowBuy(useItemBuilder.trainerId);
+   }
+
+	public ArrayList<String> handleShowLineup(int index)
+	{
+		useItemBuilder.index = index;
+
+		Trainer t = model.searchTrainer("id", useItemBuilder.trainerId);
+		trainerView.viewTrainer(t);
+
+		Pokemon[] p = t.getPokemonLineup();
+		ArrayList<Pokemon> box = t.getPokemonBox();
+
+		//add to empty slot 
+		if (t.getPokemonLineupCount() < Trainer.MAX_POKEMON_LINEUP) 
+		{
+			model.switchPokemon(t,index,-1);
+			;
+		}
+		return getPkmnInfoList(p);
+	}
+
+	public ArrayList<String> getPkmnInfoArrayList(ArrayList<Pokemon> pkmn)
+	{
+		ArrayList<String> pkmnBuilder = new ArrayList<>();
+		for(Pokemon p : pkmn)
+		{
+			if(p == null) { continue; }
+			String temp = "#" + p.getPokedexNum() + " " + p.getName() + " Lvl." + p.getBaseLevel(); 
+
+			pkmnBuilder.add(temp);
+		}
+		return pkmnBuilder;
+	}
+
+	public ArrayList<String> handleShowBox(String id)
+	{
+		useItemBuilder.trainerId = id;
+		Trainer t = model.searchTrainer("id", id);
+		
+		if(t.getPokemonBox().isEmpty())
+			return null;
+
+		return getPkmnInfoArrayList(t.getPokemonBox());
+	}
+
+	public void handleSwap(int index) 
+	{
+		Trainer t = model.searchTrainer("id", useItemBuilder.trainerId);	
+		int boxIndex = useItemBuilder.index;
+		int lineupIndex = index;
+		
+		model.switchPokemon(t, boxIndex, lineupIndex);
+	}
+
+	public ArrayList<String> getMovesInfoArrayList(ArrayList<Moves> moves)
+	{
+		ArrayList<String> info = new ArrayList<>();
+		for(Moves m : moves)
+		{
+			if(m == null) { continue; }
+			String temp = m.getMoveName() +  " " + m.getMoveClassification() + " (" + m.getMoveType1() + ")";
+
+			info.add(temp);
+		}
+		return info;
+	}
+
+	public ArrayList<String> showCurrLineup(String id)
+	{
+		Trainer t = model.searchTrainer("id", id);	
+		if(t.getPokemonLineupCount() == 0)
+			return null;
+
+		return getPkmnInfoList(t.getPokemonLineup());
+	}
+
+	public ArrayList<String> handleTeachableMoves(String id, int indexPkmn)
+	{
+		useItemBuilder.trainerId = id;
+		useItemBuilder.index = indexPkmn;
+		Trainer t = model.searchTrainer("id", id);	
+		
+		Pokemon selectedPokemon = t.getPokemonLineup()[indexPkmn];
+			
+		ArrayList<Moves> allMoves = movesModel.getMoves();
+		ArrayList<Moves> canTeach = new ArrayList<>();
+	
+		for(Moves m : allMoves)
+		{
+			if(m == null) { continue; }
+			if(model.canTeachMove(selectedPokemon, m))
+				canTeach.add(m);
+		}
+
+		movesView.displayMoves(canTeach);
+		return getMovesInfoArrayList(canTeach); 
+   }
+
+	public void handleTeachPkmn(String moveName, int index)
+	{
+		useItemBuilder.moveName = moveName;
+
+		Trainer t = model.searchTrainer("id", useItemBuilder.trainerId);	
+		Pokemon selectedPokemon = t.getPokemonLineup()[index];
+
+		System.out.println("\n\n\nhandleTeachPkmn()\n\n");
+		Moves selectedMove = movesModel.searchMove("name", moveName); 
+		
+		if(model.isMovesFull(selectedPokemon))
+		{
+			System.out.println("moves are full!");
+			handleForgetPkmnMoves(selectedPokemon, selectedMove);
+		}
+		else
+		{
+      	model.teachMove(selectedPokemon, selectedMove);
+			pokemonController.showAPokemon(useItemBuilder.trainerId, index, "check");
+		}
+	}
+
+	public void handleForgetPkmnMoves(Pokemon pkmn, Moves move)
+	{
+		Moves[] knownMoves = pkmn.getMoveSet();
+		ArrayList<Moves> canForget = new ArrayList<>();
+
+		for(Moves m : knownMoves)
+		{
+			if(m == null) { continue; }
+			if(model.canForgetMove(m))
+				canForget.add(m);
+		}
+
+		viewGUI.showViewScreen(getMovesInfoArrayList(canForget),"assets/pkmn_menu/view/box.png", "assets/moves_menu/view/title.png","forget");
+	}
+
+	public void handleForgetMove(int moveIndex)
+	{
+		Trainer t = model.searchTrainer("id", useItemBuilder.trainerId);	
+		Pokemon selectedPokemon = t.getPokemonLineup()[useItemBuilder.index];
+		Moves selectedMove = movesModel.searchMove("name", useItemBuilder.moveName); 
+
+		model.replaceMove(selectedPokemon, selectedMove, moveIndex);
+		pokemonController.showAPokemon(useItemBuilder.trainerId, useItemBuilder.index, "check");
+	}
+
+	public void handleReleasePkmn(int index, String id)
+	{
+		Trainer t = model.searchTrainer("id", id);
+		Pokemon[] lineup = t.getPokemonLineup();
+
+      Pokemon toRelease = lineup[index];
+      view.show(toRelease.getName() + " has been released.");
+		model.releasePokemon(t, toRelease);
+		manageTrainer(id);
+	}
+
+
+
+
+
+
+
+
 
 
 
@@ -418,8 +697,8 @@ public class TrainerController
                     break;
             case 3: teachMovesMenu(trainer);
                     break;
-            case 4: buyItemMenu(trainer);
-                    break;
+           // case 4: buyItemMenu(trainer);
+            //        break;
 				case 5: sellItemMenu(trainer);
                     break;
          	case 6: useItemMenu(trainer);
@@ -549,6 +828,7 @@ public class TrainerController
       view.show(selectedPokemon.getName() + " learned " + selectedMove.getMoveName() + "!");
    }
 
+	/*
 	private void buyItemMenu(Trainer trainer) 
 	{
    	trainerView.showSectionHeader("BUY ITEM");
@@ -601,7 +881,7 @@ public class TrainerController
 				break;
       }
    }
-
+	*/
 	private void sellItemMenu(Trainer trainer) 
 	{
       trainerView.showSectionHeader("SELL ITEM");

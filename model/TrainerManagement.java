@@ -129,6 +129,7 @@ public class TrainerManagement
 				pokemonBox.add(boxIndex, temp);
 				
 				trainer.setPokemonLineupCount(trainer.getPokemonLineupCount() + 1);
+				break;
 			}
 			System.out.println("Successfully added!");
 			return true;
@@ -216,7 +217,7 @@ public class TrainerManagement
 	 * @param quantity	Amount of items to be added 
 	 * @return				Returns TRUE if the item(s) were brought, FALSE otherwise
 	 **/
-   public int buyItem(Trainer trainer, Items item, int quantity, double currentBuyingPrice) 
+   public int buyItem(Trainer trainer, Items item, int quantity, double currentBuyingPrice, int capacity) 
 	{
    	if (trainer == null || item == null || quantity <= 0)
       	return 1;
@@ -235,7 +236,7 @@ public class TrainerManagement
          return 2;
 
 		//if size is over fifty
-		if (inventory.size() > 50)
+		if (capacity > 50)
 		{
 			System.out.println("full inventory");
 			return 3;
@@ -491,6 +492,7 @@ public class TrainerManagement
 		int i = 0;
 		for(Pokemon p : lineup)
 		{
+			if(p == null) continue;
 			if(isEvolutionStone(item))
 			{
 				Pokemon temp = new Pokemon(p);

@@ -7,7 +7,7 @@ import java.util.ArrayList;
  * 
  * It handles the management/logic of a collection of {@code Moves} objects.
  * This class provides the following functions, set an array of {@code Moves}, 
- * get an array of {@code Moves}, search for moves by attribute, and add a new move.
+ * get an array of {@code Movroller search for moves by attribute, and add a new move.
  */
 public class MovesManagement 
 {
@@ -95,6 +95,7 @@ public class MovesManagement
 	{
 		for (Moves move : moves) 
 		{ 
+			if(move == null) continue;
 			boolean matches = false;
 			switch (attribute) 
 			{

@@ -81,6 +81,7 @@ public class TrainerView
       
 		for (int i = 0; i < pokemonBox.size(); i++) 
 		{
+			if(pokemonBox.get(i) == null) continue;
          Pokemon p = pokemonBox.get(i);
          System.out.println("\t" + (i + 1) + ". " + p.getName() + " (Level " + p.getBaseLevel() + ")");
 			
@@ -101,7 +102,11 @@ public class TrainerView
      */
 	public void viewInventory(Trainer trainer) 
 	{
-   	System.out.println("\n" + trainer.getName() + "'s Inventory (" + trainer.getInventory().size() + "/50 items):");
+		int cap = 0;
+		for(int q : trainer.getInventory().values())
+			cap+=q;
+
+   	System.out.println("\n" + trainer.getName() + "'s Inventory (" + cap + "/50 items):");
 
 		HashMap<Items, Integer> inventory = trainer.getInventory();
 

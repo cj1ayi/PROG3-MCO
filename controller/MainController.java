@@ -42,7 +42,7 @@ public class MainController
 		this.pokemonController = new PokemonController(pokemonModel, movesModel, itemsModel, view, viewGUI);
 		this.movesController = new MovesController(movesModel, view);
 		this.itemsController = new ItemsController(itemsModel, view);
-		this.trainerController = new TrainerController(trainerModel, pokemonModel, itemsModel, movesModel, pokemonController, itemsController, view);
+		this.trainerController = new TrainerController(trainerModel, pokemonModel, itemsModel, movesModel, pokemonController, itemsController, movesController, view);
 		
 		//circular dependency (and 2 steps closer to a heart attack)
 
@@ -54,6 +54,10 @@ public class MainController
 		movesController.setView(viewGUI);
 		itemsController.setView(viewGUI);
 		trainerController.setView(viewGUI);
+
+		//inject trainer into pokemon
+		//(To use the showAPokemon function)
+		pokemonController.setTrainerModel(trainerModel);
 	}
 
 	/**

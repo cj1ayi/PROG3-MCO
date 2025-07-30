@@ -36,6 +36,7 @@ public class MovesView {
 			// Loop to display moves
 			for (Moves m : moves) 
 			{
+				if(m == null) continue;
 				displayMove(m);
 			}
 		}

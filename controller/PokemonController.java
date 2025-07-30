@@ -4,9 +4,11 @@ package controller;
 import static utils.InputHelper.*;
 import java.util.ArrayList;
 
+import model.Trainer;
 import model.Pokemon;
 import model.Moves;
 import model.Items;
+import model.TrainerManagement;
 import model.PokemonManagement;
 import model.MovesManagement;
 import model.ItemsManagement;
@@ -40,6 +42,8 @@ public class PokemonController
 	private MovesManagement movesModel;
 	private ItemsManagement itemsModel;
 	private PokemonFileHandler fileHandler;
+
+	private TrainerManagement trainerModel;
 
 	//for the states/cutscenes
 	private PokemonBuilder builderPkmn;
@@ -75,6 +79,12 @@ public class PokemonController
 		this.viewGUI = viewGUI;
 	}
 
+	//inejct the trainer model from the main controller
+	public void setTrainerModel(TrainerManagement trainerModel)
+	{
+		this.trainerModel = trainerModel;
+	}
+
 	/**
     * Saves all current Pokemon entries in the model to a file using the file handler.
     */
@@ -99,9 +109,19 @@ public class PokemonController
 		pkmnView.viewAllPokemon(model.getPokemonList());
 	}
 	
-	public void showAPokemon(String pokedex, String back)
+	//note that t acts as a pokedex number if the index is -1
+	//and it acts as the trainer id otherwise
+	public void showAPokemon(String t, int index, String back)
 	{
-		Pokemon p = model.searchOnePokemon("pokedex", pokedex);
+		Pokemon p;
+
+		if(index == -1)
+			p = model.searchOnePokemon("pokedex", t);
+		else
+		{
+			Trainer trainer = trainerModel.searchTrainer("id", t);	
+			p = trainer.getPokemonLineup()[index];
+		}
 		pkmnView.viewPokemon(p);
 		
 		String[] pkmnInfo = new String[13];
