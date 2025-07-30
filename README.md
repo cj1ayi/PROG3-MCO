@@ -15,6 +15,14 @@ Roberta Netanya S. Tan
   - Display all moves
   - Search for move(s)
 - **Items Module**
+  - Add new item
+  - Display all items
+  - Search for item(s)
+- **Trainer Module**
+  - Add new trainer profile
+  - Display all trainer
+  - Search for trainer(s)
+     - Manage Trainer
 - **Console-Based Interface**: User-friendly prompts for interacting with the application.
 
    
