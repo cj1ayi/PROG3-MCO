@@ -210,7 +210,8 @@ public class MainController
 	
 		switch(menuChoice)
 		{
-			case "add": trainerController.createTrainerProfile();
+			case "add": trainerController.startAddTrainer();
+				//trainerController.createTrainerProfile();
 				break;
 			case "view": 
 				trainerController.startViewTrainer();

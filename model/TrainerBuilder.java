@@ -1,7 +1,6 @@
 package model;
 
 public class TrainerBuilder {
-    public int ID;
     public String name;
     public String birthDate;
     public String sex;

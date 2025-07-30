@@ -14,8 +14,7 @@ import view.MainGUI;
 
 //meow
 public class TrainerController 
-{
-	private TrainerFileHandler fileHandler;
+{ private TrainerFileHandler fileHandler;
    private TrainerManagement model;
    private ItemsManagement itemsModel;
    private MovesManagement movesModel;
@@ -29,6 +28,7 @@ public class TrainerController
 	private ItemsController itemsController;
 
 	private UseItemBuilder useItemBuilder;
+	private TrainerBuilder builderTrainer;
 	private int cutsceneFlow;
 
    private View view;
@@ -52,6 +52,7 @@ public class TrainerController
 		movesView = new MovesView();
 		itemsView = new ItemsView();
 		fileHandler = new TrainerFileHandler();
+		builderTrainer = new TrainerBuilder();
 
    	model.setTrainerList(fileHandler.load()); 
 	}
@@ -780,6 +781,67 @@ public class TrainerController
    public void loadTrainers() 
 	{
    	model.setTrainerList(fileHandler.load()); 
+	}
+
+	public void startAddTrainer()
+	{
+		System.out.println("Start Add Trainer Started");
+		cutsceneFlow = 0;
+
+		if(viewGUI == null) System.out.println("main gui is null");
+
+		viewGUI.showAddTrainer();
+		viewGUI.setPrompt("Welcome to the world of Pokemon, new Trainer! Please tell me your name.");
+	}
+
+	public void handleAddTrainer(String input)
+	{
+		switch(cutsceneFlow)
+		{
+			case 0:
+				builderTrainer.name = input;
+				cutsceneFlow++;
+
+				viewGUI.setPrompt("Great! Now, when is your birthdate?");
+				break;
+			case 1:
+				builderTrainer.birthDate = input;
+				cutsceneFlow++;
+
+				viewGUI.setPrompt("Now tell me. Are you a male? Or are you a female?");
+				break;
+			case 2:
+				builderTrainer.sex = input;
+				cutsceneFlow++;
+
+				viewGUI.setPrompt("Where is your hometown?");
+				break;
+			case 3:
+				builderTrainer.hometown = input;
+				cutsceneFlow++;
+
+				viewGUI.setPrompt("And finally, give me a short description about yourself.");
+				break;
+			case 4:
+				builderTrainer.description = input;
+
+				Trainer trainer = new Trainer(
+					builderTrainer.name,
+					builderTrainer.birthDate, builderTrainer.sex,
+					builderTrainer.hometown,
+					builderTrainer.description
+				);
+
+				model.addTrainer(trainer);
+
+				viewGUI.setPrompt("...Excellent! Your Trainer profile is now complete. Welcome to the world of Pokemon! (Thank Professor Oak before going home!)");
+				cutsceneFlow++;
+				break;
+			case 5:
+				viewGUI.setPrompt("");
+				viewGUI.showTrainerMenu();
+				break;
+		}
 	}
 }
 

@@ -208,7 +208,6 @@ public class MainGUI
 	}
 
 
-
 	public void showViewPokemon()
 	{
 		showViewScreen(pokemonController.handleViewPokemon(),"assets/pkmn_menu/view/box.png", "assets/pkmn_menu/view/title.png", "pokemon");
@@ -982,6 +981,11 @@ public class MainGUI
 		showViewScreen(trainerController.handleViewTrainer(),"assets/pkmn_menu/view/box.png", "assets/trainer_menu/view/title.png", "trainer");
 	}
 
+	public void showAddTrainer()
+	{
+		createCutScene("assets/trainer_menu/add/title.png", "addTrainer");
+	}
+
 	public void showViewTrainer()
 	{
 		showViewScreen(trainerController.handleViewTrainer(),"assets/pkmn_menu/view/box.png", "assets/trainer_menu/view/title.png", "trainer");
@@ -1314,12 +1318,7 @@ public class MainGUI
 		cp.repaint();
 	}
 
-<<<<<<< Updated upstream
-	public void createCutScene(String titlePath, String action)
-	{
-=======
 	public void createCutScene(String titlePath, String action) {
->>>>>>> Stashed changes
 		cp.removeAll();
 
 		JLabel title = GUIUtils.createCenterBanner(titlePath, 0);
@@ -1336,25 +1335,6 @@ public class MainGUI
 
 		field.requestFocusInWindow();
 
-<<<<<<< Updated upstream
-		switch(action)
-		{
-			case "addPkmn":
-				field.addKeyListener(new KeyAdapter() {
-					@Override
-					public void keyPressed(KeyEvent e)
-					{
-						if(e.getKeyCode() == KeyEvent.VK_ENTER)
-						{
-							String input = field.getText();
-							field.setText("");
-							pokemonController.handleAddPokemon(input);
-						}
-					}
-				});
-				break;
-		}
-=======
 			field.addKeyListener(new KeyAdapter() {
 				@Override
 				public void keyPressed(KeyEvent e) {
@@ -1373,13 +1353,15 @@ public class MainGUI
 								//System.out.println("Going to add Moves");
 								itemsController.handleAddItems(input);
 							}
+							else if (action.equals("addTrainer")) {
+								//System.out.println("Going to add Moves");
+								trainerController.handleAddTrainer(input);
+							}
 
 						}
 					}
 
 			});
->>>>>>> Stashed changes
-
 		cp = new BackgroundPanel("assets/pkmn_menu/add/bg.jpg");		
 		cp.setLayout(null);
 		frame.setContentPane(cp);
