@@ -12,3 +12,28 @@ MOV|Tackle|Normal|TM|Tackle is one of the most common and basic moves a Pokémon
 MOV|Defend|Normal|TM|Defend raises the user's Defense by one stage each. Stats can be raised to a maximum of +6 stages each.|
 
 100001|LINEUP|0|
+100002|LINEUP|6|
+POK|7|Squirtle|Water|N/As|5|7|0|16|44|48|0|43|
+MOV|Tackle|Normal|TM|Tackle is one of the most common and basic moves a Pokémon learns. It deals damage with no additional effects.|
+MOV|Defend|Normal|TM|Defend raises the user's Defense by one stage each. Stats can be raised to a maximum of +6 stages each.|
+
+POK|471|Glaceon|Ice|N/As|1|-1|0|16|65|60|0|65|
+MOV|Tackle|Normal|TM|Tackle is one of the most common and basic moves a Pokémon learns. It deals damage with no additional effects.|
+MOV|Defend|Normal|TM|Defend raises the user's Defense by one stage each. Stats can be raised to a maximum of +6 stages each.|
+
+POK|225|Delibird|Ice|Flying|1|-1|0|16|45|45|0|75|
+MOV|Tackle|Normal|TM|Tackle is one of the most common and basic moves a Pokémon learns. It deals damage with no additional effects.|
+MOV|Defend|Normal|TM|Defend raises the user's Defense by one stage each. Stats can be raised to a maximum of +6 stages each.|
+
+POK|35|Clefairy|Fairy|N/As|1|173|0|16|70|45|0|35|
+MOV|Tackle|Normal|TM|Tackle is one of the most common and basic moves a Pokémon learns. It deals damage with no additional effects.|
+MOV|Defend|Normal|TM|Defend raises the user's Defense by one stage each. Stats can be raised to a maximum of +6 stages each.|
+
+POK|7|Squirtle|Water|N/As|5|7|0|16|44|48|0|43|
+MOV|Tackle|Normal|TM|Tackle is one of the most common and basic moves a Pokémon learns. It deals damage with no additional effects.|
+MOV|Defend|Normal|TM|Defend raises the user's Defense by one stage each. Stats can be raised to a maximum of +6 stages each.|
+
+POK|202|Wobbuffet|Psychic|N/As|1|360|0|25|190|33|0|33|
+MOV|Tackle|Normal|TM|Tackle is one of the most common and basic moves a Pokémon learns. It deals damage with no additional effects.|
+MOV|Defend|Normal|TM|Defend raises the user's Defense by one stage each. Stats can be raised to a maximum of +6 stages each.|
+

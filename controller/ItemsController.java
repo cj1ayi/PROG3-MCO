@@ -4,9 +4,7 @@ package controller;
 import static utils.InputHelper.*;
 import java.util.ArrayList;
 
-import model.Items;
-import model.ItemsManagement;
-import model.ItemsFileHandler;
+import model.*;
 import view.ItemsView;
 import view.View;
 import view.MainGUI;
@@ -25,6 +23,7 @@ public class ItemsController
 	private ItemsManagement model;
 	private ItemsFileHandler fileHandler;
 
+	private ItemsBuilder builderItems;
 	private int cutsceneFlow;
 
 	private View view;
@@ -47,6 +46,7 @@ public class ItemsController
 
 		this.view = view;
 		this.model = model;
+		this.builderItems = new ItemsBuilder();
 		
 		itemsView = new ItemsView();
 		fileHandler = new ItemsFileHandler();
@@ -105,6 +105,80 @@ public class ItemsController
 	public void loadItemEntries()
 	{
 		model.setItems(fileHandler.load());
+	}
+
+	/**
+	 * Shows detailed information about an item.
+	 * This method extracts the item name from the display text, finds the matching item,
+	 * and passes all the item attributes to the view to be displayed.
+	 *
+	 * @param itemNameInput The display text of the item (may include category in parentheses)
+	 * @param backPath The screen to return to when back button is clicked
+	 */
+	public void showAnItem(String itemNameInput, String backPath) {
+		System.out.println("Searching for item: " + itemNameInput);
+		
+		// Extract the item name from the display format
+		String itemName = "";
+		
+		// Try to extract from format: "Name (Category)"
+		if (itemNameInput.contains(" (")) {
+			itemName = itemNameInput.substring(0, itemNameInput.indexOf(" ("));
+		}
+		// Otherwise use as is
+		else {
+			itemName = itemNameInput;
+		}
+		
+		System.out.println("Extracted item name: " + itemName);
+		
+		// Find the item
+		Items item = null;
+		
+		// First try exact match with extracted name
+		for (Items i : model.getItems()) {
+			if (i != null && i.getName().equalsIgnoreCase(itemName)) {
+				item = i;
+				break;
+			}
+		}
+		
+		// If not found, try original input
+		if (item == null) {
+			for (Items i : model.getItems()) {
+				if (i != null && i.getName().equalsIgnoreCase(itemNameInput)) {
+					item = i;
+					break;
+				}
+			}
+		}
+		
+		// If still not found, try substring match
+		if (item == null) {
+			for (Items i : model.getItems()) {
+				if (i != null && (itemNameInput.toLowerCase().contains(i.getName().toLowerCase()) || 
+				    i.getName().toLowerCase().contains(itemNameInput.toLowerCase()))) {
+					item = i;
+					break;
+				}
+			}
+		}
+		
+		// Display item if found
+		if (item != null) {
+			String[] itemInfo = new String[7];
+			itemInfo[0] = item.getName();
+			itemInfo[1] = item.getCategory();
+			itemInfo[2] = item.getDescription();
+			itemInfo[3] = item.getEffects();
+			itemInfo[4] = String.valueOf(item.getBuyingPrice1());
+			itemInfo[5] = String.valueOf(item.getBuyingPrice2());
+			itemInfo[6] = String.valueOf(item.getSellingPrice());
+			
+			viewGUI.showAnItem(itemInfo, backPath);
+		} else {
+			System.out.println("Item not found: " + itemNameInput);
+		}
 	}
 
 	public void newItem()
@@ -240,4 +314,112 @@ public class ItemsController
 			view.show("Found " + matchingItems.size() + " item(s) matching '" + key + "' in " + attribute + "\n\n");
 		}
 	}
+
+	public void startAddItem()
+	{
+		System.out.println("Start Add Item Started");
+		cutsceneFlow = 0;
+
+		if(viewGUI == null) System.out.println("main gui is null");
+
+		viewGUI.showAddItems();
+		viewGUI.setPrompt("Ah, creating a new item, are we? What is the item's name?");
+	}
+
+	public void handleAddItems(String input)
+	{
+		switch(cutsceneFlow)
+		{
+			case 0:
+				builderItems.name = input;
+				cutsceneFlow++;
+
+				viewGUI.setPrompt("Good. What category does it belong to? (Vitamin, Feather, etc.)");
+				break;
+			case 1:
+					builderItems.category = input;
+					cutsceneFlow++;
+
+					viewGUI.setPrompt("Now, give me a brief description of the item.");
+				break;
+			case 2:
+				builderItems.description = input;
+				cutsceneFlow++;
+
+				viewGUI.setPrompt("What are its effects?");
+				break;
+			case 3:
+				builderItems.effects = input;
+				cutsceneFlow++;
+
+				viewGUI.setPrompt("Hmmm.. What's the starting price range of " + builderItems.name + " ? Type -1 if its NOT SOLD.");
+				break;
+			case 4:
+				try {
+					double price1 = Double.parseDouble(input);
+					if (price1 < 0) {
+						builderItems.buyingPrice1 = -1;
+					} else {
+						builderItems.buyingPrice1 = price1;
+					}
+					cutsceneFlow++;
+					viewGUI.setPrompt("And the second buying price? (Type -1 if there is none)");
+				} catch (NumberFormatException e) {
+					viewGUI.setPrompt("Please enter a valid number for the first buying price.");
+				}
+				break;
+
+			case 5:
+				try {
+					double price2 = Double.parseDouble(input);
+					if (price2 < 0) {
+						builderItems.buyingPrice2 = -1;
+					} else {
+						builderItems.buyingPrice2 = price2;
+					}
+					cutsceneFlow++;
+					viewGUI.setPrompt("Finally, what is the selling price?");
+				} catch (NumberFormatException e) {
+					viewGUI.setPrompt("Please enter a valid number for the second buying price.");
+				}
+				break;
+			case 6:
+				try
+				{
+					builderItems.sellingPrice = Double.parseDouble(input);
+					if(Double.parseDouble(input) < 0)
+					{
+						viewGUI.setPrompt("Selling price cannot be negative. Please enter a valid amount.");
+						break;
+					}
+
+				} catch(NumberFormatException e) {
+					viewGUI.setPrompt("Please enter a valid number for the selling price.");
+				}
+
+				Items item = new Items(
+						builderItems.name,
+						builderItems.category,
+						builderItems.description,
+						builderItems.effects,
+						builderItems.buyingPrice1,
+						builderItems.buyingPrice2,
+						builderItems.sellingPrice
+				);
+
+				model.addItem(item);
+
+				viewGUI.setPrompt("...Excellent! This new item is now ready for Trainers everywhere. (Thank Professor Oak before going home!)");
+				cutsceneFlow++;
+				break;
+			case 7:
+				viewGUI.setPrompt("");
+				viewGUI.showItemsMenu();
+				break;
+		}
+	}
+
+
+
+
 }

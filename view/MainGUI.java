@@ -208,7 +208,6 @@ public class MainGUI
 	}
 
 
-
 	public void showViewPokemon()
 	{
 		showViewScreen(pokemonController.handleViewPokemon(),"assets/pkmn_menu/view/box.png", "assets/pkmn_menu/view/title.png", "pokemon");
@@ -467,9 +466,115 @@ public class MainGUI
 		cp.repaint();
 	}
 
+	public void showAddMoves()
+	{
+		createCutScene("assets/moves_menu/add/title.png", "addMoves");
+	}
+
 	public void showViewMoves()
 	{
 		showViewScreen(movesController.handleViewMoves(),"assets/pkmn_menu/view/box.png", "assets/moves_menu/view/title.png", "moves");
+	}
+	
+	/**
+	 * Displays a detailed view of a single move with its description.
+	 * 
+	 * @param info array containing move details: [name, type, classification, description]
+	 * @param back the screen to return to when back button is clicked
+	 */
+	public void showAMove(String[] info, String back)
+	{
+		cp.removeAll();
+		
+		JLabel name = GUIUtils.createText(info[0], 160, 200, 250, 40); // Move name
+		JLabel type = GUIUtils.createText(info[1], 160, 220, 250, 40); // Move type
+		JLabel classification = GUIUtils.createText(info[2], 160, 240, 250, 40); // Move classification
+		JLabel description = GUIUtils.createText(info[3], 100, 320, 440, 80); // Move description
+		
+		JButton backBtn = GUIUtils.createImageButton("assets/backbutton.png", 560, 410);
+		
+		// Set description to wrap and align properly
+		description.setVerticalAlignment(SwingConstants.TOP);
+		description.setHorizontalAlignment(SwingConstants.LEFT);
+		
+		// Add back button functionality based on the back parameter
+		if (back.equals("moves")) {
+			backBtn.addActionListener(e -> controller.initMenu("moves"));
+		} else {
+			backBtn.addActionListener(e -> controller.initMovesMenu("back"));
+		}
+		
+		cp = new BackgroundPanel("assets/expandeddesc.jpg");
+		cp.setLayout(null);
+		frame.setContentPane(cp);
+		cp.add(name);
+		cp.add(type);
+		cp.add(classification);
+		cp.add(description);
+		cp.add(backBtn);
+		cp.revalidate();
+		cp.repaint();
+	}
+	
+	/**
+	 * Displays a detailed view of an item with all its attributes.
+	 * Uses the same expandeddesc.jpg asset as the move details view.
+	 * 
+	 * @param info Array containing item details [name, category, description, effects, buyingPrice1, buyingPrice2, sellingPrice]
+	 * @param back The screen to return to when back button is clicked
+	 */
+	public void showAnItem(String[] info, String back)
+	{
+		cp.removeAll();
+		
+		// Display all item attributes
+		JLabel name = GUIUtils.createText(info[0], 160, 210, 250, 30); // Item name
+		JLabel category = GUIUtils.createText("Category: " + info[1], 160, 230, 250, 30); // Category
+		
+		// Create panel for description with a scrollable area
+		JLabel description = GUIUtils.createText("Description: " + info[2], 100, 290, 440, 50); // Description
+		JLabel effects = GUIUtils.createText("Effects: " + info[3], 100, 310, 440, 50); // Effects
+		
+		// Create pricing information
+		String priceInfo = "";
+		if (Double.parseDouble(info[4]) < 0) {
+			priceInfo = "Not for sale";
+		} else if (Double.parseDouble(info[5]) < 0) {
+			priceInfo = "Buying Price: " + info[4];
+		} else {
+			priceInfo = "Buying Price Range: " + info[4] + " - " + info[5];
+		}
+		
+		JLabel prices = GUIUtils.createText(priceInfo, 100, 340, 440, 30); // Buying prices
+		JLabel sellingPrice = GUIUtils.createText("Selling Price: " + info[6], 100, 390, 440, 30); // Selling price
+		
+		JButton backBtn = GUIUtils.createImageButton("assets/backbutton.png", 560, 420);
+		
+		// Set text alignment
+		description.setVerticalAlignment(SwingConstants.TOP);
+		description.setHorizontalAlignment(SwingConstants.LEFT);
+		effects.setVerticalAlignment(SwingConstants.TOP);
+		effects.setHorizontalAlignment(SwingConstants.LEFT);
+		
+		// Add back button functionality based on the back parameter
+		if (back.equals("items")) {
+			backBtn.addActionListener(e -> controller.initMenu("items"));
+		} else {
+			backBtn.addActionListener(e -> controller.initItemsMenu("back"));
+		}
+		
+		cp = new BackgroundPanel("assets/expandeddesc.jpg");
+		cp.setLayout(null);
+		frame.setContentPane(cp);
+		cp.add(name);
+		cp.add(category);
+		cp.add(description);
+		cp.add(effects);
+		cp.add(prices);
+		cp.add(sellingPrice);
+		cp.add(backBtn);
+		cp.revalidate();
+		cp.repaint();
 	}
 	
 
@@ -636,7 +741,13 @@ public class MainGUI
 		cp.revalidate();
 		cp.repaint();
 	}
-	
+
+	public void showAddItems()
+	{
+		createCutScene("assets/items_menu/add/title.png", "addItems");
+	}
+
+
 	public void showViewItems()
 	{
 		showViewScreen(itemsController.handleViewItems(),"assets/pkmn_menu/view/box.png", "assets/items_menu/view/title.png", "items");
@@ -978,6 +1089,11 @@ public class MainGUI
 		showViewScreen(trainerController.handleViewTrainer(),"assets/pkmn_menu/view/box.png", "assets/trainer_menu/view/title.png", "trainer");
 	}
 
+	public void showAddTrainer()
+	{
+		createCutScene("assets/trainer_menu/add/title.png", "addTrainer");
+	}
+
 	public void showViewTrainer()
 	{
 		showViewScreen(trainerController.handleViewTrainer(),"assets/pkmn_menu/view/box.png", "assets/trainer_menu/view/title.png", "trainer");
@@ -1214,6 +1330,26 @@ public class MainGUI
 						}
 
 						break;
+					case "moves":
+						//Get just the move name without the type and classification
+						String fullMoveName = str.trim();
+						
+						// Pass the full display text to the controller - it will handle the parsing
+						if(!fullMoveName.isEmpty()) {
+							System.out.println("CLICKED MOVE: " + fullMoveName);
+							movesController.showAMove(fullMoveName, backPath);
+						}
+						break;
+					case "items":
+						// Get item name
+						String itemName = str.trim();
+						
+						// Pass the full display text to the controller - it will handle the parsing
+						if(!itemName.isEmpty()) {
+							System.out.println("CLICKED ITEM: " + itemName);
+							itemsController.showAnItem(itemName, backPath);
+						}
+						break;
 					case "trainer":
 						String idBuilder = "";
 						for(char c : str.toCharArray())
@@ -1417,42 +1553,50 @@ public class MainGUI
 		cp.repaint();
 	}
 
-	public void createCutScene(String titlePath, String action)
-	{
+	public void createCutScene(String titlePath, String action) {
 		cp.removeAll();
 
-		JLabel title = GUIUtils.createCenterBanner(titlePath,0);
-		JLabel fieldbg = GUIUtils.createCenterBanner("assets/pkmn_menu/add/inputs.png",0);
-		JTextField field = GUIUtils.createTextField(80,230,270,40);
+		JLabel title = GUIUtils.createCenterBanner(titlePath, 0);
+		JLabel fieldbg = GUIUtils.createCenterBanner("assets/pkmn_menu/add/inputs.png", 0);
+		JTextField field = GUIUtils.createTextField(80, 230, 270, 40);
 		promptLabel.setText("");
 
 		//label setup
 		promptLabel.setForeground(Color.BLACK);
 		Font current = promptLabel.getFont();
-		promptLabel.setBounds(40,340,460,100);
+		promptLabel.setBounds(40, 340, 460, 100);
 
 		promptLabel.setFont(current.deriveFont(20f));
 
 		field.requestFocusInWindow();
 
-		switch(action)
-		{
-			case "addPkmn":
-				field.addKeyListener(new KeyAdapter() {
-					@Override
-					public void keyPressed(KeyEvent e)
-					{
-						if(e.getKeyCode() == KeyEvent.VK_ENTER)
-						{
+			field.addKeyListener(new KeyAdapter() {
+				@Override
+				public void keyPressed(KeyEvent e) {
+						if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 							String input = field.getText();
 							field.setText("");
-							pokemonController.handleAddPokemon(input);
+							if (action.equals("addPkmn")) {
+								//System.out.println("Going to add Pokemon");
+								pokemonController.handleAddPokemon(input);
+							}
+							else if (action.equals("addMoves")) {
+								//System.out.println("Going to add Moves");
+								movesController.handleAddMoves(input);
+							}
+							else if (action.equals("addItems")) {
+								//System.out.println("Going to add Moves");
+								itemsController.handleAddItems(input);
+							}
+							else if (action.equals("addTrainer")) {
+								//System.out.println("Going to add Moves");
+								trainerController.handleAddTrainer(input);
+							}
+
 						}
 					}
-				});
-				break;
-		}
 
+			});
 		cp = new BackgroundPanel("assets/pkmn_menu/add/bg.jpg");		
 		cp.setLayout(null);
 		frame.setContentPane(cp);
