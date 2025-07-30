@@ -1,3 +1,4 @@
 100000|INVENTORY|1|
 9|ITEM|Zinc|Vitamin|A nutritious drink for Pokemon.|+10 Special Defense EVs|10000.0|-1.0|5000.0|
 100001|INVENTORY|0|
+100002|INVENTORY|0|

@@ -2,10 +2,19 @@ MOV|Tackle|Normal|TM|Tackle is one of the most common and basic moves a Pokémon
 MOV|Defend|Normal|TM|Defend raises the user's Defense by one stage each. Stats can be raised to a maximum of +6 stages each.|
 MOV|Knock Off|Dark|TM|Knocks down the foe’s held item to prevent its use.|
 MOV|Play Rough|Fairy|TM|The user plays rough with the target and attacks it.|
+MOV|Hex|Ghost|TM|Does massive damage to a target affected by status problems.|
+MOV|Thunderbolt|Electric|TM|An attack that may cause paralysis.|
+MOV|Coil|Poison|TM|Raises users DEF.|
+MOV|Leafage|Grass|TM|Strikes opponent with leaves.|
+MOV|Ember|Fire|TM|An attack that may inflict a burn.|
+MOV|Calm Mind|Psychic|TM|The user quietly focuses its mind to raise its stats.|
+MOV|Outrage|Dragon|TM|A rampage of 2 to 3 turns that confuses the user.|
+MOV|Ice Beam|Ice|TM|Blasts the foe with an icy beam that may freeze it.|
+MOV|Earthquake|Ground|TM|A powerful quake.|
+MOV|Accelerock|Rock|TM|The user smashes into the target at high speed. |
+MOV|Flash Cannon|Steel|TM|The user gathers all its light energy and releases it all at once|
 MOV|Fly|Flying|HM|Flies up on the first turn, then strikes the next turn.|
 MOV|Surf|Water|HM|A strong water-type attack.|
 MOV|Cut|Normal|HM|Cuts using claws, scythes, etc.|
 MOV|Strength|Normal|HM|A powerful physical attack.|
-MOV|Hex|Ghost|TM|Does massive damage to a target affected by status problems.|
-MOV|Thunderbolt|Electric|TM|An attack that may cause paralysis.|
-MOV|Coil|Poison|TM|Raises users DEF|
+MOV|Rock Smash|Fighting|HM|An attack that may lower Defense.|
